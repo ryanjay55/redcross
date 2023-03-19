@@ -1,0 +1,26 @@
+{% load static %}
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Cross</title>
+    {% tailwind_css %}
+</head>
+<body class=" bg-gradient-to-r from-red-500 to-red-300 px-28 py-5">
+    
+    <div class="container">
+        <nav class="flex items-center ">
+            <img src="{% static 'assets/img/logo.png' %}" alt="logo" class="h-24 w-40 cursor-pointer">
+            <ul class="ml-auto cursor-pointer text-right ">
+                <li class="list-none inline-block mx-2 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal px-2">Home</li></a>
+                <li class="list-none inline-block mx-2 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal  px-2">News & Events</li></a>
+                <li class="list-none inline-block mx-2 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal  px-2">Blood Bank</li></a>
+                <li class="list-none inline-block mx-2 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal  px-2">Contact</li></a>
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>
