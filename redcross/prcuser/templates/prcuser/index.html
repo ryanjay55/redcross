@@ -6,21 +6,40 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'assets/img/logo.png' %}">
+
     <title>Red Cross</title>
     {% tailwind_css %}
 </head>
 <body class=" bg-gradient-to-r from-red-500 to-red-300 px-28 py-5">
     
-    <div class="container">
+    <div class="container relative">
         <nav class="flex items-center ">
             <img src="{% static 'assets/img/logo.png' %}" alt="logo" class="h-24 w-40 cursor-pointer">
             <ul class="ml-auto cursor-pointer text-right ">
-                <li class="list-none inline-block mx-2 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal px-2">Home</li></a>
-                <li class="list-none inline-block mx-2 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal  px-2">News & Events</li></a>
-                <li class="list-none inline-block mx-2 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal  px-2">Blood Bank</li></a>
-                <li class="list-none inline-block mx-2 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal  px-2">Contact</li></a>
+                <li class="list-none inline-block mx-5 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal  px-2 hover:text-white duration-300 hover:text-4xl">Home</li></a>
+                <li class="list-none inline-block mx-5 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal  px-2 hover:text-white duration-300 hover:text-4xl">News & Events</li></a>
+                <li class="list-none inline-block mx-5 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal  px-2 hover:text-white duration-300 hover:text-4xl">Blood Bank</li></a>
+                <li class="list-none inline-block mx-5 px-5"><a href="#" class="no-underline font-semibold text-2xl tracking-normal  px-2 hover:text-white duration-300 hover:text-4xl">Contact</li></a>
             </ul>
         </nav>
-    </div>
+
+        <div class="mt-36 max-w-screen-xl">
+            <h1 class="text-6xl font-semibold leading-normal">Red Cross <br> <span class="font-normal">Valenzuela City Chapter</span> </h1>
+            <p>Blood donation is a selfless act of giving blood to save the lives of others.</p>
+
+            <div class="mt-8 md:mt-16 lg:mt-20">
+                <a href="#" class="bg-gray-300 rounded-3xl py-3 px-8 font-semi-bold text-2xl cursor-pointer tracking-normal hover:bg-red-700 hover:border-blue-300 hover:text-white duration-300 hover:border border border-transparent md:w-auto lg:w-1/2">Donate Blood</a>
+            </div>
+
+            <img src="{% static 'assets/img/prcvc-building.jpg' %}" alt="Red Cross Valenzuela Building" class="w-full xl:w-1/2 xl:absolute bottom-0 mt-11 ml-11 opacity-40 right-0">
+
+        </div>
+
+       
+    </div>      
+    
+    
 </body>
+
 </html>
