@@ -41,6 +41,11 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'prcuser',
+    'crispy_forms',
+    'crispy_tailwind',
+    'widget_tweaks',
+ 
+    
    
 ]
 
@@ -137,3 +142,9 @@ INTERNAL_IPS = [
 ]
 
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+
+CRISPY_TEMPLATE_PACK = "tailwind"
+
+PHONENUMBER_DEFAULT_REGION = 'PH'

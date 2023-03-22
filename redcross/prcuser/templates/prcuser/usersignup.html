@@ -1,0 +1,55 @@
+{% extends "prcuser/index.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% load static tailwind_tags %}
+{% block title %}Red Cross | Sign up{% endblock title %}
+{% tailwind_css %}
+
+</head>
+
+    {% block content %}
+    
+    <div class="container mx-auto mt-10">
+        <header class="text-2xl font-bold mb-6">Register</header>
+        <div class="details personal bg-white rounded-lg shadow-lg px-6 py-8">
+            <span class="title text-lg font-bold mb-4 block">Personal Details</span>
+            <hr class="mb-4">
+            <div class="sm:w-full md:w-1/2">  
+            <form action="" method="post" class="grid grid-cols-2 gap-4">{% csrf_token %}
+                <div>
+                    {{ user_form.firstname|as_crispy_field }}
+                    {{ user_form.lastname|as_crispy_field }}
+                    {{ user_form.blood_type|as_crispy_field }}
+                    {{ user_form.email|as_crispy_field }}
+                    {{ user_form.address|as_crispy_field }}
+                    {{ user_form.date_of_birth|as_crispy_field }}
+                </div>
+                <div>
+                    {{ user_form.sex|as_crispy_field }}
+                    {{ user_form.occupation|as_crispy_field}}
+                    {{ user_form.contact_number|as_crispy_field }}
+                    {{ user_form.password1|as_crispy_field }}
+                    {{ user_form.password2|as_crispy_field }}
+                    {% if user_form.errors.password2 %}
+                    <div class="mt-4 text-red-500">
+                        {% if form.errors %}
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-14 rounded-full col-span-2 block mx-auto">Submit</button>
+            </form>
+        </div>
+        </div>
+    </div>
+    
+ 
+
+    {% endblock content %}
+        
+    
