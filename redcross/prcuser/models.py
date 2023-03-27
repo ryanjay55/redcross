@@ -1,8 +1,16 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from datetime import datetime, date
+from django.contrib.auth.models import User
+import uuid
 
 
+
+def generate_id():
+    now = datetime.now()
+    year = now.strftime("%y")
+    unique_part = str(uuid.uuid4().fields[-1])[:4]  # Take the last 4 digits of the UUID
+    return f"{year}-{unique_part}"
 
 # Create your models here.
 class PrcUser(models.Model):
@@ -21,7 +29,7 @@ class PrcUser(models.Model):
         ('O+', 'O positive'),
         ('O-', 'O negative'),
     )
-    
+    id = models.CharField(max_length=7, unique=True, primary_key=True, editable=False, default=generate_id)
     firstname=models.CharField(max_length=50)
     lastname=models.CharField(max_length=50)
     blood_type = models.CharField(max_length=3, choices=BLOOD_TYPES)
@@ -34,6 +42,7 @@ class PrcUser(models.Model):
     occupation = models.CharField(max_length=50)
     age = models.IntegerField(default=0)
     contact_number = PhoneNumberField(default='+639')
+    # user_id = models.CharField(max_length=10, unique=True)
     created_at=models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -46,4 +55,4 @@ class PrcUser(models.Model):
 
     age.short_description = 'Age'
     
-    
+
