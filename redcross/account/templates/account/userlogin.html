@@ -1,0 +1,24 @@
+{% extends "prcuser/index.html" %}
+{% load static %}
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'assets/img/logo.png' %}">
+    {% block title %}
+     Red Cross | Login
+    {% endblock title %}
+    {% tailwind_css %}
+    
+</head>
+
+{% block content %}
+
+<h1>Login</h1>
+
+{% endblock content %}
+        
+    

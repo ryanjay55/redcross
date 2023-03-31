@@ -1,0 +1,187 @@
+{% extends "prcuser/index.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% load static tailwind_tags %}
+
+{% block title %}Red Cross | Sign up{% endblock title %}
+
+{% tailwind_css %}
+
+{% block content %}
+
+<div class="flex flex-col items-center py-6">
+  <h2 class="text-3xl font-extrabold text-gray-900 mb-6">Create an account</h2>
+
+  <div class="w-full max-w-md">
+    <form method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      {% csrf_token %}
+
+      <div class="mb-4">
+        <label for="username" class="block text-gray-700 font-bold mb-2">Username</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+        <p class="text-red-500 text-xs italic">{{ form.username.errors|first }}</p>
+        {% endif %}
+      </div>
+
+      <div class="mb-4">
+        <label for="email" class="block text-gray-700 font-bold mb-2">Email address</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+        <p class="text-red-500 text-xs italic">{{ form.email.errors|first }}</p>
+        {% endif %}
+      </div>
+
+      <div class="mb-4">
+        <label for="password1" class="block text-gray-700 font-bold mb-2">Password</label>
+        {{ form.password1 }}
+        <div id="password-strength"></div>
+        {% if form.password1.errors %}
+          <p class="text-red-500 text-xs italic">{{ form.password1.errors|first }}</p>
+        {% endif %}
+        <p id="password-strength-text"></p>
+      </div>
+
+      <div class="mb-6">
+        <label for="password2" class="block text-gray-700 font-bold mb-2">Confirm password</label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}
+        <p class="text-red-500 text-xs italic">{{ form.password2.errors|first }}</p>
+        {% endif %}
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between">
+        <button id="submit-button" type="submit"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-500 ease-in-out mb-4 sm:mb-0 sm:mr-4">
+          Sign up
+        </button>
+
+        <a href="{% url 'user_login' %}"
+          class="inline-block align-baseline font-bold text-sm text-indigo-500 hover:text-indigo-800">
+          Already have an account? Login
+        </a>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+{% endblock content %}
+
+{% block extra_css %}
+<style>
+  /* Password strength meter styles */
+  #password-strength {
+    height: 10px;
+    margin-top: 0.5rem;
+    background-color: #ddd;
+    position: relative;
+  }
+
+  #password-strength:before,
+  #password-strength:after {
+    content: "";
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease;
+  }
+
+  #password-strength:before {
+    background-color: #ff4949;
+    width: 0%;
+  }
+
+  #password-strength:after {
+    background-color: #28a745;
+    width: 0%;
+  }
+
+  #password-strength.weak:before {
+    width: 33%;
+    background-color: #ff4949;
+  }
+
+  #password-strength.medium:before {
+    background-color: #ffa500;
+    width: 66%;
+  }
+
+  #password-strength.strong:before {
+    background-color: #28a745;
+    width: 100%;
+  }
+</style>
+{% endblock extra_css %}
+
+{% block extra_js %}
+<script>
+  // Password strength meter
+  const passwordInput = document.getElementById('id_password1');
+  const strengthMeter = document.getElementById('password-strength');
+  const strengthText = document.getElementById('password-strength-text');
+
+  passwordInput.addEventListener('input', updateStrengthMeter);
+
+  function updateStrengthMeter() {
+    const weaknesses = calculatePasswordWeaknesses(passwordInput.value);
+
+    let strength = 100;
+    strength -= weaknesses.length * 20;
+
+    if (passwordInput.value.length < 8) {
+      strength -= 30;
+    } else if (passwordInput.value.length < 12) {
+      strength -= 15;
+    }
+
+    if (strength < 0) {
+      strength = 0;
+    }
+
+    if (strength <= 33) {
+      strengthMeter.className = 'weak';
+      strengthText.textContent = 'Weak';
+      strengthText.style.color = '#ff4949';
+    } else if (strength <= 66) {
+      strengthMeter.className = 'medium';
+      strengthText.textContent = 'Medium';
+      strengthText.style.color = '#ffa500';
+    } else {
+      strengthMeter.className = 'strong';
+      strengthText.textContent = 'Strong';
+      strengthText.style.color = '#28a745';
+    }
+
+    strengthMeter.querySelectorAll(':before')[0].style.width = strength + '%';
+    strengthMeter.querySelectorAll(':after')[0].style.width = (100 - strength) + '%';
+  }
+
+  function calculatePasswordWeaknesses(password) {
+    const weaknesses = [];
+
+    if (password.length < 8) {
+      weaknesses.push('too short');
+    }
+
+    if (!/[a-z]/.test(password)) {
+      weaknesses.push('no lowercase letters');
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      weaknesses.push('no uppercase letters');
+    }
+
+    if (!/\d/.test(password)) {
+      weaknesses.push('no numbers');
+    }
+
+    if (!/[^0-9a-zA-Z]/.test(password)) {
+        weaknesses.push('no special characters');
+    }
+    
+    return weaknesses;
+}
+</script>
+{% endblock extra_js %}

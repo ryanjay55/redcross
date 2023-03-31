@@ -1,0 +1,14 @@
+{% load static %}
+{% load static tailwind_tags %}
+{% tailwind_css %}
+<nav class=" bg-white shadow-md flex items-center p-4 rounded-t-2xl">
+    <a href="{% url 'home' %}"><img src="{% static 'assets/img/logo.png' %}" alt="logo" class="h-24 w-40 cursor-pointer"></a>
+    <a href="{% url 'home' %}" class="text-3xl font-bold text-red-600">Red Cross Blood Donation</a>
+    
+    <ul class="ml-auto cursor-pointer text-right">
+        <li class="list-none inline-block mx-2 "><a href="{% url 'home' %}" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white  duration-300 hover:border hover:bg-red-900  hover:rounded-md">Home</li></a>
+        <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white  duration-300 hover:border hover:bg-red-900  hover:rounded-md">News & Events</li></a>
+        <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white  duration-300 hover:border hover:bg-red-900  hover:rounded-md">Blood Bank</li></a>
+        <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white  duration-300 hover:border hover:bg-red-900  hover:rounded-md">Contact</li></a>
+    </ul>
+</nav>

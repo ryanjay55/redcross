@@ -38,12 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tailwind',
+    'account',
     'theme',
     'django_browser_reload',
     'prcuser',
     'crispy_forms',
     'crispy_tailwind',
-    'widget_tweaks',
+
  
     
    
@@ -156,3 +157,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER =  'ryanjayantonio305@gmail.com'
 EMAIL_HOST_PASSWORD = 'tcylsmjqxupiycwj'
+
+
+
