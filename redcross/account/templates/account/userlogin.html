@@ -1,24 +1,116 @@
 {% extends "prcuser/index.html" %}
 {% load static %}
 {% load static tailwind_tags %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="{% static 'assets/img/logo.png' %}">
-    {% block title %}
-     Red Cross | Login
-    {% endblock title %}
-    {% tailwind_css %}
-    
-</head>
+
+{% block title %}
+  LifeLink | Login
+{% endblock title %}
 
 {% block content %}
 
-<h1>Login</h1>
+<!-- <div class="flex items-center justify-center mt-4">
+    <div class="bg-white p-8 rounded shadow-md w-[520px]">
+      <h1 class="text-3xl font-bold mb-6 text-center">LifeLink Login</h1>
+      <form>
+        <div class="mb-6">
+          <label for="email" class="block text-gray-700 font-bold text-lg mb-2">Username</label>
+          <div class="flex items-center border border-gray-400 rounded-md p-2">
+            <span class="px-3">
+              <i class='bx bxs-user'></i>
+            </span>
+            <input type="email" id="email" name="email" class="w-full py-3 px-4 placeholder-gray-500 text-gray-700 focus:outline-none text-md" placeholder="Enter your username" required />
+          </div>
+        </div>
+        <div class="mb-6">
+          <label for="password" class="block text-gray-700 font-bold text-lg mb-2">Password</label>
+          <div class="flex items-center border border-gray-400 rounded-md p-2">
+            <span class="px-3">
+              <i class='bx bxs-lock-alt'></i>
+            </span>
+            <input type="password" id="password" name="password" class="w-full py-3 px-4 placeholder-gray-500 text-gray-700 focus:outline-none text-md" placeholder="Enter your password" required />
+          </div>
+        </div>
+        <button type="submit" class="bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition duration-200 w-full text-md">Sign In</button>
+        <a href="#" class="flex items-center text-black-500 font-bold hover:text-blue-700 transition duration-200 justify-center mt-4">
+          <span class="ml-2">Forgot password?</span>
+        </a>
+      </form>
+      <hr class="my-4 border-gray-400" />
+      <span class="text-gray-400 mx-2 flex items-center justify-center">OR</span>
+        
+      <div class="mt-4 flex flex-col justify-center items-center ">
+        <button aria-label="Sign in with Google" class="bg-red-500 text-white py-3 px-6 rounded-md hover:bg-red-600 transition duration-200 mb-4 text-md w-full" id="google-signin">
+          <i class="bx bxl-google mr-2"></i>
+          Continue with Google
+        </button>
+        <button aria-label="Sign in with Facebook" class="bg-blue-500 text-white py-3 px-6 rounded-md hover:bg-blue-600 transition duration-200 text-md w-full">
+          <i class="bx bxl-facebook mr-2"></i>
+          Continue with Google
+        </button>
+      </div>
+        
+      <div class="mt-4">
+              <span class="w-full flex justify-center">Don't have an account? <a href="{% url 'user_signup' %}" class="flex items-center text-blue-500 font-bold hover:text-blue-600 transition duration-200 mx-1">Register </a>now</span>
+      </div>
+    </div>
+  </div>
+   -->
+
+   <div class="flex items-center justify-center mt-4">
+
+    <div class="bg-white p-8 rounded shadow-md w-[520px]">
+      <h1 class="text-3xl font-bold mb-6 text-center">LifeLink Login</h1>
+        {% for message in messages %}
+          <p class="flex items-center justify-center text-white bg-slate-400">{{message}}</p>
+        {% endfor %}
+        <form method="post">{% csrf_token %}
+          <div class="mb-6">
+
+            <label for="email" class="block text-gray-700 font-bold text-lg mb-2">Username</label>
+                <div class="flex items-center border border-gray-400 rounded-md p-2">
+                   <span class="px-3">
+                    <i class='bx bxs-user'></i>
+                  </span>
+                  <input type="text" id="email" name="username" class="w-full py-3 px-4 placeholder-gray-500 text-md text-gray-700 focus:outline-none" placeholder="Enter your username" required />
+                </div>
+          </div>
+
+          <div class="mb-6">
+
+            <label for="password" class="block text-gray-700 font-bold text-lg mb-2">Password</label>
+                <div class="flex items-center border border-gray-400 rounded-md p-2">
+                  <span class="px-3">
+                    <i class='bx bxs-lock-alt'></i>
+                  </span>
+                  <input type="password" id="password" name="password" class="w-full py-3 px-4 placeholder-gray-500 text-md text-gray-700 focus:outline-none" placeholder="Enter your password" required />
+                </div>
+          </div>
+
+          <button type="submit" class="bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition duration-200 w-full text-md">Sign In</button>
+          <a href="#" class="flex items-center text-blue-500 font-bold hover:text-blue-700 transition duration-200 justify-center mt-4">
+            <span class="ml-2">Forgot password?</span>
+          </a>
+
+        </form>
+
+      <hr class="my-4 border-gray-400" />
+      <span class="text-gray-400 mx-2 flex items-center justify-center">OR</span>
+      <div class="mt-4 flex flex-col justify-center items-center">
+        <a href="{% url 'social:begin' 'google-oauth2' %}" class="bg-red-500 text-white py-3 px-6 rounded-md hover:bg-red-600 transition duration-200 mb-4 text-md w-full flex justify-center items-center"> 
+          <i class="bx bxl-google mr-2"></i>
+          Continue with Google
+        </a>
+        <a href="{% url 'social:begin' 'facebook' %}" class="bg-blue-500 text-white py-3 px-6 rounded-md hover:bg-blue-600 transition duration-200 text-md w-full flex items-center justify-center">
+          <i class="bx bxl-facebook mr-2"></i>
+          Continue with Facebook
+        </a>
+      </div>
+          
+      <div class="mt-4">
+        <span class="w-full flex justify-center">Don't have an account? <a href="{% url 'user_signup' %}" class="flex items-center text-blue-500 font-bold hover:text-blue-600 transition duration-200 mx-1">Register</a> now</span>
+      </div>
+    </div>
+
+</div>
 
 {% endblock content %}
-        
-    

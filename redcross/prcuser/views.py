@@ -14,6 +14,8 @@ def index(request):
 def home(request):
     return render(request, 'prcuser/index.html')
 
+
+@login_required
 def dashboard(request):
     return render(request, 'prcuser/dashboard.html')
 

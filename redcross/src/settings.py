@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'prcuser',
     'crispy_forms',
     'crispy_tailwind',
+    'social_django',
 
  
     
@@ -59,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_browser_reload.middleware.BrowserReloadMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'src.urls'
@@ -74,10 +76,22 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                'social_django.context_processors.backends',  # <-- Here
+                'social_django.context_processors.login_redirect', # <-- Here
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    # 'social_core.backends.twitter.TwitterOAuth',
+    # 'social_core.backends.github.GithubOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'src.wsgi.application'
 
@@ -144,10 +158,11 @@ INTERNAL_IPS = [
 
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
+#Crispy to make the default forms maayos tignan
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
-
 CRISPY_TEMPLATE_PACK = "tailwind"
 
+#PH phone number
 PHONENUMBER_DEFAULT_REGION = 'PH'
 
 # PARA AUTOMATIC MAG SEND NG TY MESSAGE AFTER REGISTRATION
@@ -160,3 +175,14 @@ EMAIL_HOST_PASSWORD = 'tcylsmjqxupiycwj'
 
 
 
+LOGIN_URL = 'user_login'
+LOGOUT_URL = 'user_logout'
+LOGIN_REDIRECT_URL = 'dashboard'
+
+#key for fb
+SOCIAL_AUTH_FACEBOOK_KEY = '761760578806561'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = '6ccc4832b23db1579dcba87625ad43cf'  # App 
+
+#key for google
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =  '854065574178-6aju8deb97hvd530jsc6kqdaj1ufl6u3.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET =  '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'

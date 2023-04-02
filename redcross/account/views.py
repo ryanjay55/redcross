@@ -7,7 +7,16 @@ from .utils import generate_user_id
 
 
 def loginPage(request):
-    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request,user)
+            return redirect('dashboard')
+    context = {}
     return render(request, 'account/userlogin.html')
 
 
@@ -19,7 +28,8 @@ def signupPage(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
-            # send_registration_email(user)
+            messages.success(request, 'Account was created.')
+            send_registration_email(user)
             return redirect('user_login')
         
     context = {'form': form}
