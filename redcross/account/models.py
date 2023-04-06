@@ -29,7 +29,7 @@ class DonorInfo(models.Model):
         ('O+', 'O positive'),
         ('O-', 'O negative'),
     )
-    id = models.CharField(max_length=7, unique=True, primary_key=True, editable=False, default=generate_id)
+    info_id = models.CharField(max_length=7, unique=True, primary_key=True, editable=False, default=generate_id)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     firstname=models.CharField(max_length=50)
     lastname=models.CharField(max_length=50)
@@ -39,9 +39,9 @@ class DonorInfo(models.Model):
     address = models.CharField(max_length=50)
     sex = models.CharField(max_length=10, choices=GENDER_CHOICES)
     occupation = models.CharField(max_length=50)
-    age_years = models.IntegerField(default=0, editable=False)
+    age = models.IntegerField(default=0, editable=False)
     contact_number = PhoneNumberField(default='+639')
-    created_at=models.DateTimeField(auto_now_add=True)
+    completed_at=models.DateTimeField(auto_now_add=True)
     is_privacy_accepted_terms_accepted = models.BooleanField(default=False)
     is_consent_accepted = models.BooleanField(default=False)
   
@@ -58,7 +58,7 @@ class DonorInfo(models.Model):
     calculate_age.short_description = 'Age'
     
     def save(self, *args, **kwargs):
-        self.age_years = self.calculate_age()
-        super().save(*args, **kwargs)
+        self.age = self.calculate_age()
+        super(DonorInfo, self).save(*args, **kwargs)
 
     

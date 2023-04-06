@@ -2,10 +2,11 @@ from django.shortcuts import render,redirect
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
-from .forms import CreateUserForm
+from .forms import CreateUserForm,CompleteProfileForm
 from django.contrib.auth.decorators import login_required
 import requests
 from .utils import generate_user_id
+from .models import DonorInfo
 
 
 def loginPage(request):
@@ -16,11 +17,18 @@ def loginPage(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request,user)
-            return redirect('completeProfile')
+            login(request, user)
+            
+            # Check if the user has a record in the DonorInfo model (or the completeProfile model)
+            try:
+                DonorInfo.objects.get(user=user)
+                # Redirect to dashboard page if user has complete profile
+                return redirect('dashboard')
+            except DonorInfo.DoesNotExist:
+                # Redirect to complete profile page if user does not have complete profile
+                return redirect('completeProfile')
         else:
             messages.info(request, 'Username or password is incorrect.')
-            # return render(request, 'account/userlogin.html')
         
     context = {}
     return render(request, 'account/userlogin.html')
@@ -55,13 +63,27 @@ def user_logout(request):
     return redirect('user_login')
 
 
+@login_required
 def completeProfile(request):
-    access_token = 'EAAK00TS0IyEBAIizZApC9ng5SXk3SMaUCg39mJyKFw6honkLwBZC8ZAksMtlTinDffeVYApT2GjGiMVZBkRptI8ZAtdaqF8hxBGD88S2GmdCT3c6WU2IdQsigNa3NpbrM77ZAY9oHZAkyNWzzXNx45RnH5LfllOBy3RkS0FjWUQCowz3dZA3NaUUnnZC3il1EYNkBaVNwJMLZCo7ySVY2tLcvknZBKCkn2my4DiQ0ZA3FSNHTNbIHBUfeTiF'
-    # Make a request to the Facebook API to retrieve the user's email address
-    response = requests.get(f'https://graph.facebook.com/v12.0/me?fields=email&access_token={access_token}')
-    # Parse the response to extract the user's email address
-    data = response.json()
-    email = data['email']
-    
-    context = {'email':email}
-    return render(request, 'account/complete-profile.html',context)    
+    # Retrieve the current user
+    user = request.user
+
+    # Check if the user has already completed their profile
+    if DonorInfo.objects.filter(user=user).exists():
+        return redirect('home')  # Redirect to home page or any other appropriate page
+
+    # If the request method is POST, process the form submission
+    if request.method == 'POST':
+        form = CompleteProfileForm(request.POST)
+        if form.is_valid():
+            # Create a new DonorInfo object with the form data
+            donor_info = form.save(commit=False)
+            donor_info.user = user  # Set the user field to the current user
+            donor_info.save()
+            return redirect('dashboard')  # Redirect to dashboard page or any other appropriate page
+    else:
+        # Set the initial value of the email field to the email of the currently logged in user
+        form = CompleteProfileForm(initial={'email': user.email})
+
+    context = {'form': form}
+    return render(request, 'account/complete-profile.html', context)
