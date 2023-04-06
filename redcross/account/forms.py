@@ -56,7 +56,7 @@ class CompleteProfileForm(forms.ModelForm):
             'firstname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'firstname', 'style': 'width: 100%'}),
             'lastname': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'lastname', 'style': 'width: 100%'}),
             'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'style': 'width: 100%'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'style': 'width: 100%', 'value': 'email'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'style': 'width: 100%'}),
             'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'address', 'style': 'width: 100%'}),
             # 'sex': forms.TextInput(attrs={'class': 'form-control','style': 'width: 100%'}),
             'occupation': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'occupation', 'style': 'width: 100%'}),

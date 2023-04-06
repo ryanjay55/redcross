@@ -65,25 +65,39 @@ def user_logout(request):
 
 @login_required
 def completeProfile(request):
+    access_token = 'EAAK00TS0IyEBADkHkWYOEHVLPQpchGlbxa0Bn8vPPb5zai9DdZA5884UhEKLFG2w1v1yZC0FtqdYloUB5b8ga8Baca62I6Xmj1vGZCVv8u5poRqFZBYiZAaLUqxykO1CFr4mBoY64HkrLf6C1d5ZADCqIiHH7fZCGTVUNZB1o2V9NCSW0IrWzSnZCAtoPHAOFRB95gVRZBYsJ7z9vD5SK39rWB3jZCdzE0c7c9otW3niAQIZBtokKA1B1U61'
+    response = requests.get(f'https://graph.facebook.com/v12.0/me?fields=email&access_token={access_token}')
+    data = response.json()
+    facebook_email = data['email']
     # Retrieve the current user
     user = request.user
 
     # Check if the user has already completed their profile
     if DonorInfo.objects.filter(user=user).exists():
-        return redirect('home')  # Redirect to home page or any other appropriate page
+        return redirect('dashboard')  # Redirect to dashboard page or any other appropriate page
 
     # If the request method is POST, process the form submission
     if request.method == 'POST':
         form = CompleteProfileForm(request.POST)
         if form.is_valid():
-            # Create a new DonorInfo object with the form data
-            donor_info = form.save(commit=False)
-            donor_info.user = user  # Set the user field to the current user
-            donor_info.save()
-            return redirect('dashboard')  # Redirect to dashboard page or any other appropriate page
+            # Check if the checkboxes are checked
+            checkbox1 = form.cleaned_data.get('is_privacy_accepted_terms_accepted')
+            checkbox2 = form.cleaned_data.get('is_consent_accepted')
+            if checkbox1 and checkbox2:
+                # Create a new DonorInfo object with the form data
+                donor_info = form.save(commit=False)
+                donor_info.user = user  # Set the user field to the current user
+                donor_info.save()
+                return redirect('dashboard')  # Redirect to dashboard page or any other appropriate page
+            else:
+                # If checkboxes are not checked, display an error message
+                messages.info(request, 'You need to read and accept Privacy Policy and Terms & Conditions and understand how your information will be used.')
+                
     else:
         # Set the initial value of the email field to the email of the currently logged in user
         form = CompleteProfileForm(initial={'email': user.email})
+        form = CompleteProfileForm(initial={'email': facebook_email})
 
     context = {'form': form}
     return render(request, 'account/complete-profile.html', context)
+

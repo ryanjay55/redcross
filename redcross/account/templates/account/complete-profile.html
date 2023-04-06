@@ -13,9 +13,12 @@
 <div id="myModal" class="modal fixed w-full h-full top-0 left-0 flex items-center justify-center ">
     <!-- Modal background overlay -->
     <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50 "></div>
-
+    
     <!-- Modal content container -->
     <div class="modal-container bg-white md:max-w-[700px] mx-auto rounded shadow-lg z-50 overflow-y-auto ">
+        {% for message in messages %}
+          <p class="flex items-center justify-center text-white bg-yellow-500 p-4 text-lg font-semibold rounded">{{message}}</p>
+        {% endfor %}
         <div class="modal-content py-4 text-left px-6">
             <!-- Form content -->
             <form id="myForm" class="grid grid-cols-1 md:grid-cols-2 gap-4" method="post">
@@ -74,7 +77,7 @@
                         I understand how your information will be used and we may contact you using the details you have provided
                     </label>
                 </div>
-
+                
                 <div class="flex justify-end">
                     <button type="submit"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -87,23 +90,6 @@
     </div>
 </div>
 
-<!-- Add modal JavaScript to open and close modal -->
-<script>
-    document.getElementById("openModal").addEventListener("click", function() {
-        document.getElementById("myModal").classList.add("modal-active");
-    });
 
-    document.getElementById("closeModal").addEventListener("click", function() {
-        document.getElementById("myModal").classList.remove("modal-active");
-    });
-
-    // Submit form using JavaScript
-    document.getElementById("submitBtn").addEventListener("click", function(e) {
-        if (!document.getElementById("id_is_privacy_accepted_terms_accepted").checked || !document.getElementById("id_is_consent_accepted").checked) {
-            e.preventDefault();
-            alert("Please accept privacy policy and consent before submitting the form.");
-        }
-    });
-</script>
 
 {% endblock content %}
