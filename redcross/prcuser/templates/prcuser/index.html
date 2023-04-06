@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="{% static 'assets/img/logo.png' %}">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+ 
 
 
     {% tailwind_css %}
@@ -17,14 +17,16 @@
         {% endblock title %}
     </title>
 </head>
-<body class=" bg-gray-200 px-2 py-2">
 
+<body class=" bg-gray-200 ">
+
+    
     {% include "prcuser/navbar.html" %}
     {% block content %}
           
     <div class="container relative mx-8">
         <div class="mt-36 max-w-screen-xl">
-            <h1 class="text-6xl font-semibold leading-normal">Red Cross <br> <span class="font-normal">Valenzuela City Chapter</span> </h1>
+            <h1 class="text-6xl font-semibold leading-normal">Red Cross <br> <span class="font-normal">Valenzuela City Chapter</h1>
             <h3 class="text-4xl font-normal">Donate Blood, Save Lives</h3>
             <p>Blood donation is a selfless act of giving blood to save the lives of others.</p>
 
@@ -36,16 +38,19 @@
             <img src="{% static 'assets/img/prcvc-building.jpg' %}" alt="Red Cross Valenzuela Building" class="w-full xl:w-1/2 xl:absolute bottom-0 opacity-50 right-0 rounded-2xl">
 
         </div>
+    </div>   
 
-       
-    </div>    
     {% endblock content %}  
     {% block extra_css %}
     {% endblock extra_css%}
     {% block extra_js %}
     {% endblock extra_js %}
-    {% include "prcuser/footer.html" %}
+    
+    <div class="fixed-bottom ">
+        {% include "prcuser/footer.html" %}
+    </div>
 
 </body>
+
 
 </html>

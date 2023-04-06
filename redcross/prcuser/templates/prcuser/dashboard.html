@@ -8,7 +8,7 @@
 </head>
 <body>
     {% if request.user.is_authenticated %}
-        <p>Hello {{request.user}} </p>
+        <p>Hello {{request.user.username}} </p>
     {% endif %}
     <h1>DASHBOARD TO</h1>
 </body>

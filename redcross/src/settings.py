@@ -177,7 +177,7 @@ EMAIL_HOST_PASSWORD = 'tcylsmjqxupiycwj'
 
 LOGIN_URL = 'user_login'
 LOGOUT_URL = 'user_logout'
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'completeProfile'
 
 #key for fb
 SOCIAL_AUTH_FACEBOOK_KEY = '761760578806561'  # App ID

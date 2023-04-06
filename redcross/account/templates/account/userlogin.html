@@ -58,20 +58,20 @@
 
    <div class="flex items-center justify-center mt-4">
 
-    <div class="bg-white p-8 rounded shadow-md w-[520px]">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-[620px]">
       <h1 class="text-3xl font-bold mb-6 text-center">LifeLink Login</h1>
         {% for message in messages %}
-          <p class="flex items-center justify-center text-white bg-slate-400">{{message}}</p>
+          <p class="flex items-center justify-center text-white bg-slate-500 p-4 text-lg font-semibold rounded-md">{{message}}</p>
         {% endfor %}
-        <form method="post">{% csrf_token %}
+        <form method="post" action="">{% csrf_token %}
           <div class="mb-6">
 
             <label for="email" class="block text-gray-700 font-bold text-lg mb-2">Username</label>
                 <div class="flex items-center border border-gray-400 rounded-md p-2">
                    <span class="px-3">
-                    <i class='bx bxs-user'></i>
+                    <img src="{% static 'assets/icons/user.svg' %}" alt="User Icon" class="w-[40px] h-[25px]">
                   </span>
-                  <input type="text" id="email" name="username" class="w-full py-3 px-4 placeholder-gray-500 text-md text-gray-700 focus:outline-none" placeholder="Enter your username" required />
+                  <input type="text" id="email" name="username" class="w-full py-3 px-4 placeholder-gray-500 text-md text-gray-700 focus:outline-none rounded-lg" placeholder="Enter your username" required />
                 </div>
           </div>
 
@@ -80,13 +80,13 @@
             <label for="password" class="block text-gray-700 font-bold text-lg mb-2">Password</label>
                 <div class="flex items-center border border-gray-400 rounded-md p-2">
                   <span class="px-3">
-                    <i class='bx bxs-lock-alt'></i>
+                    <img src="{% static 'assets/icons/lock.svg' %}" alt="Lock Icon" class="w-[40px] h-[25px]">
                   </span>
-                  <input type="password" id="password" name="password" class="w-full py-3 px-4 placeholder-gray-500 text-md text-gray-700 focus:outline-none" placeholder="Enter your password" required />
+                  <input type="password" id="password" name="password" class="w-full py-3 px-4 placeholder-gray-500 text-md text-gray-700 focus:outline-none rounded-lg" placeholder="Enter your password" required />
                 </div>
           </div>
 
-          <button type="submit" class="bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition duration-200 w-full text-md">Sign In</button>
+          <button type="submit" class="bg-blue-700 text-white py-3 px-6 rounded-md hover:bg-blue-900 transition duration-200 w-full text-lg">Sign In</button>
           <a href="#" class="flex items-center text-blue-500 font-bold hover:text-blue-700 transition duration-200 justify-center mt-4">
             <span class="ml-2">Forgot password?</span>
           </a>
@@ -96,12 +96,12 @@
       <hr class="my-4 border-gray-400" />
       <span class="text-gray-400 mx-2 flex items-center justify-center">OR</span>
       <div class="mt-4 flex flex-col justify-center items-center">
-        <a href="{% url 'social:begin' 'google-oauth2' %}" class="bg-red-500 text-white py-3 px-6 rounded-md hover:bg-red-600 transition duration-200 mb-4 text-md w-full flex justify-center items-center"> 
-          <i class="bx bxl-google mr-2"></i>
+        <a href="{% url 'social:begin' 'google-oauth2' %}" class="bg-gray-200 text-black py-3 px-6 rounded-md hover:bg-gray-700 hover:text-white transition duration-200 mb-4 text-md w-full flex justify-center items-center"> 
+          <img src="{% static 'assets/icons/google.svg' %}" alt="Lock Icon" class="w-[40px] h-[25px] mr-1">
           Continue with Google
         </a>
-        <a href="{% url 'social:begin' 'facebook' %}" class="bg-blue-500 text-white py-3 px-6 rounded-md hover:bg-blue-600 transition duration-200 text-md w-full flex items-center justify-center">
-          <i class="bx bxl-facebook mr-2"></i>
+        <a href="{% url 'social:begin' 'facebook' %}" class="bg-gray-200 text-black py-3 px-6 rounded-md hover:bg-gray-700 hover:text-white transition duration-200 text-md w-full flex items-center justify-center">
+          <img src="{% static 'assets/icons/036-facebook.svg' %}" alt="Lock Icon" class="w-[40px] h-[25px] ">
           Continue with Facebook
         </a>
       </div>

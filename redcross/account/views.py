@@ -3,6 +3,8 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from .forms import CreateUserForm
+from django.contrib.auth.decorators import login_required
+import requests
 from .utils import generate_user_id
 
 
@@ -15,7 +17,11 @@ def loginPage(request):
 
         if user is not None:
             login(request,user)
-            return redirect('dashboard')
+            return redirect('completeProfile')
+        else:
+            messages.info(request, 'Username or password is incorrect.')
+            # return render(request, 'account/userlogin.html')
+        
     context = {}
     return render(request, 'account/userlogin.html')
 
@@ -29,7 +35,7 @@ def signupPage(request):
             user = form.save(commit=False)
             user.save()
             messages.success(request, 'Account was created.')
-            send_registration_email(user)
+            # send_registration_email(user)
             return redirect('user_login')
         
     context = {'form': form}
@@ -47,4 +53,15 @@ def send_registration_email(user):
 def user_logout(request):
     logout(request)
     return redirect('user_login')
+
+
+def completeProfile(request):
+    access_token = 'EAAK00TS0IyEBAIizZApC9ng5SXk3SMaUCg39mJyKFw6honkLwBZC8ZAksMtlTinDffeVYApT2GjGiMVZBkRptI8ZAtdaqF8hxBGD88S2GmdCT3c6WU2IdQsigNa3NpbrM77ZAY9oHZAkyNWzzXNx45RnH5LfllOBy3RkS0FjWUQCowz3dZA3NaUUnnZC3il1EYNkBaVNwJMLZCo7ySVY2tLcvknZBKCkn2my4DiQ0ZA3FSNHTNbIHBUfeTiF'
+    # Make a request to the Facebook API to retrieve the user's email address
+    response = requests.get(f'https://graph.facebook.com/v12.0/me?fields=email&access_token={access_token}')
+    # Parse the response to extract the user's email address
+    data = response.json()
+    email = data['email']
     
+    context = {'email':email}
+    return render(request, 'account/complete-profile.html',context)    

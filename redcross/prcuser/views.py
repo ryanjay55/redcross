@@ -11,11 +11,12 @@ from django.contrib.auth.decorators import login_required,permission_required
 def index(request):
     return render(request, 'prcuser/index.html')
 
+
 def home(request):
     return render(request, 'prcuser/index.html')
 
 
-@login_required
+@login_required(login_url='user_logout')
 def dashboard(request):
     return render(request, 'prcuser/dashboard.html')
 
