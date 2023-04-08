@@ -10,12 +10,15 @@
 {% block content %}
 
 <!-- Add a modal container -->
-<div id="myModal" class="modal fixed w-full h-full top-0 left-0 flex items-center justify-center ">
+<div id="myModal" class="modal fixed w-full h-full top-0 left-0 flex items-center justify-center">
     <!-- Modal background overlay -->
     <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50 "></div>
     
     <!-- Modal content container -->
-    <div class="modal-container bg-white md:max-w-[700px] mx-auto rounded shadow-lg z-50 overflow-y-auto ">
+    <div class="modal-container bg-white md:max-w-[700px] mx-auto rounded shadow-lg z-50 overflow-y-auto">
+        <div class="flex items-center justify-center">
+            <span class="text-xl m-3 font-semibold">-- Complete Profile --</span>
+        </div>
         {% for message in messages %}
           <p class="flex items-center justify-center text-white bg-yellow-500 p-4 text-lg font-semibold rounded">{{message}}</p>
         {% endfor %}
@@ -24,64 +27,64 @@
             <form id="myForm" class="grid grid-cols-1 md:grid-cols-2 gap-4" method="post">
                 {% csrf_token %}
                 
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="firstname">First Name</label>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2" for="firstname">First Name</label>
                     {{ form.firstname }}
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="lastname">Last Name</label>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2" for="lastname">Last Name</label>
                     {{ form.lastname }}
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="sex">Sex</label>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2" for="sex">Sex</label>
                     {{ form.sex }}
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="blood_type">Blood Type</label>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2" for="blood_type">Blood Type</label>
                     {{ form.blood_type }}
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="date_of_birth">Date of Birth</label>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2" for="date_of_birth">Date of Birth</label>
                     {{ form.date_of_birth }}
                     {% if form.date_of_birth.errors %}
                         <p class="text-red-500 text-s italic">{{ form.date_of_birth.errors|first }}</p>
                     {% endif %}
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2" for="email">Email</label>
                     {{ form.email }}
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="address">Address</label>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2" for="address">Address</label>
                     {{ form.address }}
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone Number</label>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2" for="phone">Phone Number</label>
                     {{ form.contact_number }}
                     {% if form.contact_number.errors %}
                         <p class="text-red-500 text-xs italic">{{ form.contact_number.errors|first }}</p>
                     {% endif %}
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Occupation</label>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2" for="phone">Occupation</label>
                     {{ form.occupation }}
                 </div>
                 <!-- Consent for collecting personal information -->
-                <div class="mb-4 col-span-2">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                <div class="mb-2 col-span-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2">
                         {{ form.is_privacy_accepted_terms_accepted }}
                         I’ve read and accept <a href="#" class="text-blue-500 hover:underline">Privacy Policy</a>  and <a href="#" class="text-blue-500"> Terms & Conditions</a>
                     </label>
-                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                    <label class="block text-gray-700 text-xs font-bold mb-2">
                         {{ form.is_consent_accepted }}
                         I understand how your information will be used and we may contact you using the details you have provided
                     </label>
                 </div>
                 
-                <div class="flex justify-end">
+                <div class="flex justify-center col-span-2">
                     <button type="submit"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Complete
+                        Complete Profile
                     </button>
                 </div>
             </form>

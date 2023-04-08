@@ -22,5 +22,5 @@ urlpatterns = [
     path("", include("prcuser.urls")),
     path("account/",include("account.urls")),
     
-    path('oauth/', include('social_django.urls', namespace='social')),  # <-- here
+    path('oauth/', include('social_django.urls', namespace='social')),  
 ]

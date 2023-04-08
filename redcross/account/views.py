@@ -65,10 +65,10 @@ def user_logout(request):
 
 @login_required
 def completeProfile(request):
-    access_token = 'EAAK00TS0IyEBADkHkWYOEHVLPQpchGlbxa0Bn8vPPb5zai9DdZA5884UhEKLFG2w1v1yZC0FtqdYloUB5b8ga8Baca62I6Xmj1vGZCVv8u5poRqFZBYiZAaLUqxykO1CFr4mBoY64HkrLf6C1d5ZADCqIiHH7fZCGTVUNZB1o2V9NCSW0IrWzSnZCAtoPHAOFRB95gVRZBYsJ7z9vD5SK39rWB3jZCdzE0c7c9otW3niAQIZBtokKA1B1U61'
+    access_token = 'EAAK00TS0IyEBAHWYoZAnUoLNZB0h8NyMF8XRQPrzlYbxZBnvIT1z8CiG7fs2RztkjETZCbdSgRiEEuJ4RvhED9qjbt1oOviyktcIMm021M2MuhZAvq8fyZBnzuwzGWiscVCapMpjxQT4YDCkvBvZCQf53ZA4LNqifZA7n1OgfWyaszl9H1qgKhgLeug0MWmnxfqvVSqzoHLwadAo26ZC7ZBV7011KvMBYuFephN8LJNEqEdUA8p5AiGZCmqS'
     response = requests.get(f'https://graph.facebook.com/v12.0/me?fields=email&access_token={access_token}')
     data = response.json()
-    facebook_email = data['email']
+    # facebook_email = data['email']
     # Retrieve the current user
     user = request.user
 
@@ -96,7 +96,7 @@ def completeProfile(request):
     else:
         # Set the initial value of the email field to the email of the currently logged in user
         form = CompleteProfileForm(initial={'email': user.email})
-        form = CompleteProfileForm(initial={'email': facebook_email})
+        # form = CompleteProfileForm(initial={'email': facebook_email})
 
     context = {'form': form}
     return render(request, 'account/complete-profile.html', context)
