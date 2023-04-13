@@ -1,15 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Red Cross | Dashboard</title>
-</head>
-<body>
-    {% if request.user.is_authenticated %}
+{% extends "prcuser/index.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% load static tailwind_tags %}
+
+{% block title %}LifeLink | Dashboard{% endblock title %}
+
+{% tailwind_css %}
+
+{% block content %}
+
+    <!-- {% if request.user.is_authenticated %}
         <p>Hello {{request.user.first_name}} </p>
-    {% endif %}
-    <h1>DASHBOARD TO</h1>
-</body>
-</html>
+    {% endif %} -->
+
+    <div>
+    {% include "prcuser/sidebar.html" %}
+    </div>
+
+
+{% endblock content %}
