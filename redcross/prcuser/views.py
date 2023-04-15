@@ -13,7 +13,8 @@ def index(request):
 
 
 def home(request):
-    return render(request, 'prcuser/index.html')
+    context = {'navbar': 'home'}
+    return render(request, 'prcuser/index.html', context)
 
 
 @login_required(login_url='user_logout')

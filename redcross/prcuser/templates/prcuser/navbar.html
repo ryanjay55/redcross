@@ -1,6 +1,7 @@
 {% load static %}
 {% load static tailwind_tags %}
 {% tailwind_css %}
+
 <nav class=" bg-white shadow-md flex items-center p-4 rounded-t-2xl mb-[50px] justify-around">
 
     <div class="flex items-center">
@@ -11,12 +12,18 @@
 
     <div>
         <ul class="ml-auto cursor-pointer text-right">
-            <li class="list-none inline-block mx-2 "><a href="{% url 'home' %}" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white  duration-300 hover:bg-red-500  hover:rounded-md">Home</li></a>
-            <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white  duration-300  hover:bg-red-500  hover:rounded-md">News & Events</li></a>
-            <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white  duration-300  hover:bg-red-500  hover:rounded-md">Blood Bank</li></a>
-            <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white  duration-300  hover:bg-red-500  hover:rounded-md">Contact</li></a>
+            <li class="list-none inline-block mx-2">
+                <a href="{% url 'home' %}" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white duration-300 hover:bg-red-500 hover:rounded-md {% if navbar == 'home' %} bg-red-700 text-white rounded-md {% endif %}">
+                  Home
+                </a>
+            </li>
+
+            <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white duration-300 hover:bg-red-500 hover:rounded-md">News &amp; Events</a></li>
+            <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white duration-300 hover:bg-red-500 hover:rounded-md">Blood Bank</a></li>
+            <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white duration-300 hover:bg-red-500 hover:rounded-md">Contact</a></li>
             <!-- <span><a href="{% url 'user_logout' %}">Logout</a></span> -->
         </ul>
     </div>
+    
 
 </nav>
