@@ -1,0 +1,352 @@
+{% extends "prcuser/index.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% load static tailwind_tags %}
+{% block title %}LifeLink | Users{% endblock title %}
+{% tailwind_css %}
+{% block content %}
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg mx-10">
+   <div class="flex items-center justify-between pb-4">
+      <label for="table-search" class="sr-only">Search</label>
+      <div class="relative">
+         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <img src="{% static 'assets/icons/search.svg' %}" alt="Search icon" class="w-5 h-5">
+         </div>
+         <input type="text" id="search" class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for items">
+      </div>
+      <div>
+        <!-- <a href="{% url 'export-donor-info' %}"> -->
+         <button id="dateRange-modal-trigger-btn" data-modal-target="small-modal" data-modal-toggle="small-modal" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-300 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">
+         <img src="{% static 'assets/icons/xls.svg' %}" alt="xls icon" class="w-5 h-5 mr-4">
+         Export
+         </button>
+         <!-- </a> -->
+      </div>
+   </div>
+   <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="table">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">
+        <tr>
+          <th scope="col" class="px-6 py-3">
+            info ID 
+          </th>
+          <th scope="col" class="px-6 py-3">
+            <div class="flex items-center justify-center">
+              Name
+              <a href="#" id="sort-name"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2"></a>
+            </div>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            <div class="flex items-center justify-center">
+              Blood Type
+              <a href="#" id="sort-blood-type"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2"></a>
+            </div>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            <div class="flex items-center justify-center">
+              Date of Birth
+              
+            </div>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Email
+          </th>
+          <th scope="col" class="px-6 py-3">
+            <div class="flex items-center justify-center">
+            Sex
+            <a href="#" id="sort-sex"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2"></a>
+            </div>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            <div class="flex items-center justify-center">
+              Age
+              <a href="#" id="sort-age"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2"></a>
+            </div>
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Contact Number
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Actions
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Blood Bag
+          </th>
+        </tr>
+      </thead>
+      
+      
+      <tbody id="table-body">
+         {% for user in users  %}
+         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-center">
+            <td class="px-6 py-4">
+               {{ user.info_id }}
+            </td>
+            <td class="px-6 py-4">
+               {{ user.firstname }} {{ user.lastname }}
+            </td>
+            <td class="px-6 py-4">
+               {{user.blood_type }}
+            </td>
+            <td class="px-6 py-4">
+               {{ user.date_of_birth }}
+            </td>
+            <td class="px-6 py-4">
+               {{ user.email }}
+            </td>
+            <td class="px-6 py-4">
+               {{ user.sex }}
+            </td>
+            <td class="px-6 py-4">
+               {{ user.age }}
+            </td>
+            <td class="px-6 py-4">
+               {{ user.contact_number }}
+            </td>
+            <td class="px-6 py-4">
+               <div class="flex item-center justify-center">
+                  <div class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110 text-gray-700">
+                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                     </svg>
+                  </div>
+                  <div class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110 text-gray-700">
+                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                     </svg>
+                  </div>
+                  <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
+                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                     </svg>
+                  </div>
+               </div>
+            </td>
+            <td class="px-6 py-4">
+                <a href="#" id="modal-trigger-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-3 rounded-2xl flex items-center justify-center text-xs transition-colors duration-300 ease-in-out sm:py-3 sm:px-4 md:text-sm lg:text-base">
+                    <img src="{% static 'assets/icons/add.svg' %}" alt="Add icon" class="w-4 mr-2 sm:w-5 md:w-6">
+                    Add Blood Bag
+                </a>
+            </td>            
+         </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+   
+</div>
+<!-- Main modal -->
+<div id="authentication-modal" tabindex="-1" aria-hidden="true" class="fixed z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+   <div class="relative w-full max-w-md max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+         <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="authentication-modal">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="sr-only">Close modal</span>
+         </button>
+         <div class="px-6 py-6 lg:px-8">
+            <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add Blood Bag</h3>
+            <form>
+               <div class="grid gap-6 mb-6 md:grid-cols-2">
+                  <div>
+                     <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name</label>
+                     <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required>
+                  </div>
+                  <div>
+                     <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last name</label>
+                     <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Doe" required>
+                  </div>
+                  <div>
+                     <label for="company" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company</label>
+                     <input type="text" id="company" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Flowbite" required>
+                  </div>
+                  <div>
+                     <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone number</label>
+                     <input type="tel" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" required>
+                  </div>
+                  <div>
+                     <label for="website" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website URL</label>
+                     <input type="url" id="website" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="flowbite.com" required>
+                  </div>
+                  <div>
+                     <label for="visitors" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unique visitors (per month)</label>
+                     <input type="number" id="visitors" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+                  </div>
+               </div>
+               <div class="mb-6">
+                  <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address</label>
+                  <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="john.doe@company.com" required>
+               </div>
+               <div class="mb-6">
+                  <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                  <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="•••••••••" required>
+               </div>
+               <div class="mb-6">
+                  <label for="confirm_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
+                  <input type="password" id="confirm_password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="•••••••••" required>
+               </div>
+               <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!-- DATE RANGE MODAL -->
+
+
+<div class="relative">
+    <input type="text" id="floating_filled" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+    <label for="floating_filled" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Floating filled</label>
+</div>
+<div class="relative">
+    <input type="text" id="floating_outlined" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+    <label for="floating_outlined" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Floating outlined</label>
+</div>
+<div class="relative z-0">
+    <input type="text" id="floating_standard" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+    <label for="floating_standard" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Floating standard</label>
+</div>
+
+<script>
+//Date range modal
+
+
+
+//Search
+    const searchInput = document.getElementById('search');
+    searchInput.addEventListener('input', function() {
+      filterTable('name');
+    });
+    
+    function filterTable(sortColumn) {
+      const filterValue = searchInput.value.toLowerCase();
+      const tableBody = document.getElementById('table-body');
+      const tableRows = Array.from(tableBody.querySelectorAll('tr'));
+    
+      let rowCount = 0;
+    
+      tableRows.forEach(row => {
+        let isMatch = false;
+        row.querySelectorAll('td').forEach(cell => {
+          const cellValue = cell.textContent.toLowerCase();
+          if (cellValue.includes(filterValue)) {
+            isMatch = true;
+          }
+        });
+        if (isMatch) {
+          row.style.display = 'table-row';
+          rowCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    
+      if (rowCount === 0) {
+        const noDataRow = document.createElement('tr');
+        const noDataCell = document.createElement('td');
+        noDataCell.setAttribute('colspan', '8');
+        noDataCell.textContent = 'No data available';
+        noDataCell.classList.add('px-6', 'py-4', 'text-center', 'text-gray-500', 'italic');
+        noDataRow.appendChild(noDataCell);
+        noDataRow.classList.add('no-data');
+        tableBody.appendChild(noDataRow);
+      } else {
+        const noDataRow = document.querySelector('.no-data');
+        if (noDataRow) {
+          tableBody.removeChild(noDataRow);
+        }
+      }
+    }
+
+// SORTTTTT
+
+function sortTable(columnIndex, isAscending) {
+    const tbody = document.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+  
+    const modifier = isAscending ? 1 : -1;
+    const compare = (rowA, rowB) => {
+      const cellA = rowA.querySelectorAll('td')[columnIndex].textContent.trim();
+      const cellB = rowB.querySelectorAll('td')[columnIndex].textContent.trim();
+  
+      return cellA.localeCompare(cellB) * modifier;
+    };
+  
+    rows.sort(compare);
+  
+    for (let i = 0; i < rows.length; i++) {
+      tbody.appendChild(rows[i]);
+    }
+  }
+  
+
+  const nameSortButton = document.querySelector('#sort-name');
+  let nameSortOrder = 0; // 0 = unsorted, 1 = ascending, 2 = descending
+  nameSortButton.addEventListener('click', () => {
+    const columnIndex = 1; // The index of the Name column
+    if (nameSortOrder === 0 || nameSortOrder === 2) {
+      nameSortOrder = 1;
+    } else {
+      nameSortOrder = 2;
+    }
+    sortTable(columnIndex, nameSortOrder === 1);
+  });
+  
+  const bloodTypeSortButton = document.querySelector('#sort-blood-type');
+  let bloodTypeSortOrder = 0; // 0 = unsorted, 1 = ascending, 2 = descending
+  bloodTypeSortButton.addEventListener('click', () => {
+    const columnIndex = 2; // The index of the Blood Type column
+    if (bloodTypeSortOrder === 0 || bloodTypeSortOrder === 2) {
+      bloodTypeSortOrder = 1;
+    } else {
+      bloodTypeSortOrder = 2;
+    }
+    sortTable(columnIndex, bloodTypeSortOrder === 1);
+  });
+  
+
+
+//const sortLink = document.getElementById("sort-birthday");
+
+//sortLink.addEventListener("click", () => {
+//  const dates = Array.from(document.querySelectorAll(".birthday")).map((elem) => elem.textContent);
+//  const sortedDates = dates.sort((a, b) => new Date(a) - new Date(b));
+ // const list = document.querySelector(".birthday-list");
+ // sortedDates.forEach((date) => {
+  //  const item = list.querySelector(`[data-date="${date}"]`);
+    //list.appendChild(item);
+  //});
+//});
+
+  
+
+  const ageSortButton = document.querySelector('#sort-age');
+  let ageSortOrder = 0; // 0 = unsorted, 1 = ascending, 2 = descending
+  ageSortButton.addEventListener('click', () => {
+    const columnIndex = 6; // The index of the Age column
+    if (ageSortOrder === 0 || ageSortOrder === 2) {
+      ageSortOrder = 1;
+    } else {
+      ageSortOrder = 2;
+    }
+    sortTable(columnIndex, ageSortOrder === 1);
+  });
+  
+  const sexSortButton = document.querySelector('#sort-sex');
+  let sexSortOrder = 0; // 0 = unsorted, 1 = ascending, 2 = descending
+  sexSortButton.addEventListener('click', () => {
+    const columnIndex = 5; // The index of the Sex column
+    if (sexSortOrder === 0 || sexSortOrder === 2) {
+      sexSortOrder = 1;
+    } else {
+      sexSortOrder = 2;
+    }
+    sortTable(columnIndex, sexSortOrder === 1);
+  });
+  
+</script>
+
+{% endblock content%}

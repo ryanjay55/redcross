@@ -42,8 +42,8 @@ def signupPage(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
+            send_registration_email(user)
             messages.success(request, 'Account was created.')
-            # send_registration_email(user)
             return redirect('user_login')
         
     context = {'form': form}
@@ -52,8 +52,8 @@ def signupPage(request):
 
 # METHOD FOR SENDING EMAIL
 def send_registration_email(user):
-    subject = 'Thank you for registering!'
-    message = f'Hi {user.username},\n\nThank you for registering with Lifelink! We appreciate your trust in us and we are committed to providing you with the best service possible.\n\nAccount Information: \nuser-id: {user.id}\nemail:{user.email}\n Note: Do not share this to anyone.'
+    subject = 'Thank you for completing your profile!'
+    message = f'Hi {user.username},\n\nThank you for registering with Lifelink! We appreciate your trust in us and we are committed to providing you with the best service possible.\n\nAccount Information: \n\nemail:{user.email}\n Note: Do not share this to anyone.'
     from_email = 'ryanjayantonio305@gmail.com'
     recipient_list = [user.email]
     send_mail(subject, message, from_email, recipient_list)
@@ -88,7 +88,7 @@ def completeProfile(request):
                 donor_info = form.save(commit=False)
                 donor_info.user = user  # Set the user field to the current user
                 donor_info.save()
-                return redirect('dashboard')  # Redirect to dashboard page or any other appropriate page
+                return redirect('prcusers/dashboard')  # Redirect to dashboard page or any other appropriate page
             else:
                 # If checkboxes are not checked, display an error message
                 messages.info(request, 'You need to read and accept Privacy Policy and Terms & Conditions and understand how your information will be used.')

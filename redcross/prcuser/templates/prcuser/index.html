@@ -16,6 +16,8 @@
         LifeLink 
         {% endblock title %}
     </title>
+    {% block extra_css %}
+    {% endblock extra_css%}
 </head>
 
 <body class="bg-gray-200">
@@ -50,8 +52,6 @@
 
     {% endblock content %} 
 
-    {% block extra_css %}
-    {% endblock extra_css%}
     {% block extra_js %}
     {% endblock extra_js %}
     

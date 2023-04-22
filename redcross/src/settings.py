@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_tailwind',
     'social_django',
+    'custom_admin',
 
  
     
@@ -184,5 +185,5 @@ SOCIAL_AUTH_FACEBOOK_KEY = '761760578806561'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '6ccc4832b23db1579dcba87625ad43cf'  # App 
 
 #key for google
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =  '854065574178-6aju8deb97hvd530jsc6kqdaj1ufl6u3.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET =  '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =  '854065574178-cgigjli9oleavbo9572u03ri565091hk.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET =  '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'

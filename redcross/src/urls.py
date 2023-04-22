@@ -21,6 +21,7 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
     path("", include("prcuser.urls")),
     path("account/",include("account.urls")),
+    path('lifelinkadmin/',include("custom_admin.urls")),
     
     path('oauth/', include('social_django.urls', namespace='social')),  
 ]
