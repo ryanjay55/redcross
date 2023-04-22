@@ -9,179 +9,80 @@
 
 {% block content %}
 
-<div class="flex flex-col items-center py-6">
-  <h2 class="text-3xl font-extrabold text-gray-900 mb-6">Create an account</h2>
+<div class="flex flex-col items-center justify-center px-6 py-0 mx-auto mt-5 lg:py-0">
+  <a href="#" class="flex items-center mb-6 text-3xl font-semibold text-gray-900 dark:text-white">
+  <img class="h-[50px]" src="{% static 'assets/img/Lifelink-logo.png' %}" alt="logo">
+  </a>
+  <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+     <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <h1 class="flex flex-row items-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+           <a href="{% url 'user_login' %}"><img class="h-[25px] mr-3 hover:rounded-md hover:bg-red-200" src="{% static 'assets/icons/back.svg' %}" alt="back icon"></a>
+           <span>Account Registration</span>
+        </h1>
+        {% for message in messages %}
+        <p class="flex items-center justify-center text-white bg-slate-500 p-4 text-xs font-semibold rounded-md">{{message}}</p>
+        {% endfor %}
+        <form class="space-y-4 md:space-y-6" method="post">{% csrf_token %}
 
-  <div class="w-full max-w-md">
-    <form method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      {% csrf_token %}
+           <div class="relative mb-3">
+             <input type="text" name="username" id="" class="hidden"/>
+             <input type="text" name="username" id="floating_username" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
+             <label for="floating_username" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                 <img src="{% static 'assets/icons/user.svg' %}" alt="User Icon" class="inline-block w-[15px] h-auto mr-2">
+                 Username
+             </label>
+         </div>
 
-      <div class="mb-4">
-        <label for="username" class="block text-gray-700 font-bold mb-2">Username</label>
-        {{ form.username }}
-        {% if form.username.errors %}
-        <p class="text-red-500 text-xs italic">{{ form.username.errors|first }}</p>
-        {% endif %}
+         <div class="relative mb-3">
+          <input type="text" name="email" id="" class="hidden"/>
+          <input type="email" name="email" id="floating_email" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
+          <label for="floating_email" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+              <img src="{% static 'assets/icons/user.svg' %}" alt="User Icon" class="inline-block w-[15px] h-auto mr-2">
+              E-mail
+          </label>
       </div>
 
-      <div class="mb-4">
-        <label for="email" class="block text-gray-700 font-bold mb-2">Email address</label>
-        {{ form.email }}
-        {% if form.email.errors %}
-        <p class="text-red-500 text-xs italic">{{ form.email.errors|first }}</p>
-        {% endif %}
+         <div class="relative mb-3">
+             <input type="password" name="password1" id="password1" class="hidden"/>
+             <input type="password" name="password1" id="floating_password1" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
+             <label for="floating_password" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                 <img src="{% static 'assets/icons/lock.svg' %}" alt="Password Icon" class="inline-block w-[15px] h-auto mr-2">
+                 Password
+             </label>
+         </div>
+
+         <div class="relative mb-3">
+          <input type="password" name="password2" id="password2" class="hidden"/>
+          <input type="password" name="password2" id="floating_password2" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
+          <label for="floating_password2" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+              <img src="{% static 'assets/icons/approved.svg' %}" alt="Password Icon" class="inline-block w-[15px] h-auto mr-2">
+              Confirm Password
+          </label>
       </div>
 
-      <div class="mb-4">
-        <label for="password1" class="block text-gray-700 font-bold mb-2">Password</label>
-        {{ form.password1 }}
-        <div id="password-strength"></div>
-        {% if form.password1.errors %}
-          <p class="text-red-500 text-xs italic">{{ form.password1.errors|first }}</p>
-        {% endif %}
-        <p id="password-strength-text"></p>
-      </div>
 
-      <div class="mb-6">
-        <label for="password2" class="block text-gray-700 font-bold mb-2">Confirm password</label>
-        {{ form.password2 }}
-        {% if form.password2.errors %}
-        <p class="text-red-500 text-xs italic">{{ form.password2.errors|first }}</p>
-        {% endif %}
-      </div>
-
-      <div class="flex flex-col sm:flex-row items-center justify-between">
-        <button id="submit-button" type="submit"
-          class="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-500 ease-in-out mb-4 sm:mb-0 sm:mr-4">
-          Sign up
-        </button>
-
-        <a href="{% url 'user_login' %}"
-          class="inline-block align-baseline font-bold text-sm text-indigo-500 hover:text-indigo-800">
-          Already have an account? Login
-        </a>
-      </div>
-    </form>
+           <button type="submit" class="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign Up</button>
+           
+           <div class="inline-flex items-center justify-center w-full">
+              <hr class="w-64 h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
+              <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">or</span>
+           </div>
+           <div class="flex flex-col justify-between items-center">
+              <a href="{% url 'social:begin' 'google-oauth2' %}" class="flex justify-center items-center bg-white border-2 border-red-300 text-gray-800 text-sm py-3 px-6 rounded-sm hover:bg-gray-700 hover:text-white transition duration-200 mb-4 w-full"> 
+              <img src="{% static 'assets/icons/google.svg' %}" alt="Lock Icon" class="w-[15px] h-[25px] mr-5">
+              Continue with Google
+              </a>
+              <a href="{% url 'social:begin' 'facebook' %}" class="bg-white border-2 border-red-300 text-gray-700 py-3 px-6 rounded-md hover:bg-gray-800 hover:text-white transition duration-200 text-sm w-full flex items-center justify-center">
+              <img src="{% static 'assets/icons/036-facebook.svg' %}" alt="Lock Icon" class="w-[15px] h-[25px] mr-5">
+              Continue with Facebook
+              </a>
+           </div>
+           <p class="text-sm font-light text-gray-700 dark:text-gray-400 text-center">
+              Already have an account? <a href="{% url 'user_login' %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500 hover:text-red-600">Login</a>
+           </p>
+        </form>
+     </div>
   </div>
-
 </div>
 
 {% endblock content %}
-
-{% block extra_css %}
-<style>
-  /* Password strength meter styles */
-  #password-strength {
-    height: 10px;
-    margin-top: 0.5rem;
-    background-color: #ddd;
-    position: relative;
-  }
-
-  #password-strength:before,
-  #password-strength:after {
-    content: "";
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: all 0.3s ease;
-  }
-
-  #password-strength:before {
-    background-color: #ff4949;
-    width: 0%;
-  }
-
-  #password-strength:after {
-    background-color: #28a745;
-    width: 0%;
-  }
-
-  #password-strength.weak:before {
-    width: 33%;
-    background-color: #ff4949;
-  }
-
-  #password-strength.medium:before {
-    background-color: #ffa500;
-    width: 66%;
-  }
-
-  #password-strength.strong:before {
-    background-color: #28a745;
-    width: 100%;
-  }
-</style>
-{% endblock extra_css %}
-
-{% block extra_js %}
-<script>
-  // Password strength meter
-  const passwordInput = document.getElementById('id_password1');
-  const strengthMeter = document.getElementById('password-strength');
-  const strengthText = document.getElementById('password-strength-text');
-
-  passwordInput.addEventListener('input', updateStrengthMeter);
-
-  function updateStrengthMeter() {
-    const weaknesses = calculatePasswordWeaknesses(passwordInput.value);
-
-    let strength = 100;
-    strength -= weaknesses.length * 20;
-
-    if (passwordInput.value.length < 8) {
-      strength -= 30;
-    } else if (passwordInput.value.length < 12) {
-      strength -= 15;
-    }
-
-    if (strength < 0) {
-      strength = 0;
-    }
-
-    if (strength <= 33) {
-      strengthMeter.className = 'weak';
-      strengthText.textContent = 'Weak';
-      strengthText.style.color = '#ff4949';
-    } else if (strength <= 66) {
-      strengthMeter.className = 'medium';
-      strengthText.textContent = 'Medium';
-      strengthText.style.color = '#ffa500';
-    } else {
-      strengthMeter.className = 'strong';
-      strengthText.textContent = 'Strong';
-      strengthText.style.color = '#28a745';
-    }
-
-    strengthMeter.querySelectorAll(':before')[0].style.width = strength + '%';
-    strengthMeter.querySelectorAll(':after')[0].style.width = (100 - strength) + '%';
-  }
-
-  function calculatePasswordWeaknesses(password) {
-    const weaknesses = [];
-
-    if (password.length < 8) {
-      weaknesses.push('too short');
-    }
-
-    if (!/[a-z]/.test(password)) {
-      weaknesses.push('no lowercase letters');
-    }
-
-    if (!/[A-Z]/.test(password)) {
-      weaknesses.push('no uppercase letters');
-    }
-
-    if (!/\d/.test(password)) {
-      weaknesses.push('no numbers');
-    }
-
-    if (!/[^0-9a-zA-Z]/.test(password)) {
-        weaknesses.push('no special characters');
-    }
-    
-    return weaknesses;
-}
-</script>
-{% endblock extra_js %}

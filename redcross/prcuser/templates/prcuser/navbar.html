@@ -2,11 +2,47 @@
 {% load static tailwind_tags %}
 {% tailwind_css %}
 
-<nav class=" bg-white shadow-md flex items-center p-4 rounded-t-2xl justify-around">
+
+<nav class="">
+    <div class="max-w-screen-xl  p-4">
+      <a href="{% url 'home' %}">
+          <img src="{% static 'assets/img/Lifelink-logo.png' %}" class="h-[50px] ml-5 mt-5" alt="LifeLink Logo" />
+      </a>
+    </div>
+    <div>
+        <nav class="">
+            <div class="max-w-screen-xl px-4 py-3 mx-auto">
+                <div class="flex items-center">
+                    <ul class="flex flex-row font-medium mt-0 mr-6 space-x-8 text-md">
+                        <li>
+                            <a href="{% url 'home' %}" class="text-gray-900 dark:text-white hover:underline mr-5  {% if navbar == 'home' %} underline text-red-600{% endif %}" aria-current="page">Home</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-900 dark:text-white hover:underline mr-5">News and Events</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-900 dark:text-white hover:underline mr-5">Blood Banks</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-900 dark:text-white hover:underline mr-5">About</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-900 dark:text-white hover:underline mr-5">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</nav>
+
+
+
+<!-- <nav class="shadow-md flex items-center p-4 rounded-t-2xl justify-around">
 
     <div class="flex items-center">
         <a href="{% url 'home' %}"><img src="{% static 'assets/img/Lifelink-logo.png' %}" alt="logo" class="h-[100px] w-[320px] cursor-pointer mt-5"></a>
-         <!-- <a href="{% url 'home' %}" class="text-[4rem] font-bold text-red-600">LifeLink</a> -->
+         <a href="{% url 'home' %}" class="text-[4rem] font-bold text-red-600">LifeLink</a>
     </div>
     
 
@@ -21,9 +57,9 @@
             <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white duration-300 hover:bg-red-500 hover:rounded-md">News &amp; Events</a></li>
             <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white duration-300 hover:bg-red-500 hover:rounded-md">Blood Bank</a></li>
             <li class="list-none inline-block mx-2 "><a href="#" class="no-underline font-semibold text-2xl tracking-normal text-gray-600 px-5 py-3 hover:text-white duration-300 hover:bg-red-500 hover:rounded-md">Contact</a></li>
-            <!-- <span><a href="{% url 'user_logout' %}">Logout</a></span> -->
+            <span><a href="{% url 'user_logout' %}">Logout</a></span>
         </ul>
     </div>
     
 
-</nav>
+</nav> -->

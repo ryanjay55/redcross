@@ -1,116 +1,64 @@
 {% extends "prcuser/index.html" %}
 {% load static %}
 {% load static tailwind_tags %}
-
 {% block title %}
-  LifeLink | Login
+LifeLink | Login
 {% endblock title %}
-
 {% block content %}
-
-<!-- <div class="flex items-center justify-center mt-4">
-    <div class="bg-white p-8 rounded shadow-md w-[520px]">
-      <h1 class="text-3xl font-bold mb-6 text-center">LifeLink Login</h1>
-      <form>
-        <div class="mb-6">
-          <label for="email" class="block text-gray-700 font-bold text-lg mb-2">Username</label>
-          <div class="flex items-center border border-gray-400 rounded-md p-2">
-            <span class="px-3">
-              <i class='bx bxs-user'></i>
-            </span>
-            <input type="email" id="email" name="email" class="w-full py-3 px-4 placeholder-gray-500 text-gray-700 focus:outline-none text-md" placeholder="Enter your username" required />
+<div class="flex flex-col items-center justify-center px-6 py-0 mx-auto mt-5 lg:py-0">
+   <a href="#" class="flex items-center mb-6 text-3xl font-semibold text-gray-900 dark:text-white">
+   <img class="h-[50px]" src="{% static 'assets/img/Lifelink-logo.png' %}" alt="logo">
+   </a>
+   <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+         <h1 class="flex flex-row items-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            <a href="{% url 'home' %}"><img class="h-[25px] mr-3 hover:rounded-md hover:bg-red-200" src="{% static 'assets/icons/back.svg' %}" alt="back icon"></a>
+            <span>Sign In</span>
+         </h1>
+         {% for message in messages %}
+         <p class="flex items-center justify-center text-white bg-slate-500 p-4 text-xs font-semibold rounded-md">{{message}}</p>
+         {% endfor %}
+         <form class="space-y-4 md:space-y-6" method="post">
+            {% csrf_token %}
+            <div class="relative mb-3">
+              <input type="text" name="username" id="" class="hidden"/>
+              <input type="text" name="username" id="floating_username" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
+              <label for="floating_username" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                  <img src="{% static 'assets/icons/user.svg' %}" alt="User Icon" class="inline-block w-[15px] h-auto mr-2">
+                  Username
+              </label>
           </div>
-        </div>
-        <div class="mb-6">
-          <label for="password" class="block text-gray-700 font-bold text-lg mb-2">Password</label>
-          <div class="flex items-center border border-gray-400 rounded-md p-2">
-            <span class="px-3">
-              <i class='bx bxs-lock-alt'></i>
-            </span>
-            <input type="password" id="password" name="password" class="w-full py-3 px-4 placeholder-gray-500 text-gray-700 focus:outline-none text-md" placeholder="Enter your password" required />
+          <div class="relative mb-3">
+              <input type="password" name="password" id="password" class="hidden"/>
+              <input type="password" name="password" id="floating_password" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
+              <label for="floating_password" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                  <img src="{% static 'assets/icons/lock.svg' %}" alt="Password Icon" class="inline-block w-[15px] h-auto mr-2">
+                  Password
+              </label>
           </div>
-        </div>
-        <button type="submit" class="bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition duration-200 w-full text-md">Sign In</button>
-        <a href="#" class="flex items-center text-black-500 font-bold hover:text-blue-700 transition duration-200 justify-center mt-4">
-          <span class="ml-2">Forgot password?</span>
-        </a>
-      </form>
-      <hr class="my-4 border-gray-400" />
-      <span class="text-gray-400 mx-2 flex items-center justify-center">OR</span>
-        
-      <div class="mt-4 flex flex-col justify-center items-center ">
-        <button aria-label="Sign in with Google" class="bg-red-500 text-white py-3 px-6 rounded-md hover:bg-red-600 transition duration-200 mb-4 text-md w-full" id="google-signin">
-          <i class="bx bxl-google mr-2"></i>
-          Continue with Google
-        </button>
-        <button aria-label="Sign in with Facebook" class="bg-blue-500 text-white py-3 px-6 rounded-md hover:bg-blue-600 transition duration-200 text-md w-full">
-          <i class="bx bxl-facebook mr-2"></i>
-          Continue with Google
-        </button>
+            <button type="submit" class="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
+            <div class="flex items-center justify-center">
+               <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+            </div>
+            <div class="inline-flex items-center justify-center w-full">
+               <hr class="w-64 h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
+               <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">or</span>
+            </div>
+            <div class="flex flex-col justify-between items-center">
+               <a href="{% url 'social:begin' 'google-oauth2' %}" class="flex justify-center items-center bg-white border-2 border-red-300 text-gray-800 text-sm py-3 px-6 rounded-sm hover:bg-gray-700 hover:text-white transition duration-200 mb-4 w-full"> 
+               <img src="{% static 'assets/icons/google.svg' %}" alt="Lock Icon" class="w-[15px] h-[25px] mr-5">
+               Continue with Google
+               </a>
+               <a href="{% url 'social:begin' 'facebook' %}" class="bg-white border-2 border-red-300 text-gray-700 py-3 px-6 rounded-md hover:bg-gray-800 hover:text-white transition duration-200 text-sm w-full flex items-center justify-center">
+               <img src="{% static 'assets/icons/036-facebook.svg' %}" alt="Lock Icon" class="w-[15px] h-[25px] mr-5">
+               Continue with Facebook
+               </a>
+            </div>
+            <p class="text-sm font-light text-gray-700 dark:text-gray-400 text-center">
+               Don’t have an account yet? <a href="{% url 'user_signup' %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500 hover:text-red-600">Sign Up</a>
+            </p>
+         </form>
       </div>
-        
-      <div class="mt-4">
-              <span class="w-full flex justify-center">Don't have an account? <a href="{% url 'user_signup' %}" class="flex items-center text-blue-500 font-bold hover:text-blue-600 transition duration-200 mx-1">Register </a>now</span>
-      </div>
-    </div>
-  </div>
-   -->
-
-<div class="flex items-center justify-center">
-
-    <div class="bg-white p-8 rounded-xl shadow-lg w-[620px]">
-      <h1 class="text-2xl font-bold mb-6 text-center">LifeLink Sign in</h1>
-        {% for message in messages %}
-          <p class="flex items-center justify-center text-white bg-slate-500 p-4 text-md font-semibold rounded-md">{{message}}</p>
-        {% endfor %}
-        <form method="post" action="">{% csrf_token %}
-
-          <div class="mb-6">
-            <label for="email" class="block text-gray-700 font-bold text-sm mb-2">Username</label>
-                <div class="flex items-center border border-gray-400 rounded-md p-2">
-                   <span class="px-3">
-                    <img src="{% static 'assets/icons/user.svg' %}" alt="User Icon" class="w-[40px] h-[25px]">
-                  </span>
-                  <input type="text" id="email" name="username" class="w-full py-3 px-4 placeholder-gray-500 text-sm text-gray-700 focus:outline-none rounded-lg" placeholder="Enter your username" required />
-                </div>
-          </div>
-
-          <div class="mb-6">
-
-            <label for="password" class="block text-gray-700 font-bold text-sm mb-2">Password</label>
-                <div class="flex items-center border border-gray-400 rounded-md p-2">
-                  <span class="px-3">
-                    <img src="{% static 'assets/icons/lock.svg' %}" alt="Lock Icon" class="w-[40px] h-[25px]">
-                  </span>
-                  <input type="password" id="password" name="password" class="w-full py-3 px-4 placeholder-gray-500 text-sm text-gray-700 focus:outline-none rounded-lg" placeholder="Enter your password" required />
-                </div>
-          </div>
-
-          <button type="submit" class="bg-blue-700 text-white py-3 px-6 rounded-md hover:bg-blue-900 transition duration-200 w-full text-sm">Sign In</button>
-          <a href="#" class="flex items-center text-blue-500 font-bold hover:text-blue-700 transition duration-200 justify-center mt-4">
-            <span class="ml-2">Forgot password?</span>
-          </a>
-
-        </form>
-
-      <hr class="my-4 border-gray-400" />
-      <span class="text-gray-400 mx-2 flex items-center justify-center">OR</span>
-      <div class="mt-4 flex flex-col justify-center items-center">
-        <a href="{% url 'social:begin' 'google-oauth2' %}" class="bg-gray-200 text-black py-3 px-6 rounded-md hover:bg-gray-700 hover:text-white transition duration-200 mb-4 text-sm w-full flex justify-center items-center"> 
-          <img src="{% static 'assets/icons/google.svg' %}" alt="Lock Icon" class="w-[40px] h-[25px] mr-1">
-          Continue with Google
-        </a>
-        <a href="{% url 'social:begin' 'facebook' %}" class="bg-gray-200 text-black py-3 px-6 rounded-md hover:bg-gray-700 hover:text-white transition duration-200 text-sm w-full flex items-center justify-center">
-          <img src="{% static 'assets/icons/036-facebook.svg' %}" alt="Lock Icon" class="w-[40px] h-[25px] ">
-          Continue with Facebook
-        </a>
-      </div>
-          
-      <div class="mt-4">
-        <span class="w-full flex justify-center">Don't have an account? <a href="{% url 'user_signup' %}" class="flex items-center text-blue-500 font-bold hover:text-blue-600 transition duration-200 mx-1">Register</a> now</span>
-      </div>
-    </div>
-
+   </div>
 </div>
-
 {% endblock content %}

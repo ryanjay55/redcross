@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.models import User
 from .forms import CreateUserForm,CompleteProfileForm
 from django.contrib.auth.decorators import login_required
 import requests
@@ -23,7 +24,7 @@ def loginPage(request):
             try:
                 DonorInfo.objects.get(user=user)
                 # Redirect to dashboard page if user has complete profile
-                return redirect('dashboard')
+                return redirect('user-dashboard')
             except DonorInfo.DoesNotExist:
                 # Redirect to complete profile page if user does not have complete profile
                 return redirect('completeProfile')
@@ -34,21 +35,40 @@ def loginPage(request):
     return render(request, 'account/userlogin.html')
 
 
-def signupPage(request):
-    form = CreateUserForm()
+# def signupPage(request):
+#     form = CreateUserForm()
     
+#     if request.method == 'POST':
+#         form = CreateUserForm(request.POST)
+#         if form.is_valid():
+#             user = form.save(commit=False)
+#             user.save()
+#             send_registration_email(user)
+#             messages.success(request, 'Account was created.')
+#             return redirect('user_login')
+        
+#     context = {'form': form}
+#     return render(request, 'account/usersignup.html',context)
+def signupPage(request):
     if request.method == 'POST':
-        form = CreateUserForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password1']
+        confirm_password = request.POST['password2']
+        if password == confirm_password:
+            # Create the user object
+            user = User.objects.create_user(username=username, email=email, password=password)
             user.save()
-            send_registration_email(user)
+            # send_registration_email(user)
             messages.success(request, 'Account was created.')
             return redirect('user_login')
-        
-    context = {'form': form}
-    return render(request, 'account/usersignup.html',context)
-
+        else:
+            # Return an error message if the passwords don't match
+            context = {'error': 'Passwords do not match'}
+            return render(request, 'account/usersignup.html', context)
+    else:
+        # Render the signup page if the request method is GET
+        return render(request, 'account/usersignup.html')
 
 # METHOD FOR SENDING EMAIL
 def send_registration_email(user):
