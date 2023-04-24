@@ -1,4 +1,4 @@
-{% extends "prcuser/index.html" %}
+{% extends "account/base.html" %}
 {% load static %}
 {% load static tailwind_tags %}
 {% block title %}
@@ -16,8 +16,8 @@ LifeLink | Login
             <span>Sign In</span>
          </h1>
          {% for message in messages %}
-         <p class="flex items-center justify-center text-white bg-slate-500 p-4 text-xs font-semibold rounded-md">{{message}}</p>
-         {% endfor %}
+         <p class="text-gray-800 bg-gray-300 p-4 text-xs font-semibold rounded-md flex justify-center">{{message}}</p>
+         {% endfor %} 
          <form class="space-y-4 md:space-y-6" method="post">
             {% csrf_token %}
             <div class="relative mb-3">
@@ -45,11 +45,11 @@ LifeLink | Login
                <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">or</span>
             </div>
             <div class="flex flex-col justify-between items-center">
-               <a href="{% url 'social:begin' 'google-oauth2' %}" class="flex justify-center items-center bg-white border-2 border-red-300 text-gray-800 text-sm py-3 px-6 rounded-sm hover:bg-gray-700 hover:text-white transition duration-200 mb-4 w-full"> 
+               <a href="{% url 'social:begin' 'google-oauth2' %}" class="flex justify-center items-center bg-white border-2 border-red-300 text-gray-700 text-sm py-3 px-6 rounded-sm hover:bg-red-500 hover:text-white transition duration-200 mb-4 w-full"> 
                <img src="{% static 'assets/icons/google.svg' %}" alt="Lock Icon" class="w-[15px] h-[25px] mr-5">
                Continue with Google
                </a>
-               <a href="{% url 'social:begin' 'facebook' %}" class="bg-white border-2 border-red-300 text-gray-700 py-3 px-6 rounded-md hover:bg-gray-800 hover:text-white transition duration-200 text-sm w-full flex items-center justify-center">
+               <a href="{% url 'social:begin' 'facebook' %}" class="bg-white border-2 border-red-300 text-gray-700 py-3 px-6 rounded-md hover:bg-red-500 hover:text-white transition duration-200 text-sm w-full flex items-center justify-center">
                <img src="{% static 'assets/icons/036-facebook.svg' %}" alt="Lock Icon" class="w-[15px] h-[25px] mr-5">
                Continue with Facebook
                </a>

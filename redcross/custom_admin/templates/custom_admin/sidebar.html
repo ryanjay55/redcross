@@ -1,0 +1,82 @@
+{% load tailwind_filters %}
+{% load static %}
+{% load static tailwind_tags %}
+
+<div class="min-h-screenduration-500 ease-in-out ">
+    <div class="sidebar min-h-screen w-[50px] overflow-hidden border-r hover:w-56 bg-gradient-to-b from-black to-red-800 hover:shadow-lg">
+      <div class="flex h-screen flex-col justify-between pt-2 pb-6">
+        <div>
+          <div class="w-max">
+            <div class="flex flex-row items-center justify-center">
+              <img src="{% static 'assets/img/prc.png' %}" alt="Search icon" class="w-[50px]">
+            </div>
+          </div>
+          <ul class="mt-1 space-y-2 tracking-wide">
+            <li class="min-w-max flex flex-col items-center justify-center">
+              <span aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3">
+                <img src="" class="w-[20px]">
+              </span>
+              <span class="-mr-1 font-medium text-center text-white mb-2"><span class="text-red-500">Life</span>Link</span>
+              <a href="#" class="hover:underline hover:text-white">
+              <div class="flex flex-row">
+                <img src="{% static 'assets/icons/eye.svg' %}" alt="view icon" class="w-[20px]">
+                <span class="text-white text-xs ml-2">Activity Log</span>
+             
+              </div>
+            </a>
+
+              <hr class="w-48 h-[0.5px] mx-auto my-4 bg-gray-50 border-0 rounded md:my-5 dark:bg-gray-700">
+            </li>
+            <li class="min-w-max">
+              <a href="{% url 'dashboard' %}" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-700 hover:rounded-md">
+                <img src="{% static 'assets/icons/layout.svg' %}" alt="dashboard icon" class="w-[20px]">
+                <span class="-mr-1 font-medium">Dashboard</span>
+              </a>
+            </li>
+            <li class="min-w-max">
+                <a href="{% url 'users-list' %}" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-700 hover:rounded-md">
+                  <img src="{% static 'assets/icons/group-of-users-silhouette.svg' %}" alt="users icon" class="w-[20px]">
+                  <span class="-mr-1 font-medium">Users</span>
+                </a>
+              </li>
+              <li class="min-w-max">
+                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-700 hover:rounded-md">
+                  <img src="{% static 'assets/icons/blood-bag.svg' %}" alt="blood bag icon" class="w-[20px]">
+                  <span class="-mr-1 font-medium">Blood Bags</span>
+                </a>
+              </li>
+              <li class="min-w-max">
+                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-700 hover:rounded-md">
+                  <img src="{% static 'assets/icons/donor.svg' %}" alt="Search icon" class="w-[20px]">
+                  <span class="-mr-1 font-medium">Donor List</span>
+                </a>
+              </li>
+              <li class="min-w-max">
+                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-700 hover:rounded-md">
+                  <img src="{% static 'assets/icons/life-insurance (1).svg' %}" alt="stock icon" class="w-[20px]">
+                  <span class="-mr-1 font-medium">Transfusion Record</span>
+                </a>
+              </li>
+              <li class="min-w-max">
+                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-700 hover:rounded-md">
+                  <img src="{% static 'assets/icons/post-office.svg' %}" alt="Search icon" class="w-[20px]">
+                  <span class="-mr-1 font-medium">Donor Post</span>
+                </a>
+              </li>
+              <li class="min-w-max">
+                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-700 hover:rounded-md ">
+                  <img src="{% static 'assets/icons/megaphone.svg' %}" alt="Search icon" class="w-[20px]">
+                  <span class="-mr-1 font-medium">News and Events</span>
+                </a>
+              </li>
+          </ul>
+        </div>
+        <div class="min-w-max -mb-3">
+          <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-700 hover:rounded-md">
+            <img src="{% static 'assets/icons/logout.svg' %}" alt="Search icon" class="w-[30px]">
+            <span class="-mr-1 font-medium">Logout</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>

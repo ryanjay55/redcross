@@ -19,8 +19,10 @@ def home(request):
 
 @login_required(login_url='user_logout')
 def dashboard(request):
-    context = {'request': request}
+    context = {'navbar': dashboard}
     return render(request, 'prcuser/dashboard.html',context)
+
+
 
     
 

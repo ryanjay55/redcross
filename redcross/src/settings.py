@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-6@l6%%$mlprwtyer@3_7++qabi1d^smv!)$bdgu3q61wqc-*)y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -102,8 +102,12 @@ WSGI_APPLICATION = 'src.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'lifelink',
+        'USER': 'root',
+        'PASSWORD': '123456789',
+        'PORT': '3306',
+        'HOST': 'localhost',
     }
 }
 

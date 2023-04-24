@@ -1,29 +1,70 @@
+{% load tailwind_filters %}
 {% load static %}
 {% load static tailwind_tags %}
-{% tailwind_css %}
 
+<div class="min-h-screen duration-500 ease-in-out">
+    <div class="sidebar min-h-screen w-[58px] overflow-hidden border-r hover:w-56 bg-gradient-to-b from-red-600 to-red-800 hover:shadow-lg">
+      <div class="flex h-screen flex-col justify-between pt-2 pb-6">
+        <div>
+          <div class="w-max">
+            <div class="flex flex-row items-center justify-center">
+              <img src="{% static 'assets/img/prc.png' %}" alt="Search icon" class="w-[50px]">
+            </div>
+          </div>
+          <ul class="mt-1 space-y-2 tracking-wide">
+            <!-- <li class="min-w-max flex flex-col items-center justify-center">
+              <span aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3">
+                <img src="" class="w-[20px]">
+              </span>
+              <span class="-mr-1 font-medium text-center text-white mb-2"><span class="text-red-500">Life</span>Link</span>
+              <a href="#" class="hover:underline hover:text-white">
+              <div class="flex flex-row">
+                <img src="{% static 'assets/icons/eye.svg' %}" alt="view icon" class="w-[20px]">
+                <span class="text-white text-xs ml-2">Activity Log</span>
+              </div>
+            </a> -->
 
-<div class="relative bg-gray-900 text-white min-h-screen flex flex-col justify-between w-[300px] text-center">
-    <div class="p-6">
-        <div class="text-center">
-            <img src="{% static 'assets/img/logo.png' %}" alt="Profile Picture" class="mx-auto w-20 h-20 rounded-full mb-4">
-            {% if user.is_authenticated %}
-            <h3 class="text-2xl font-semibold mb-6">{{user.firstname}}</h3>
-            {% endif %}
+              <hr class="w-48 h-[0.5px] mx-auto my-4 bg-gray-50 border-0 rounded md:my-5 dark:bg-gray-700">
+            </li>
+            <li class="min-w-max">
+              <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-800 hover:rounded-md">
+                <img src="{% static 'assets/icons/user (1).svg' %}" alt="profile icon" class="w-[25px]">
+                <span class="-mr-1 font-medium">Profile</span>
+              </a>
+            </li>
+            <li class="min-w-max">
+              <a href="#}" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-800 hover:rounded-md {% if sidebar == 'dashboard' %} underline text-blue-800{% endif %}">
+                <img src="{% static 'assets/icons/dashboard (2).svg' %}" alt="dashboard icon" class="w-[25px]">
+                <span class="-mr-1 font-medium">Dashboard</span>
+              </a>
+            </li>
+              <li class="min-w-max">
+                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-800 hover:rounded-md">
+                  <img src="{% static 'assets/icons/history.svg' %}" alt="blood bag icon" class="w-[25px]">
+                  <span class="-mr-1 font-medium">Donation History</span>
+                </a>
+              </li>
+              <li class="min-w-max">
+                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-800 hover:rounded-md">
+                  <img src="{% static 'assets/icons/network.svg' %}" alt="Search icon" class="w-[25px]">
+                  <span class="-mr-1 font-medium text-sm">Blood Donor Network</span>
+                </a>
+              </li>
+              <li class="min-w-max">
+                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-800 hover:rounded-md">
+                  <img src="{% static 'assets/icons/process.svg' %}" alt="stock icon" class="w-[25px]">
+                  <span class="-mr-1 font-medium">Blood Journey</span>
+                </a>
+              </li>
+              
+          </ul>
         </div>
-        <hr class="my-6 border-gray-800">
-        <nav class="space-y-2">
-            <a href="#" class="block px-4 py-2 hover:bg-gray-800">Dashboard</a>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-800">News and Events</a>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-800">Donation History</a>
-        </nav>
+        <div class="min-w-max -mb-3">
+          <a href="{% url 'user_logout' %}" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-blue-800 hover:rounded-md">
+            <img src="{% static 'assets/icons/logout (1).svg' %}" alt="Search icon" class="w-[25px]">
+            <span class="-mr-1 font-medium">Logout</span>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="p-6">
-        <ul class="space-y-2">
-            <a href="{% url 'user_logout' %}"><li class="block px-4 py-2 hover:bg-gray-800">Logout</li></a>
-        </ul>
-    </div>
-</div>
-  
-
-
+  </div>

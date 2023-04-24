@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeLink | Admin
-    </title>
-</head>
-<body>
-    <h1>Dashboard</h1>
-</body>
-</html>
+{% extends "custom_admin/base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% load static tailwind_tags %}
+{% block title %}Admin | Dashboard{% endblock title %}
+{% tailwind_css %}
+
+{% block content %}
+
+<div class="flex flex-row">
+    <div>
+        {% include "custom_admin/sidebar.html" %}
+    </div>
+    <div>
+
+    </div>
+</div>
+{% endblock content%}

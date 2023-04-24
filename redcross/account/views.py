@@ -8,6 +8,9 @@ from django.contrib.auth.decorators import login_required
 import requests
 from .utils import generate_user_id
 from .models import DonorInfo
+from django.http import JsonResponse
+
+
 
 
 def loginPage(request):
@@ -35,26 +38,18 @@ def loginPage(request):
     return render(request, 'account/userlogin.html')
 
 
-# def signupPage(request):
-#     form = CreateUserForm()
-    
-#     if request.method == 'POST':
-#         form = CreateUserForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)
-#             user.save()
-#             send_registration_email(user)
-#             messages.success(request, 'Account was created.')
-#             return redirect('user_login')
-        
-#     context = {'form': form}
-#     return render(request, 'account/usersignup.html',context)
 def signupPage(request):
     if request.method == 'POST':
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password1']
         confirm_password = request.POST['password2']
+        
+        # Check if the username is already taken
+        if User.objects.filter(username=username).exists():
+            context = {'error': 'Username is already taken'}
+            return render(request, 'account/usersignup.html', context)
+        
         if password == confirm_password:
             # Create the user object
             user = User.objects.create_user(username=username, email=email, password=password)
@@ -64,11 +59,13 @@ def signupPage(request):
             return redirect('user_login')
         else:
             # Return an error message if the passwords don't match
-            context = {'error': 'Passwords do not match'}
+            context = {'password_error': 'Passwords do not match'}
             return render(request, 'account/usersignup.html', context)
     else:
         # Render the signup page if the request method is GET
         return render(request, 'account/usersignup.html')
+
+
 
 # METHOD FOR SENDING EMAIL
 def send_registration_email(user):
@@ -108,7 +105,7 @@ def completeProfile(request):
                 donor_info = form.save(commit=False)
                 donor_info.user = user  # Set the user field to the current user
                 donor_info.save()
-                return redirect('prcusers/dashboard')  # Redirect to dashboard page or any other appropriate page
+                return redirect('user-dashboard')  # Redirect to dashboard page or any other appropriate page
             else:
                 # If checkboxes are not checked, display an error message
                 messages.info(request, 'You need to read and accept Privacy Policy and Terms & Conditions and understand how your information will be used.')

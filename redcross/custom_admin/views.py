@@ -3,22 +3,28 @@ from account.models import DonorInfo
 import xlwt
 from django.http import HttpResponse
 from datetime import datetime
+from xlwt import easyxf
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 # Create your views here.
 def dashboard(request):
     
-    return render(request, 'custom_admin/dashboard.html')
+    return render(request, 'custom_admin/dashboard.html',{'sidebar':dashboard})
 
-def users(request):
-    users = DonorInfo.objects.all()
-    return render(request, 'custom_admin/users.html', {'users': users})
+def usersList(request):
+    user_list = DonorInfo.objects.all()
+    paginator = Paginator(user_list, 6)
+    page = request.GET.get('page')
+    users = paginator.get_page(page)
+    return render(request, 'custom_admin/users.html', {'users': users, 'sidebar':users})
 
 
 
 def export_donors_info(request):
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="donors.xls"'
+    response['Content-Disposition'] = 'attachment; filename="UserList.xls"'
 
     wb = xlwt.Workbook(encoding='utf-8')
     ws = wb.add_sheet('Donors')
@@ -37,13 +43,22 @@ def export_donors_info(request):
     # Write donor data in worksheet
     font_style = xlwt.XFStyle()
 
+    # Define custom date format
+    date_format = easyxf(num_format_str='MMMM DD, YYYY')
+
     rows = DonorInfo.objects.all().values_list('info_id', 'firstname', 'lastname', 'blood_type', 'date_of_birth', 'email', 'address', 'sex', 'occupation', 'age', 'contact_number', 'completed_at','is_privacy_accepted_terms_accepted','is_consent_accepted')
     for row in rows:
         row_num += 1
         for col_num, cell_value in enumerate(row):
-            if isinstance(cell_value, datetime):
+            if col_num == 4: # If the column is Date of Birth
+                cell_value = datetime.strptime(str(cell_value), '%Y-%m-%d').date()
+                ws.write(row_num, col_num, cell_value, date_format)
+            elif isinstance(cell_value, datetime):
                 cell_value = cell_value.strftime('%d-%m-%Y %H:%M:%S')
-            ws.write(row_num, col_num, cell_value, font_style)
+                ws.write(row_num, col_num, cell_value, font_style)
+            else:
+                ws.write(row_num, col_num, cell_value, font_style)
 
     wb.save(response)
     return response
+
