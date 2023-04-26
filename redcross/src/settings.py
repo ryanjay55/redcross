@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'crispy_tailwind',
     'social_django',
     'custom_admin',
+    'inventory',
+    
 
  
     

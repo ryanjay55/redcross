@@ -1,0 +1,43 @@
+{% load static %}
+<!-- Add blood Bag Modal-->
+<div id="view-blood-modal{{user.info_id}}" class="fixed flex justify-center items-center z-50 modal hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-gray-200 rounded-lg shadow">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t">
+                <h3 class="text-xl font-semibold text-gray-900">
+                   {{ user.firstname }} {{ user.lastname }}
+                </h3>
+                <h3 class="text-lg font-semibold text-gray-900">
+                    Info ID: <span class="text-red-700 text-lg">{{ user.pk}}</span>
+                </h3>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6 space-y-6">
+                
+                    <div class="relative mb-3">
+                       <span>Age: {{user.age}}</span> <br>
+                       <span>Address: {{user.address}}</span><br>
+                       <span>saka ko na dagdag iba hehe</span>
+                    </div>
+                    
+                    <!-- Modal footer -->
+                    <div class="flex justify-end">
+                        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
+                            <button
+                                id="cancel-btn"
+                                type="button"
+                                class="text-black bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- End of Add blood Bag Modal-->
+</div>

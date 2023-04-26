@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from account.models import DonorInfo
+from inventory.models import BloodBags
 import xlwt
 from django.http import HttpResponse
 from datetime import datetime
 from xlwt import easyxf
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import F
+from django.db.models.functions import ExtractYear
 
 
 # Create your views here.
@@ -14,13 +16,80 @@ def dashboard(request):
     return render(request, 'custom_admin/dashboard.html',{'sidebar':dashboard})
 
 def usersList(request):
-    user_list = DonorInfo.objects.all()
-    paginator = Paginator(user_list, 6)
-    page = request.GET.get('page')
-    users = paginator.get_page(page)
-    return render(request, 'custom_admin/users.html', {'users': users, 'sidebar':users})
+    donors = DonorInfo.objects.all()
+    serial_exists_error = ''
+    if request.method == 'POST':
+        # Handle the modal form data here
+        info_id = request.POST.get('info_id')
+        serial_no = request.POST.get('serial_no')
+        date_donated = request.POST.get('date_donated')
+        bled_by = request.POST.get('bled_by')
+
+        if not info_id:
+            # Return an error message if info_id is empty or None
+            return HttpResponse('Error: DonorInfo record id is required')
+
+        # Check if DonorInfo record with id exists in database
+        try:
+            donor_info = DonorInfo.objects.get(pk=info_id)
+        except DonorInfo.DoesNotExist:
+            # Return an error message if the record does not exist
+            return HttpResponse('Error: DonorInfo record with id {} does not exist'.format(info_id))
+
+        # Check if the entered serial number already exists in the database
+        if BloodBags.objects.filter(serial_no=serial_no).exists():
+            serial_exists_error = 'Serial number already exists.'
+
+        # Create a new BloodBags instance based on the form data and DonorInfo record
+        blood_bag = BloodBags(
+            info_id=donor_info,
+            serial_no=serial_no,
+            date_donated=date_donated,
+            bled_by=bled_by,
+        )
+        blood_bag.save()
+        
+    sort_param = request.GET.get('sort', 'completed_at')  # default sort by completion date
+    if sort_param == 'firstname':
+        user_list = DonorInfo.objects.order_by('firstname')
+    elif sort_param == 'blood_type':
+        user_list = DonorInfo.objects.order_by('blood_type')
+    elif sort_param == 'sex':
+        user_list = DonorInfo.objects.order_by('sex')
+    elif sort_param == 'age_asc':
+        user_list = DonorInfo.objects.annotate(
+            computed_age=ExtractYear(F('completed_at')) - ExtractYear(F('date_of_birth'))
+        ).order_by('age')
+    else:
+        user_list = DonorInfo.objects.order_by('-completed_at')
+    paginator = Paginator(user_list, 7)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    # Pass the current sort parameter value to the pagination links
+    if sort_param == 'firstname':
+        page_obj.sort_param = '&sort=firstname'
+    elif sort_param == 'blood_type':
+        page_obj.sort_param = '&sort=blood_type'
+    elif sort_param == 'sex':
+        page_obj.sort_param = '&sort=sex'
+    elif sort_param == 'age_asc':
+        page_obj.sort_param = '&sort=age_asc'
+    else:
+        page_obj.sort_param = ''
+    # Pass the current sort parameter value to the next and previous page links
+    if page_obj.has_previous():
+        page_obj.previous_page_number_param = f'&sort={sort_param}&page={page_obj.previous_page_number()}'
+    if page_obj.has_next():
+        page_obj.next_page_number_param = f'&sort={sort_param}&page={page_obj.next_page_number()}'
+    rows = [{'id': user.pk, 'firstname': user.firstname, 'lastname': user.lastname} for user in page_obj]
+    return render(request, 'custom_admin/users.html', {'users': page_obj, 'sidebar': page_obj, 'modal': True, 'rows': rows,'donors':donors,'serial_exists_error':serial_exists_error})
 
 
+def donorList(request):
+    return render(request, 'custom_admin/donorlist.html')
+
+def bloodBagList(request):
+    return render(request, 'custom_admin/bloodbaglist.html')
 
 def export_donors_info(request):
     response = HttpResponse(content_type='application/ms-excel')
