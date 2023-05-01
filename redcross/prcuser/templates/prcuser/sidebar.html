@@ -27,33 +27,33 @@
               <hr class="w-48 h-[0.5px] mx-auto my-4 bg-gray-50 border-0 rounded md:my-5 dark:bg-gray-700">
             </li>
             <li class="min-w-max">
-              <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-red-900 hover:rounded-md">
+              <a href="{% url 'profile' %}" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-red-900 hover:rounded-md">
                 <img src="{% static 'assets/icons/user (1).svg' %}" alt="profile icon" class="w-[25px]">
                 <span class="-mr-1 font-medium">Profile</span>
               </a>
             </li>
             <li class="min-w-max">
-              <a href="#}" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-red-900 hover:rounded-md {% if sidebar == 'dashboard' %} underline text-blue-800{% endif %}">
+              <a href="{% url 'user-dashboard' %}" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-red-900 hover:rounded-md {% if sidebar == 'dashboard' %} underline text-blue-800{% endif %}">
                 <img src="{% static 'assets/icons/dashboard (2).svg' %}" alt="dashboard icon" class="w-[25px]">
                 <span class="-mr-1 font-medium">Dashboard</span>
               </a>
             </li>
               <li class="min-w-max">
-                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-red-900 hover:rounded-md">
+                <a href="{% url 'donationHistory' %}" aria-label="Donation History" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-red-900 hover:rounded-md">
                   <img src="{% static 'assets/icons/history.svg' %}" alt="blood bag icon" class="w-[25px]">
                   <span class="-mr-1 font-medium">Donation History</span>
                 </a>
               </li>
               <li class="min-w-max">
-                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-red-900 hover:rounded-md">
-                  <img src="{% static 'assets/icons/network.svg' %}" alt="Search icon" class="w-[25px]">
-                  <span class="-mr-1 font-medium text-sm">Blood Donor Network</span>
+                <a href="{% url 'bloodJourney' %}" aria-label="Blood Journey" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-red-900 hover:rounded-md">
+                  <img src="{% static 'assets/icons/process.svg' %}" alt="stock icon" class="w-[25px]">
+                  <span class="-mr-1 font-medium">Blood Journey</span>
                 </a>
               </li>
               <li class="min-w-max">
-                <a href="#" aria-label="dashboard" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-red-900 hover:rounded-md">
-                  <img src="{% static 'assets/icons/process.svg' %}" alt="stock icon" class="w-[25px]">
-                  <span class="-mr-1 font-medium">Blood Journey</span>
+                <a href="{% url 'bloodDonorNetowrk' %}" aria-label="Blood Donor Network" class="relative flex items-center space-x-4  px-4 py-3 text-white hover:bg-red-900 hover:rounded-md">
+                  <img src="{% static 'assets/icons/network.svg' %}" alt="Search icon" class="w-[25px]">
+                  <span class="-mr-1 font-medium text-sm">Blood Donor Network</span>
                 </a>
               </li>
               

@@ -1,43 +1,90 @@
 {% load static %}
 <!-- Add blood Bag Modal-->
-<div id="view-blood-modal{{user.info_id}}" class="fixed flex justify-center items-center z-50 modal hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+{% block modaltoggle %}<div id="view-blood-modal{{user.info_id}}" class="fixed flex justify-center items-center z-50 modal hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">{% endblock modaltoggle %} 
     <div class="relative w-full max-w-2xl max-h-full">
         <!-- Modal content -->
         <div class="relative bg-gray-200 rounded-lg shadow">
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t">
-                <h3 class="text-xl font-semibold text-gray-900">
-                   {{ user.firstname }} {{ user.lastname }}
+                <h3 class="text-2xl font-semibold text-text-700">
+                   <span class="text-red-700 text-2xl">{{ user.firstname }} {{ user.lastname }}</span>
                 </h3>
-                <h3 class="text-lg font-semibold text-gray-900">
-                    Info ID: <span class="text-red-700 text-lg">{{ user.pk}}</span>
+                <h3 class="text-2xl font-semibold text-red-700">
+                    Info ID: <span class="text-red-700 text-2xl">{{ user.pk}}</span>
                 </h3>
             </div>
             <!-- Modal body -->
-            <div class="p-6 space-y-6">
-                
-                    <div class="relative mb-3">
-                       <span>Age: {{user.age}}</span> <br>
-                       <span>Address: {{user.address}}</span><br>
-                       <span>saka ko na dagdag iba hehe</span>
+            <div class="p-4 space-y-2">
+                {% block form %}
+                <form action="#">
+                    <div class="grid gap-4 mb-4 grid-cols-2 sm:gap-6 sm:mb-5">
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Age</label>
+                            <input type="text" name="age" id="age" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.age}}" placeholder="Type product name" required="" readonly>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sex</label>
+                            <input type="text" name="sex" id="sex" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.sex}}" placeholder="Type product name" required="" readonly>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Blood Type</label>
+                            <input type="text" name="blood_type" id="blood_type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.blood_type}}" placeholder="Type product name" required="" readonly>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of Birth</label>
+                            <input type="text" name="date_of_birth" id="date_of_birth" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.date_of_birth}}" placeholder="Type product name" required="" readonly>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                            <input type="text" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.email}}" placeholder="Type product name" required="" readonly>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                            <input type="text" name="address" id="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.address}}" placeholder="Type product name" required="" readonly>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Occupation</label>
+                            <input type="text" name="occupation" id="occupation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.occupation}}" placeholder="Type product name" required="" readonly>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
+                            <input type="text" name="contact_number" id="contact_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.contact_number}}" placeholder="Type product name" required="" readonly>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Completed Profile Date</label>
+                            <input type="text" name="completed_at" id="completed_at" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.completed_at}}" placeholder="Type product name" required="" readonly>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">This user accept terms and conditions?</label>
+                            <input type="text" name="is_privacy_accepted_terms_accepted" id="is_privacy_accepted_terms_accepted" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.is_privacy_accepted_terms_accepted}}" placeholder="Type product name" required="" readonly>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">This user accept consent?</label>
+                            <input type="text" name="is_consent_accepted" id="is_consent_accepted" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.is_consent_accepted}}" placeholder="Type product name" required="" readonly>
+                        </div>
                     </div>
-                    
-                    <!-- Modal footer -->
-                    <div class="flex justify-end">
+
+                     <!-- Modal footer -->
+                     <div class="flex justify-end">
                         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
-                            <button
+                        <button
                                 id="cancel-btn"
                                 type="button"
-                                class="text-black bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
+                                class="text-white bg-red-700 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
                             >
-                                Cancel
-                            </button>
+                                Close
+                        </button>
                         </div>
                     </div>
                 </form>
+                {% endblock form %}
             </div>
         </div>
     </div>
 
     <!-- End of Add blood Bag Modal-->
 </div>
+
+
+
+

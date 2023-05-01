@@ -1,0 +1,15 @@
+{% extends "prcuser/base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% load static tailwind_tags %}
+{% block title %}LifeLink | Dashboard{% endblock title %}
+{% tailwind_css %}
+{% block content %}
+
+<div class="flex">
+    {% include "prcuser/sidebar.html" %}
+    <div>
+        
+    </div>
+</div>
+{% endblock content %}

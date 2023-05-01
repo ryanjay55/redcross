@@ -64,6 +64,9 @@ class CompleteProfileForm(forms.ModelForm):
             'date_of_birth': forms.TextInput(attrs={'class': 'form-control','style': 'width: 100%','type': 'date'})
             
         }
+        required = {
+            'occupation': False,
+        }
        
 
     def clean_contact_number(self):

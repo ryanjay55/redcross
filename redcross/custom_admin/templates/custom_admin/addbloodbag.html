@@ -1,89 +1,107 @@
 {% load static %}
 <!-- Add blood Bag Modal-->
 <div id="add-blood-modal{{user.info_id}}" class="fixed flex justify-center items-center z-50 modal hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative w-full max-w-2xl max-h-full">
-        <!-- Modal content -->
-        <div class="relative bg-gray-200 rounded-lg shadow">
-            <!-- Modal header -->
-            <div class="flex items-start justify-between p-4 border-b rounded-t">
-                <h3 class="text-xl font-semibold text-gray-900">
-                    Add Blood Bag for <span class="text-red-700">{{ user.firstname }} {{ user.lastname }}</span>
-                </h3>
-                <h3 class="text-lg font-semibold text-gray-900">
-                    Info ID: <span class="text-red-700 text-lg">{{ user.info_id}}</span>
-                </h3>
-            </div>
-            <!-- Modal body -->
-            <div class="p-6 space-y-6">
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="text" name="info_id" value="{{ user.info_id }}" class="hidden" required/>
-                    <div class="relative mb-3">
-                        <input type="text" name="serial_no" id="serial_no" class="hidden" />
-                        <input
-                            type="text"
-                            name="serial_no"
-                            id="floating_serial_no"
-                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            placeholder=" "
-                            required
-                        />
-                        <label
-                            for="floating_serial_no"
-                            class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus: peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+   <div class="relative w-full max-w-2xl max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-gray-200 rounded-lg shadow">
+         <!-- Modal header -->
+         <div class="flex items-start justify-between p-4 border-b border-gray-400 rounded-t">
+            <h3 class="text-xl font-semibold text-gray-900">
+               Add Blood Bag for <span class="text-red-700">{{ user.firstname }} {{ user.lastname }}</span>
+            </h3>
+            <h3 class="text-lg font-semibold text-gray-900">
+               Info ID: <span class="text-red-700 text-lg">{{ user.info_id}}</span>
+            </h3>
+         </div>
+         <!-- Modal body -->
+         <div class="p-4 space-y-6">
+            <form method="post" id="myForm" onsubmit="return validateForm(event);">
+               {% csrf_token %}
+               <input type="text" name="info_id" value="{{ user.info_id }}" class="hidden" required/>
+               <div class="relative mb-3">
+                  <label class="flex items-center text-gray-500 text-sm">
+                  <img src="{% static 'assets/icons/barcode.svg' %}" alt="barcode Icon" class="inline-block w-5 h-5 mr-2" />
+                  <span>Serial Number</span>
+                  </label>
+                  <div class="flex flex-row justify-between mt-3">
+                     <input type="text" name="serial_no_1" id="serial_no_1" class="text-center rounded-t-lg px-2.5 pb-2.5 pt-5 w-[250px] text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600" placeholder="XXXX" oninput="validateInput(this)" required/>
+                     <span class="font-bold text-lg flex items-center mx-2">-</span>
+                     <input type="text" name="serial_no_2" id="serial_no_2" class="text-center rounded-t-lg px-2.5 pb-2.5 pt-5 w-[250px] text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600" placeholder="XXXXXX" oninput="validateInput(this)" required/>
+                     <span class="font-bold text-lg flex items-center mx-2">-</span>
+                     <input type="text" name="serial_no_3" id="serial_no_3" class="text-center rounded-t-lg px-2.5 pb-2.5 pt-5 w-[250px] text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600" placeholder="X" oninput="validateInput(this)" required/>
+                  </div>
+               </div>
+               <div class="relative mb-3 mt-3">
+                  <input type="text" name="bled_by" id="bled_by" class="hidden" />
+                  <input
+                     type="text"
+                     name="bled_by"
+                     id="floating_bled_by"
+                     class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                     placeholder=" "
+                     onkeypress="return /[a-zA-Z\s]/i.test(event.key)"
+                     required
+                     />
+                  <label
+                     for="floating_bled_by"
+                     class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+                     >
+                  <img src="{% static 'assets/icons/user.svg' %}" alt="user Icon" class="inline-block w-[15px] h-auto mr-2" />
+                  Bled By
+                  </label>
+               </div>
+               <div class="relative max-w-sm">
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none w">
+                     <img src="{% static 'assets/icons/calendar.svg' %}" alt="calendar Icon" class="inline-block w-[15px] h-auto mr-2" />
+                  </div>
+                  <input type="date" name="date_donated" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Select date" />
+               </div>
+               <!-- Modal footer -->
+               <hr class="h-px my-2 bg-gray-400 border-0">
+               <div class="flex justify-end ">
+                  <div class="flex items-center space-x-2 border-t border-gray-200 rounded-b">
+                     <button data-modal-hide="staticModal" type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                     Add Blood
+                     </button>
+                     <button
+                        id="cancel-btn"
+                        type="button"
+                        class="text-black bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
                         >
-                            <img src="{% static 'assets/icons/barcode.svg' %}" alt="Password Icon" class="inline-block w-[15px] h-auto mr-2" />
-                            Serial Number
-                        </label>
-                            {% if serial_exists_error %}
-                            <div class="text-red-700 text-xs">
-                                <p>{{ serial_exists_error }}</p>
-                            </div>
-                            {% endif %}
-                    </div>
-                    <div class="relative mb-3">
-                        <input type="text" name="bled_by" id="bled_by" class="hidden" />
-                        <input
-                            type="text"
-                            name="bled_by"
-                            id="floating_bled_by"
-                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            placeholder=" "
-                            required
-                        />
-                        <label
-                            for="floating_bled_by"
-                            class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
-                        >
-                            <img src="{% static 'assets/icons/user.svg' %}" alt="Password Icon" class="inline-block w-[15px] h-auto mr-2" />
-                            Bled By
-                        </label>
-                    </div>
-                    <div class="relative max-w-sm">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none w">
-                            <img src="{% static 'assets/icons/calendar.svg' %}" alt="Password Icon" class="inline-block w-[15px] h-auto mr-2" />
-                        </div>
-                        <input type="date" name="date_donated" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Select date" />
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="flex justify-end">
-                        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
-                            <button data-modal-hide="staticModal" type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                                Add Blood
-                            </button>
-                            <button
-                                id="cancel-btn"
-                                type="button"
-                                class="text-black bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- End of Add blood Bag Modal-->
+                     Cancel
+                     </button>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+   <!-- End of Add blood Bag Modal-->
 </div>
+
+<script>
+   function validateInput(input) {
+     // Remove any non-numeric characters
+     input.value = input.value.replace(/[^0-9]/g, '');
+ 
+     // Check the length of the input value
+     if (input.name === "serial_no_1" && input.value.length > 4) {
+       input.value = input.value.slice(0, 4);
+     } else if (input.name === "serial_no_2" && input.value.length > 6) {
+       input.value = input.value.slice(0, 6);
+     } else if (input.name === "serial_no_3" && input.value.length > 1) {
+       input.value = input.value.slice(0, 1);
+     }
+   }
+ 
+   
+
+// Check if form is valid
+if (document.getElementById("myForm").checkValidity()) {
+   // Submit form
+   document.getElementById("myForm").submit();
+   
+}
+    
+ </script>
+ 

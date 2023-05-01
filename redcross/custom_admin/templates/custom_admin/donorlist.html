@@ -1,233 +1,261 @@
-{% extends "custom_admin/base.html" %}{% load tailwind_filters %} {% load static %} {% load static tailwind_tags %} {% block title %}Admin | Users{% endblock title %} {% tailwind_css %}
-
+{% extends "custom_admin/base.html" %}{% load tailwind_filters %} {% load static %} {% load static tailwind_tags %} {% block title %}Admin | Donor List {% endblock title %} {% tailwind_css %}
 {% block content %}
-  
-<div class="flex flex-row">
-    <div>
-        {% include "custom_admin/sidebar.html" %}
-    </div>
-    <div>
-        <!-- TABLEEEEEEE -->
-        <div class="relative overflow-x-auto shadow-b-2xl sm:rounded-lg mx-60 mt-[20px]">
-            <h1 class="flex items-center text-5xl font-extrabold mb-[50px]">Donor<span class="bg-red-700 text-white text-sm font-semibold mr-2 px-2.5 py-0.5 rounded ml-2">LIST</span></h1>
-            <div class="flex items-center justify-between pb-4">
-                <label for="table-search" class="sr-only">Search</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <img src="{% static 'assets/icons/search.svg' %}" alt="Search icon" class="w-5 h-5" />
-                    </div>
-                    <input
-                        type="text"
-                        id="search"
-                        class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Search Donor"
-                    />
-                </div>
-                <div>
-                    <a href="{% url 'export-donor-info' %}">
-                        <button
-                            id="dateRange-modal-trigger-btn"
-                            data-modal-target="small-modal"
-                            data-modal-toggle="small-modal"
-                            class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-300 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5"
-                            type="button"
-                        >
-                            <img src="{% static 'assets/icons/xls.svg' %}" alt="xls icon" class="w-5 h-5 mr-4" />
-                            Export
-                        </button>
-                    </a>
-                </div>
+<div class="flex flex-row h-full">
+   <div class=""> {% include "custom_admin/sidebar.html" %} </div>
+   <div class="flex-1 mx-auto ">
+      <!-- TABLEEEEEEE -->
+      <div class="relative overflow-x-auto shadow-b-2xl sm:rounded-lg mx-[120px] mt-[20px]">
+         <h1 class="flex items-center text-5xl font-extrabold mb-[40px]">Donor<span class="bg-red-700 text-white text-sm font-semibold mr-2 px-2.5 py-0.5 rounded ml-2">LIST</span></h1>
+         <div class="flex items-center justify-between pb-4">
+            <label for="table-search" class="sr-only">Search</label>
+            <div class="relative ">
+               <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <img src="{% static 'assets/icons/search.svg' %}" alt="Search icon" class="w-5 h-5" />
+               </div>
+               <input
+                  type="text"
+                  id="search"
+                  class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-red-500 focus:border-red-500 "
+                  placeholder="Search Donor"
+                  />
             </div>
-            <table class="w-full text-sm text-left text-gray-500 table-auto" id="table">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 text-center">
-                    <tr>
-                        <!-- <th scope="col" class="px-6 py-3">
+         </div>
+         
+         <div class="flex flex-row justify-between items-center mb-2">
+            <div class="actions">
+                <label>
+                    <span style="font-weight: bold;">Action:</span> 
+                    <select name="action" required="" class="px-4 py-2 rounded border border-gray-300 text-gray-700 text-sm w-[250px]">
+                        <option value="" selected>------------------</option>
+                        <option value="delete_selected" class="font-semibold">Move selected users to deferral</option>
+                    </select>                    
+                </label>
+               <input type="hidden" name="select_across" value="0" class="select-across">
+               <button  type="button" class="w-[80px] text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg py-[5px] px-[3px] text-xs text-center" >Go</button>
+            </div>
+
+            <div>
+               <a href="{% url 'export-donor-info' %}">
+               <button
+                  id="dateRange-modal-trigger-btn"
+                  data-modal-target="small-modal"
+                  data-modal-toggle="small-modal"
+                  class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-300 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5"
+                  type="button"
+                  >
+               <img src="{% static 'assets/icons/xls.svg' %}" alt="xls icon" class="w-5 h-5 mr-4" />
+               Export
+               </button>
+               </a>
+            </div>
+         </div>
+         <table class="w-full text-sm text-left text-gray-500 table-auto" id="table">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-200 text-center">
+               <tr>
+                  <!-- <th scope="col" class="px-6 py-3">
                      info ID 
                      </th> -->
-                        <th scope="col" class="px-6 py-3">
-                            <div class="flex items-center justify-center">
-                                Name {% if users.sort_param == '&sort=firstname' %}
-                                <a href="?page={{ users.number }}&sort=-firstname"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                                {% else %}
-                                <a href="?page={{ users.number }}&sort=firstname"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                                {% endif %}
-                            </div>
-                        </th>
-
-                        <th scope="col" class="px-6 py-3">
-                            <div class="flex items-center justify-center">
-                                Blood Type {% if users.sort_param == '&sort=blood_type' %} {% if users.paginator.reverse %}
-                                <!-- check if currently sorted ascending or descending -->
-                                <a href="?page={{ users.number }}&sort=-blood_type"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort ascending icon" class="w-5 h-5 ml-2" /></a>
-                                {% else %}
-                                <a href="?page={{ users.number }}"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort descending icon" class="w-5 h-5 ml-2" /></a>
-                                {% endif %} {% else %}
-                                <a href="?page={{ users.number }}&sort=blood_type"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                                {% endif %}
-                            </div>
-                        </th>
-
-                        <th scope="col" class="px-6 py-3">
-                            <div class="flex items-center justify-center">
-                                Date of Birth
-                            </div>
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Email
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            <div class="flex items-center justify-center">
-                                Sex {% if users.sort_param == '&sort=sex' %} {% if users.paginator.reverse %}
-                                <!-- check if currently sorted ascending or descending -->
-                                <a href="?page={{ users.number }}&sort=-sex"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort ascending icon" class="w-5 h-5 ml-2" /></a>
-                                {% else %}
-                                <a href="?page={{ users.number }}"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort descending icon" class="w-5 h-5 ml-2" /></a>
-                                {% endif %} {% else %}
-                                <a href="?page={{ users.number }}&sort=sex"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                                {% endif %}
-                            </div>
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            <div class="flex items-center justify-center">
-                                Age {% if users.sort_param == '&sort=age_asc' %}
-                                <a href="?page={{ users.number }}&sort=-age_asc"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                                {% else %}
-                                <a href="?page={{ users.number }}&sort=age_asc"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                                {% endif %}
-                            </div>
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Contact Number
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Actions
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Blood Bag
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    {% for user in users %}
-                    <tr class="bg-white border-b hover:bg-gray-50 text-center text-gray-800">
-                        <!-- <td class="px-6 py-4">
+                  <th scope="col" class="px-3">
+                     <input id="select-all" type="checkbox"  class="w-5 h-5 text-lifelink-red2 bg-gray-200 border-gray-400 rounded focus:ring-white">
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                     <div class="flex items-center justify-center">
+                        Name {% if users.sort_param == '&sort=firstname' %}
+                        <a href="?page={{ users.number }}&sort=-firstname"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                        {% else %}
+                        <a href="?page={{ users.number }}&sort=firstname"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                        {% endif %}
+                     </div>
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                     <div class="flex items-center justify-center">
+                        Blood Type {% if users.sort_param == '&sort=blood_type' %} {% if users.paginator.reverse %}
+                        <!-- check if currently sorted ascending or descending -->
+                        <a href="?page={{ users.number }}&sort=-blood_type"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort ascending icon" class="w-5 h-5 ml-2" /></a>
+                        {% else %}
+                        <a href="?page={{ users.number }}"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort descending icon" class="w-5 h-5 ml-2" /></a>
+                        {% endif %} {% else %}
+                        <a href="?page={{ users.number }}&sort=blood_type"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                        {% endif %}
+                     </div>
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                     <div class="flex items-center justify-center">
+                        Number of donated
+                     </div>
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                     Last Donated
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                     <div class="flex items-center justify-center">
+                        Sex {% if users.sort_param == '&sort=sex' %} {% if users.paginator.reverse %}
+                        <!-- check if currently sorted ascending or descending -->
+                        <a href="?page={{ users.number }}&sort=-sex"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort ascending icon" class="w-5 h-5 ml-2" /></a>
+                        {% else %}
+                        <a href="?page={{ users.number }}"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort descending icon" class="w-5 h-5 ml-2" /></a>
+                        {% endif %} {% else %}
+                        <a href="?page={{ users.number }}&sort=sex"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                        {% endif %}
+                     </div>
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                     <div class="flex items-center justify-center">
+                        Age {% if users.sort_param == '&sort=age_asc' %}
+                        <a href="?page={{ users.number }}&sort=-age_asc"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                        {% else %}
+                        <a href="?page={{ users.number }}&sort=age_asc"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                        {% endif %}
+                     </div>
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                     Contact Number
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                     Actions
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                     Deferral
+                  </th>
+               </tr>
+            </thead>
+            <tbody id="table-body">
+               {% for blood_bag  in page_obj %}
+               <tr class="bg-white border-b hover:bg-gray-50 text-center text-gray-800">
+                  <!-- <td class="px-6 py-4">
                      {{ user.info_id }}
                      </td> -->
-                        <td class="px-6 py-4">
-                            {{ user.firstname }} {{ user.lastname }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{user.blood_type }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ user.date_of_birth }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ user.email }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ user.sex }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ user.age }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ user.contact_number }}
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex item-center justify-center">
-                                <button  data-modal-target="#view-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal" type="button">
-                                <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                </div>
-                            </button>
-                                <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                    </svg>
-                                </div>
-                                <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                        />
-                                    </svg>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-4 py-4">
-                            <button data-modal-target="#add-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal"  type="button" class="add-blood-btn flex items-center justify-center text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg py-[5px] px-[3px] text-xs text-center" >Add Blood</button>
-                        </td>
-                    </tr>
-
-                    {% include "custom_admin/addbloodbag.html" %}
-                    {% include "custom_admin/viewuserinfo.html" %}
-                    {% endfor %}
-                </tbody>
-            </table>
-            <nav class="bg-gray-50 flex items-center justify-center py-5">
-                {% if users.has_other_pages %}
-                <ul class="flex list-none">
-                    {% if users.has_previous %}
-                    <!-- First page item -->
-                    <li>
-                        <a class="relative block px-3 py-2 rounded-l-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page=1{{ users.sort_param }}">
-                            <span>First</span>
-                        </a>
-                    </li>
-                    <!-- Previous page item -->
-                    <li>
-                        <a
-                            class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900"
-                            href="?page={{ users.previous_page_number }}{{ users.sort_param }}"
-                        >
-                            Previous
-                        </a>
-                    </li>
-                    {% endif %} {% for num in users.paginator.page_range %} {% if num == users.number %}
-                    <!-- Current page item with highlighted background -->
-                    <li>
-                        <a class="relative block px-3 py-2 bg-primary text-red-700 font-medium rounded-md" href="?page={{ num }}{{ users.sort_param }}">{{ num }}</a>
-                    </li>
-                    {% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
-                    <!-- Page number item -->
-                    <li>
-                        <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ num }}{{ users.sort_param }}">
-                            {{ num }}
-                        </a>
-                    </li>
-                    {% endif %} {% endfor %} {% if users.has_next %}
-                    <!-- Next page item -->
-                    <li>
-                        <a
-                            class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900"
-                            href="?page={{ users.next_page_number }}{{ users.sort_param }}"
-                        >
-                            Next
-                        </a>
-                    </li>
-                    <!-- Last page item -->
-                    <li>
-                        <a
-                            class="relative block px-3 py-2 rounded-r-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900"
-                            href="?page={{ users.paginator.num_pages }}{{ users.sort_param }}"
-                        >
-                            <span>Last</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-                {% endif %}
-            </nav>
-        </div>
-    </div>
+                  <td class="px-3 ">
+                     <input type="checkbox"  class="select-donor w-5 h-5 text-lifelink-red2 bg-gray-200 border-gray-400 rounded focus:ring-white">
+                  </td>
+                  <td class="px-6 py-4">
+                     {{ blood_bag.full_name }}
+                  </td>
+                  <td class="px-6 py-4">
+                     {{ blood_bag.info_id__blood_type }}
+                  </td>
+                  <td class="px-6 py-4">
+                     {{ blood_bag.num_donations }}
+                  </td>
+                  <td class="px-6 py-4">
+                     {{ blood_bag.last_donation|date:"F d, Y" }}
+                  </td>
+                  <td class="px-6 py-4">
+                     {{ blood_bag.info_id__sex }}
+                  </td>
+                  <td class="px-6 py-4">
+                     {{ blood_bag.age }}
+                  </td>
+                  <td class="px-6 py-4">
+                     {{ blood_bag.info_id__contact_number }}
+                  </td>
+                  <td class="px-6 py-4">
+                     <div class="flex item-center justify-center">
+                        <button  data-modal-target="#view-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal" type="button">
+                           <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                           </div>
+                        </button>
+                        <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
+                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 stroke-width="2"
+                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                 />
+                           </svg>
+                        </div>
+                     </div>
+                  </td>
+                  <td class="px-4 py-4">
+                     <button data-modal-target="#add-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal"  type="button" class="add-blood-btn flex items-center justify-center text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg py-[5px] px-[3px] text-xs text-center" >Move to Deferral</button>
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+         <nav class="bg-gray-50 flex items-center justify-center py-5">
+            {% if page_obj.has_other_pages %} 
+            <ul class="flex list-none">
+               {% if page_obj.has_previous %}
+               <!-- First page item -->
+               <li>
+                  <a class="relative block px-3 py-2 rounded-l-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page=1">
+                  <span>First</span>
+                  </a>
+               </li>
+               <!-- Previous page item -->
+               <li>
+                  <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.previous_page_number }}"> Previous </a>
+               </li>
+               {% endif %} {% for num in page_obj.paginator.page_range %} {% if num == page_obj.number %}
+               <!-- Current page item with highlighted background -->
+               <li>
+                  <a class="relative block px-3 py-2 bg-primary text-red-700 font-medium rounded-md" href="?page={{ num }}">{{ num }}</a>
+               </li>
+               {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+               <!-- Page number item -->
+               <li>
+                  <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ num }}">
+                  {{ num }}
+                  </a>
+               </li>
+               {% endif %} {% endfor %} {% if page_obj.has_next %}
+               <!-- Next page item -->
+               <li>
+                  <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.next_page_number }}"> Next </a>
+               </li>
+               <!-- Last page item -->
+               <li>
+                  <a class="relative block px-3 py-2 rounded-r-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.paginator.num_pages }}">
+                  <span>Last</span>
+                  </a>
+               </li>
+               {% endif %}
+            </ul>
+            {% endif %} 
+         </nav>
+      </div>
+   </div>
 </div>
-
-
+<script>
+   const selectAllCheckbox = document.getElementById('select-all');
+   const selectDonorCheckboxes = document.querySelectorAll('.select-donor');
+   const actionSelect = document.getElementById('action-select');
+   const executeButton = document.getElementById('execute-button');
+   
+   selectAllCheckbox.addEventListener('change', () => {
+     selectDonorCheckboxes.forEach(checkbox => {
+       checkbox.checked = selectAllCheckbox.checked;
+     });
+   });
+   
+   executeButton.addEventListener('click', () => {
+     const selectedAction = actionSelect.value;
+     const selectedDonors = [];
+   
+     selectDonorCheckboxes.forEach(checkbox => {
+       if (checkbox.checked) {
+         selectedDonors.push(checkbox.parentElement.parentElement);
+       }
+     });
+   
+     if (selectedDonors.length === 0) {
+       alert('Please select at least one donor to execute the action.');
+       return;
+     }
+   
+     if (selectedAction === 'move-to-deferral') {
+       selectedDonors.forEach(donor => {
+         // Logic to move donor to deferral list
+       });
+     }
+   
+     // Add more if statements to handle other actions
+   });
+</script>
 {% endblock content %}

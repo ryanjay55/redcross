@@ -1,0 +1,144 @@
+{% extends "custom_admin/users.html" %}
+{% load static %}
+{% block title %}Admin | bloodBag {% endblock title %} 
+{% block titleLarge %}
+  Collected Blood Bag
+{% endblock titleLarge %}
+{% block searchPlaceHolder %}
+<input type="text" id="search" class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search Bag" />
+{% endblock searchPlaceHolder %}
+{% block export %}
+<a href="{% url 'exportBloodBagList_to_xls' %}">
+  <button id="dateRange-modal-trigger-btn" data-modal-target="small-modal" data-modal-toggle="small-modal" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-300 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5" type="button">
+    <img src="{% static 'assets/icons/xls.svg' %}" alt="xls icon" class="w-5 h-5 mr-4" /> Export </button>
+</a>
+{% endblock export %}
+
+{% block table %}
+
+<table class="w-full text-sm text-left text-gray-500 table-auto" id="table">
+  <thead class="text-xs text-gray-700 uppercase bg-gray-50 text-center">
+    <tr>
+      <!-- <th scope="col" class="px-6 py-3">
+               info ID 
+      </th> -->
+      <th scope="col" class="px-6 py-3">
+        <div class="flex items-center justify-center"> Name {% if users.sort_param == '&sort=firstname' %} <a href="?page={{ users.number }}&sort=-firstname">
+            <img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" />
+          </a> {% else %} <a href="?page={{ users.number }}&sort=firstname">
+            <img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" />
+          </a> {% endif %} </div>
+      </th>
+      <th scope="col" class="px-6 py-3">
+        <div class="flex items-center justify-center"> Serial Number </div>
+      </th>
+      <th scope="col" class="px-6 py-3">
+        <div class="flex items-center justify-center"> Blood Type {% if users.sort_param == '&sort=blood_type' %} {% if users.paginator.reverse %}
+          <!-- check if currently sorted ascending or descending -->
+          <a href="?page={{ users.number }}&sort=-blood_type">
+            <img src="{% static 'assets/icons/sort.svg' %}" alt="sort ascending icon" class="w-5 h-5 ml-2" />
+          </a> {% else %} <a href="?page={{ users.number }}">
+            <img src="{% static 'assets/icons/sort.svg' %}" alt="sort descending icon" class="w-5 h-5 ml-2" />
+          </a> {% endif %} {% else %} <a href="?page={{ users.number }}&sort=blood_type">
+            <img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" />
+          </a> {% endif %}
+        </div>
+      </th>
+      <th scope="col" class="px-6 py-3"> Date Donated</th>
+      <th scope="col" class="px-6 py-3"> Bled By</th>
+      <th scope="col" class="px-6 py-3"> Actions </th>
+    </tr>
+  </thead>
+  {% for blood_bag in blood_bags %}
+  <tbody id="table-body">
+      <tr class="bg-white border-b hover:bg-gray-50 text-center text-gray-800">
+      <!-- <td class="px-6 py-4">
+        {{ blood_bag.info_id.info_id }}
+      </td> -->
+      <td class="px-6 py-4">
+        {{ blood_bag.info_id.firstname }} {{ blood_bag.info_id.lastname }}
+      </td>
+      <td class="px-6 py-4"> 
+        {{ blood_bag.serial_no }}
+      </td>
+      <td class="px-6 py-4">
+        {{ blood_bag.info_id.blood_type }}
+      </td>
+      <td class="px-8 py-6">
+        {{ blood_bag.date_donated|date:"F d, Y" }}
+      </td>
+      <td class="px-6 py-4">
+        {{ blood_bag.bled_by }}
+      </td>
+      <td class="px-6 py-4">
+        <div class="flex item-center justify-center">
+          <button data-modal-target="#view-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal" type="button">
+            <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </div>
+          </button>
+          <button data-modal-target="#edit-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal" type="button">
+            <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+            </div>
+          </button>
+          <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </div>
+        </div>
+      </td>
+    </tr> 
+  </tbody>
+  {% endfor %}
+</table>
+{% endblock table %}
+{% block navPagination %} 
+<nav class="bg-gray-50 flex items-center justify-center py-5">
+  {% if users.has_other_pages %} 
+  <ul class="flex list-none">
+     {% if users.has_previous %}
+     <!-- First page item -->
+     <li>
+        <a class="relative block px-3 py-2 rounded-l-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page=1{{ users.sort_param }}">
+        <span>First</span>
+        </a>
+     </li>
+     <!-- Previous page item -->
+     <li>
+        <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ users.previous_page_number }}{{ users.sort_param }}"> Previous </a>
+     </li>
+     {% endif %} {% for num in users.paginator.page_range %} {% if num == users.number %}
+     <!-- Current page item with highlighted background -->
+     <li>
+        <a class="relative block px-3 py-2 bg-primary text-red-700 font-medium rounded-md" href="?page={{ num }}{{ users.sort_param }}">{{ num }}</a>
+     </li>
+     {% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
+     <!-- Page number item -->
+     <li>
+        <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ num }}{{ users.sort_param }}">
+        {{ num }}
+        </a>
+     </li>
+     {% endif %} {% endfor %} {% if users.has_next %}
+     <!-- Next page item -->
+     <li>
+        <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ users.next_page_number }}{{ users.sort_param }}"> Next </a>
+     </li>
+     <!-- Last page item -->
+     <li>
+        <a class="relative block px-3 py-2 rounded-r-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ users.paginator.num_pages }}{{ users.sort_param }}">
+        <span>Last</span>
+        </a>
+     </li>
+     {% endif %}
+  </ul>
+  {% endif %} 
+</nav>
+{% endblock navPagination %}

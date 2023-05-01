@@ -3,12 +3,9 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
-from .forms import CreateUserForm,CompleteProfileForm
+from .forms import CompleteProfileForm
 from django.contrib.auth.decorators import login_required
-import requests
-from .utils import generate_user_id
 from .models import DonorInfo
-from django.http import JsonResponse
 
 
 
@@ -54,7 +51,7 @@ def signupPage(request):
             # Create the user object
             user = User.objects.create_user(username=username, email=email, password=password)
             user.save()
-            # send_registration_email(user)
+            send_registration_email(user)
             messages.success(request, 'Account was created.')
             return redirect('user_login')
         else:

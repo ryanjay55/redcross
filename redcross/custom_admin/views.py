@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.core.mail import send_mail
 from account.models import DonorInfo
 from inventory.models import BloodBags
 import xlwt
@@ -6,8 +7,10 @@ from django.http import HttpResponse
 from datetime import datetime
 from xlwt import easyxf
 from django.core.paginator import Paginator
-from django.db.models import F
-from django.db.models.functions import ExtractYear
+from django.db.models.functions import ExtractYear,Concat
+from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField
+
+
 
 
 # Create your views here.
@@ -15,19 +18,67 @@ def dashboard(request):
     
     return render(request, 'custom_admin/dashboard.html',{'sidebar':dashboard})
 
+from datetime import datetime
+
+from datetime import datetime
+
 def usersList(request):
+    # if request.method == 'POST':
+    #     # Retrieve the form data
+    #     info_id = request.POST.get('info_id')
+    #     firstname = request.POST.get('firstname')
+    #     lastname = request.POST.get('lastname')
+    #     sex = request.POST.get('sex')
+    #     blood_type = request.POST.get('blood_type')
+
+    #     email = request.POST.get('email')
+    #     address = request.POST.get('address')
+    #     contact_number = request.POST.get('contact_number')
+
+    #     # Convert date_of_birth string to datetime object
+
+  
+
+    #     # Retrieve the existing DonorInfo object
+    #     donor_info = DonorInfo.objects.get(info_id=info_id)
+
+    #     # Update the DonorInfo object with the form data
+    #     donor_info.firstname = firstname
+    #     donor_info.lastname = lastname
+    #     donor_info.sex = sex
+    #     donor_info.blood_type = blood_type
+  
+    #     donor_info.email = email
+    #     donor_info.address = address
+    #     donor_info.contact_number = contact_number
+
+    #     # Save the updated DonorInfo object to the database
+    #     donor_info.save()
+
+    #     # Redirect to the users list page
+    #     return redirect('users-list')
+    
     donors = DonorInfo.objects.all()
     serial_exists_error = ''
+    serial_incomplete_error = ''
+    submission_success = ''
+
     if request.method == 'POST':
         # Handle the modal form data here
         info_id = request.POST.get('info_id')
-        serial_no = request.POST.get('serial_no')
+        serial_no_1 = request.POST.get('serial_no_1')
+        serial_no_2 = request.POST.get('serial_no_2')
+        serial_no_3 = request.POST.get('serial_no_3')
+        serial_no = serial_no_1 + '-' + serial_no_2 + '-' + serial_no_3
         date_donated = request.POST.get('date_donated')
         bled_by = request.POST.get('bled_by')
 
-        if not info_id:
-            # Return an error message if info_id is empty or None
-            return HttpResponse('Error: DonorInfo record id is required')
+
+        # Validate the serial number
+        if len(serial_no_1) != 4 or len(serial_no_2) != 6 or len(serial_no_3) != 1:
+            serial_incomplete_error = 'Serial number must have the format XXXX-XXXXXX-X.'
+        elif BloodBags.objects.filter(serial_no=serial_no).exists():
+            serial_exists_error = 'Serial number already exists in the database.'
 
         # Check if DonorInfo record with id exists in database
         try:
@@ -36,18 +87,18 @@ def usersList(request):
             # Return an error message if the record does not exist
             return HttpResponse('Error: DonorInfo record with id {} does not exist'.format(info_id))
 
-        # Check if the entered serial number already exists in the database
-        if BloodBags.objects.filter(serial_no=serial_no).exists():
-            serial_exists_error = 'Serial number already exists.'
+        else:
+            if not serial_exists_error and not serial_incomplete_error:
+                # Create a new BloodBags instance based on the form data and DonorInfo record
+                blood_bag = BloodBags(
+                    info_id=donor_info,
+                    serial_no=serial_no,
+                    date_donated=date_donated,
+                    bled_by=bled_by,
+                )
+                blood_bag.save()
+                submission_success = 'Blood bag successfully added to the database.'
 
-        # Create a new BloodBags instance based on the form data and DonorInfo record
-        blood_bag = BloodBags(
-            info_id=donor_info,
-            serial_no=serial_no,
-            date_donated=date_donated,
-            bled_by=bled_by,
-        )
-        blood_bag.save()
         
     sort_param = request.GET.get('sort', 'completed_at')  # default sort by completion date
     if sort_param == 'firstname':
@@ -82,14 +133,55 @@ def usersList(request):
     if page_obj.has_next():
         page_obj.next_page_number_param = f'&sort={sort_param}&page={page_obj.next_page_number()}'
     rows = [{'id': user.pk, 'firstname': user.firstname, 'lastname': user.lastname} for user in page_obj]
-    return render(request, 'custom_admin/users.html', {'users': page_obj, 'sidebar': page_obj, 'modal': True, 'rows': rows,'donors':donors,'serial_exists_error':serial_exists_error})
+    return render(request, 'custom_admin/users.html', {'users': page_obj, 'sidebar': page_obj, 'modal': True, 'rows': rows,'donors':donors,'serial_exists_error':serial_exists_error,'donors': donors,'serial_incomplete_error': serial_incomplete_error,'submission_success':submission_success})
+
+
+def send_thank_you_email(donor_info):
+    subject = 'Thank you for donating blood'
+    message = f'Hi {donor_info.firstname} {donor_info.lastname},\n\nWe want to express our sincerest thanks for taking the time and effort to donate blood at our blood donation event. Your selfless act of donating blood has the potential to save lives and make a significant difference in the lives of those in need.\n\nYour donation will be used to help patients who are undergoing surgery, experiencing medical emergencies, or undergoing treatment for life-threatening conditions. Your generosity and willingness to give back to your community is truly appreciated.\n\nWe also want to acknowledge the courage and strength it takes to donate blood. We understand that some people may be nervous or anxious about the process, and we thank you for overcoming any fears or discomfort in order to make a difference in the lives of others.\n\nOnce again, thank you for your donation and for being a part of our blood donation community. We hope that you will continue to support our efforts in the future. \n\n\nSincerely,\n\nRed Cross Valenzuela City Chapter \nLifeLink'
+    from_email = 'ryanjayantonio305@gmail.com'
+    recipient_list = [donor_info.email]
+    send_mail(subject, message, from_email, recipient_list)
 
 
 def donorList(request):
-    return render(request, 'custom_admin/donorlist.html')
+    sort_param = request.GET.get('sort', '-last_donation')  # default sort by last donation date in descending order
+    blood_bags = BloodBags.objects.select_related('info_id').annotate(
+        age=ExpressionWrapper(
+            datetime.now().year - ExtractYear(F('info_id__date_of_birth')),
+            output_field=IntegerField()
+        ),
+        full_name=Concat('info_id__firstname', Value(' '), 'info_id__lastname', output_field=CharField())
+    ).values(
+        'info_id', 'full_name', 'age', 'info_id__blood_type', 'info_id__date_of_birth', 'info_id__email',
+        'info_id__sex', 'info_id__contact_number', 'info_id__address', 'info_id__occupation', 'info_id__completed_at'
+    ).annotate(
+        num_donations=Count('bag_id'),
+        last_donation=Max('date_donated')
+    )
+    
+    if sort_param == 'name':
+        blood_bags = blood_bags.order_by('full_name')
+    elif sort_param == 'bloodtype':
+        blood_bags = blood_bags.order_by('info_id__blood_type')
+    elif sort_param == 'num_donations':
+        blood_bags = blood_bags.order_by('-num_donations')
+    elif sort_param == 'sex':
+        blood_bags = blood_bags.order_by('info_id__sex')
+    elif sort_param == 'age':
+        blood_bags = blood_bags.order_by('age')
+    else:
+        blood_bags = blood_bags.order_by('-info_id__completed_at')
 
-def bloodBagList(request):
-    return render(request, 'custom_admin/bloodbaglist.html')
+    paginator = Paginator(blood_bags, 8)  # Show 8 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'custom_admin/donorlist.html', {'blood_bags': blood_bags, 'page_obj': page_obj})
+
+
+
+
+
 
 def export_donors_info(request):
     response = HttpResponse(content_type='application/ms-excel')

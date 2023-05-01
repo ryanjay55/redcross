@@ -42,7 +42,42 @@ module.exports = {
         // '../../**/*.py'
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                lifelink: {
+                   
+                // Grayyyyyyy
+                  gray1: '#D9D9D9',
+                  gray2: '#C7BAB9',
+                  gray3: '#DADADA',
+                  gray4: '#EAEAEA',
+
+                // Blackkkkk
+                  black1: '#161616',
+                  black2: '#616161',
+                  black3: '#474747',
+                  black4: '#3E3E3E',
+                  black5: '#333333',
+
+                // Redddddd
+                   red1: '#D21B16',
+                   red2: '#B61611',
+                   red3: '#FF0700',
+
+                // gradientttt
+                gradient1: 'linear-gradient(to bottom, #D21B16, #FF0700)',
+                gradient2: 'linear-gradient(to bottom, #DB392E, #AD0E0A)',
+                },
+                
+                admin: {
+                    primary: '#dc3545',
+                    secondary: '#007bff',
+                    accent: '#ffc107',
+                    neutral1: '#f8f9fa',
+                    neutral2: '#343a40',
+                  },
+              },
+        },
     },
     plugins: [
         /**

@@ -5,7 +5,6 @@ urlpatterns = [
     path('users-list/', views.usersList, name='users-list'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('donorList/', views.donorList, name='donorList'),
-    path('bloodBagList/', views.bloodBagList, name='bloodBagList'),
     # path('add_bloodbag/', views.add_bloodbag, name='add_bloodbag'),
     # path('add_blood_bag/', views.add_blood_bag, name='add_blood_bag'),
     

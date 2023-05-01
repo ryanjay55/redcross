@@ -1,0 +1,93 @@
+{% extends "custom_admin/base.html" %}
+{% load static %}
+{% block title %}Admin | bloodBag {% endblock title %} 
+{% block titleLarge %}
+  Admin | Inventory
+{% endblock titleLarge %}
+
+{% block content %}
+<div class="flex flex-row h-full">
+
+    <div class="w-1/5"> {% include "custom_admin/sidebar.html" %} </div>
+
+    <div class="flex-1 mx-auto my-auto">
+
+        <!-- Add your inventory content here -->
+        <div class="w-3/4">
+            <div class="grid mb-8 md:mb-8 md:grid-cols-4">
+                <figure class="flex flex-col items-center justify-center p-8 text-center mr-3 bg-gray-100 border-b border-gray-200 rounded-2xl md:border-r dark:bg-gray-800 dark:border-gray-700 hover:bg-red-200 mt-5" style="position: relative;">
+                    <figcaption class="flex items-center justify-center space-x-3 flex-col">
+                       <img src="{% static 'assets/icons/blood-type (4).svg' %}" alt="profile icon" class="w-[105px] transform transition-transform duration-300 hover:scale-110">
+                    </figcaption>
+                    <div class="space-y-0.5 font-medium dark:text-white text-left" style="position: absolute; bottom: 0;">
+                       <span class="flex items-center text-xl font-bold text-gray-900 dark:text-white">Stock</span>
+                    </div>
+                 </figure>
+                 
+                 <figure class="flex flex-col items-center justify-center p-8 text-center mr-3 bg-gray-100 border-b border-gray-200 rounded-2xl md:border-r dark:bg-gray-800 dark:border-gray-700 hover:bg-red-200 mt-5" style="position: relative;">
+                    <figcaption class="flex items-center justify-center space-x-3 flex-col">
+                       <img src="{% static 'assets/icons/blood-type (3).svg' %}" alt="profile icon" class="w-[105px] transform transition-transform duration-300 hover:scale-110">
+                    </figcaption>
+                    <div class="space-y-0.5 font-medium dark:text-white text-left" style="position: absolute; bottom: 0;">
+                        <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white"><span class="flex w-2.5 h-2.5 bg-green-600 rounded-full mr-1.5 flex-shrink-0 "></span>Available</span>
+                    </div>
+                 </figure>
+                 <figure class="flex flex-col items-center justify-center p-8 text-center mr-3 bg-gray-100 border-b border-gray-200 rounded-2xl md:border-r dark:bg-gray-800 dark:border-gray-700 hover:bg-red-200 mt-5" style="position: relative;">
+                    <figcaption class="flex items-center justify-center space-x-3 flex-col">
+                       <img src="{% static 'assets/icons/blood-type (7).svg' %}" alt="profile icon" class="w-[105px] transform transition-transform duration-300 hover:scale-110">
+                    </figcaption>
+                    <div class="space-y-0.5 font-medium dark:text-white text-left" style="position: absolute; bottom: 0;">
+                       <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white"><span class="flex w-2.5 h-2.5 bg-red-600 rounded-full mr-1.5 flex-shrink-0"></span>Not Available</span>
+                    </div>
+                 </figure>
+                 <figure class="flex flex-col items-center justify-center p-8 text-center bg-gray-100 border-b border-gray-200 rounded-2xl md:border-r dark:bg-gray-800 dark:border-gray-700 hover:bg-red-200 mt-5" style="position: relative;">
+                    <figcaption class="flex items-center justify-center space-x-3 flex-col">
+                       <img src="{% static 'assets/icons/blood-type (2).svg' %}" alt="profile icon" class="w-[105px] transform transition-transform duration-300 hover:scale-110">
+                    </figcaption>
+                    <div class="space-y-0.5 font-medium dark:text-white text-left" style="position: absolute; bottom: 0;">
+                       <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white"><span class="flex w-2.5 h-2.5 bg-red-600 rounded-full mr-1.5 flex-shrink-0"></span>Not Available</span>
+                    </div>
+                 </figure>
+                 <figure class="flex flex-col items-center justify-center p-8 text-center mr-3 bg-gray-100 border-b border-gray-200 rounded-2xl md:border-r dark:bg-gray-800 dark:border-gray-700 hover:bg-red-200 mt-5" style="position: relative;">
+                    <figcaption class="flex items-center justify-center space-x-3 flex-col">
+                       <img src="{% static 'assets/icons/blood-type (3).svg' %}" alt="profile icon" class="w-[105px] transform transition-transform duration-300 hover:scale-110">
+                    </figcaption>
+                    <div class="space-y-0.5 font-medium dark:text-white text-left" style="position: absolute; bottom: 0;">
+                        <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white"><span class="flex w-2.5 h-2.5 bg-green-600 rounded-full mr-1.5 flex-shrink-0 "></span>Available</span>
+                    </div>
+                 </figure>
+                 <figure class="flex flex-col items-center justify-center p-8 text-center mr-3 bg-gray-100 border-b border-gray-200 rounded-2xl md:border-r dark:bg-gray-800 dark:border-gray-700 hover:bg-red-200 mt-5" style="position: relative;">
+                    <figcaption class="flex items-center justify-center space-x-3 flex-col">
+                       <img src="{% static 'assets/icons/blood-type (5).svg' %}" alt="profile icon" class="w-[105px] transform transition-transform duration-300 hover:scale-110">
+                    </figcaption>
+                    <div class="space-y-0.5 font-medium dark:text-white text-left" style="position: absolute; bottom: 0;">
+                       <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white"><span class="flex w-2.5 h-2.5 bg-red-600 rounded-full mr-1.5 flex-shrink-0"></span>Not Available</span>
+                    </div>
+                 </figure>
+                 <figure class="flex flex-col items-center justify-center p-8 text-center mr-3 bg-gray-100 border-b border-gray-200 rounded-2xl md:border-r dark:bg-gray-800 dark:border-gray-700 hover:bg-red-200 mt-5" style="position: relative;">
+                    <figcaption class="flex items-center justify-center space-x-3 flex-col">
+                       <img src="{% static 'assets/icons/blood-type (8).svg' %}" alt="profile icon" class="w-[105px] transform transition-transform duration-300 hover:scale-110">
+                    </figcaption>
+                    <div class="space-y-0.5 font-medium dark:text-white text-left" style="position: absolute; bottom: 0;">
+                        <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white"><span class="flex w-2.5 h-2.5 bg-green-600 rounded-full mr-1.5 flex-shrink-0 "></span>Available</span>
+                    </div>
+                 </figure>
+                 <figure class="flex flex-col items-center justify-center p-8 text-center bg-gray-100 border-b border-gray-200 rounded-2xl md:border-r dark:bg-gray-800 dark:border-gray-700 hover:bg-red-200 mt-5" style="position: relative;">
+                    <figcaption class="flex items-center justify-center space-x-3 flex-col">
+                       <img src="{% static 'assets/icons/blood-type (6).svg' %}" alt="profile icon" class="w-[105px] transform transition-transform duration-300 hover:scale-110">
+                    </figcaption>
+                    <div class="space-y-0.5 font-medium dark:text-white text-left" style="position: absolute; bottom: 0;">
+                       <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white"><span class="flex w-2.5 h-2.5 bg-red-600 rounded-full mr-1.5 flex-shrink-0"></span>Not Available</span>
+                    </div>
+                 </figure>
+              </div>
+        </div>
+        
+
+    </div>
+
+</div>
+
+{% endblock content %}
+
+

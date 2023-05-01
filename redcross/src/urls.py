@@ -22,6 +22,7 @@ urlpatterns = [
     path("", include("prcuser.urls")),
     path("account/",include("account.urls")),
     path('lifelinkadmin/',include("custom_admin.urls")),
+    path('inventory/',include("inventory.urls")),
     
     path('oauth/', include('social_django.urls', namespace='social')),  
 ]
