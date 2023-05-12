@@ -1,9 +1,9 @@
 {% extends "custom_admin/users.html" %}
 {% load static %}
-{% block title %}Admin | bloodBag {% endblock title %} 
-{% block titleLarge %}
-  Collected Blood Bag
-{% endblock titleLarge %}
+{% block sidebaruser %}
+{% endblock sidebaruser %}
+{% block headings %}
+{% endblock headings %}
 {% block searchPlaceHolder %}
 <input type="text" id="search" class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search Bag" />
 {% endblock searchPlaceHolder %}
@@ -49,7 +49,7 @@
       <th scope="col" class="px-6 py-3"> Actions </th>
     </tr>
   </thead>
-  {% for blood_bag in blood_bags %}
+  {% for blood_bag in page_obj  %}
   <tbody id="table-body">
       <tr class="bg-white border-b hover:bg-gray-50 text-center text-gray-800">
       <!-- <td class="px-6 py-4">
@@ -101,39 +101,39 @@
 {% endblock table %}
 {% block navPagination %} 
 <nav class="bg-gray-50 flex items-center justify-center py-5">
-  {% if users.has_other_pages %} 
+  {% if page_obj.has_other_pages %} 
   <ul class="flex list-none">
-     {% if users.has_previous %}
+     {% if page_obj.has_previous %}
      <!-- First page item -->
      <li>
-        <a class="relative block px-3 py-2 rounded-l-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page=1{{ users.sort_param }}">
+        <a class="relative block px-3 py-2 rounded-l-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page=1{{ page_obj.sort_param }}">
         <span>First</span>
         </a>
      </li>
      <!-- Previous page item -->
      <li>
-        <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ users.previous_page_number }}{{ users.sort_param }}"> Previous </a>
+        <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.previous_page_number }}{{ page_obj.sort_param }}"> Previous </a>
      </li>
-     {% endif %} {% for num in users.paginator.page_range %} {% if num == users.number %}
+     {% endif %} {% for num in page_obj.paginator.page_range %} {% if num == page_obj.number %}
      <!-- Current page item with highlighted background -->
      <li>
-        <a class="relative block px-3 py-2 bg-primary text-red-700 font-medium rounded-md" href="?page={{ num }}{{ users.sort_param }}">{{ num }}</a>
+        <a class="relative block px-3 py-2 bg-primary text-red-700 font-medium rounded-md" href="?page={{ num }}{{ page_obj.sort_param }}">{{ num }}</a>
      </li>
-     {% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
+     {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
      <!-- Page number item -->
      <li>
-        <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ num }}{{ users.sort_param }}">
+        <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ num }}{{ page_obj.sort_param }}">
         {{ num }}
         </a>
      </li>
-     {% endif %} {% endfor %} {% if users.has_next %}
+     {% endif %} {% endfor %} {% if page_obj.has_next %}
      <!-- Next page item -->
      <li>
-        <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ users.next_page_number }}{{ users.sort_param }}"> Next </a>
+        <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.next_page_number }}{{ page_obj.sort_param }}"> Next </a>
      </li>
      <!-- Last page item -->
      <li>
-        <a class="relative block px-3 py-2 rounded-r-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ users.paginator.num_pages }}{{ users.sort_param }}">
+        <a class="relative block px-3 py-2 rounded-r-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.paginator.num_pages }}{{ page_obj.sort_param }}">
         <span>Last</span>
         </a>
      </li>

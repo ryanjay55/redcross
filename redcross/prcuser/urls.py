@@ -9,5 +9,4 @@ urlpatterns = [
   path('donation-history/', views.donationHistory, name='donationHistory'),
   path('blood-donor-network/', views.bloodDonorNetowrk, name='bloodDonorNetowrk'),
   path('profile/', views.profile, name='profile'),
-  
 ]

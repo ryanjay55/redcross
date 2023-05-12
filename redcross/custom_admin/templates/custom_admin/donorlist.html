@@ -1,261 +1,367 @@
-{% extends "custom_admin/base.html" %}{% load tailwind_filters %} {% load static %} {% load static tailwind_tags %} {% block title %}Admin | Donor List {% endblock title %} {% tailwind_css %}
-{% block content %}
-<div class="flex flex-row h-full">
-   <div class=""> {% include "custom_admin/sidebar.html" %} </div>
-   <div class="flex-1 mx-auto ">
-      <!-- TABLEEEEEEE -->
-      <div class="relative overflow-x-auto shadow-b-2xl sm:rounded-lg mx-[120px] mt-[20px]">
-         <h1 class="flex items-center text-5xl font-extrabold mb-[40px]">Donor<span class="bg-red-700 text-white text-sm font-semibold mr-2 px-2.5 py-0.5 rounded ml-2">LIST</span></h1>
-         <div class="flex items-center justify-between pb-4">
-            <label for="table-search" class="sr-only">Search</label>
-            <div class="relative ">
-               <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <img src="{% static 'assets/icons/search.svg' %}" alt="Search icon" class="w-5 h-5" />
-               </div>
-               <input
-                  type="text"
-                  id="search"
-                  class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-red-500 focus:border-red-500 "
-                  placeholder="Search Donor"
-                  />
-            </div>
-         </div>
-         
-         <div class="flex flex-row justify-between items-center mb-2">
-            <div class="actions">
-                <label>
-                    <span style="font-weight: bold;">Action:</span> 
-                    <select name="action" required="" class="px-4 py-2 rounded border border-gray-300 text-gray-700 text-sm w-[250px]">
-                        <option value="" selected>------------------</option>
-                        <option value="delete_selected" class="font-semibold">Move selected users to deferral</option>
-                    </select>                    
-                </label>
-               <input type="hidden" name="select_across" value="0" class="select-across">
-               <button  type="button" class="w-[80px] text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg py-[5px] px-[3px] text-xs text-center" >Go</button>
-            </div>
+{% load static %}
+<h1 class="flex items-center text-5xl font-extrabold mt-6 mb-[40px]">Donor<span class="bg-red-700 text-white text-sm font-semibold mr-2 px-2.5 py-0.5 rounded ml-2">LIST</span></h1>
+<div class="flex items-center justify-between pb-4">
+    <label for="table-search" class="sr-only">Search</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <img src="{% static 'assets/icons/search.svg' %}" alt="Search icon" class="w-5 h-5" />
+        </div>
+        <input type="text" id="search" class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-red-500 focus:border-red-500" placeholder="Search Donor" />
+    </div>
+</div>
 
-            <div>
-               <a href="{% url 'export-donor-info' %}">
-               <button
-                  id="dateRange-modal-trigger-btn"
-                  data-modal-target="small-modal"
-                  data-modal-toggle="small-modal"
-                  class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-300 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5"
-                  type="button"
-                  >
-               <img src="{% static 'assets/icons/xls.svg' %}" alt="xls icon" class="w-5 h-5 mr-4" />
-               Export
-               </button>
-               </a>
-            </div>
-         </div>
-         <table class="w-full text-sm text-left text-gray-500 table-auto" id="table">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-200 text-center">
-               <tr>
-                  <!-- <th scope="col" class="px-6 py-3">
+<div class="flex flex-row justify-between items-center mb-2">
+    <div class="flex flex-row items-center justify-center">
+        <div class="actions">
+            <label>
+                <span style="font-weight: bold;">Action:</span>
+                <select name="action" required="" class="px-4 py-2 h-auto rounded border border-gray-300 text-gray-700 text-sm w-[250px]">
+                    <option value="" selected>------------------</option>
+                    <option value="delete_selected" class="font-semibold">Move selected users to deferral</option>
+                </select>
+            </label>
+            <input type="hidden" name="select_across" value="0" class="select-across" />
+            <button type="button" id="execute-button" class="w-[80px] text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg py-[5px] px-[3px] text-xs text-center">Go</button>
+        </div>
+        <p class="text-sm"><span id="checked-count" class="ml-2">0</span> out of <span id="row-count">{{ users.paginator.count }}</span> selected</p>
+    </div>
+    <div>
+        <a href="{% url 'export-donor-info' %}">
+            <button
+                id="dateRange-modal-trigger-btn"
+                data-modal-target="small-modal"
+                data-modal-toggle="small-modal"
+                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-300 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5"
+                type="button"
+            >
+                <img src="{% static 'assets/icons/xls.svg' %}" alt="xls icon" class="w-5 h-5 mr-4" />
+                Export
+            </button>
+        </a>
+    </div>
+</div>
+<!-- TABLEEEEEEE -->
+<table class="w-full text-sm text-left text-gray-500 table-auto" id="table">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-200 text-center">
+        <tr>
+            <!-- <th scope="col" class="px-6 py-3">
                      info ID 
                      </th> -->
-                  <th scope="col" class="px-3">
-                     <input id="select-all" type="checkbox"  class="w-5 h-5 text-lifelink-red2 bg-gray-200 border-gray-400 rounded focus:ring-white">
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                     <div class="flex items-center justify-center">
-                        Name {% if users.sort_param == '&sort=firstname' %}
-                        <a href="?page={{ users.number }}&sort=-firstname"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                        {% else %}
-                        <a href="?page={{ users.number }}&sort=firstname"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                        {% endif %}
-                     </div>
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                     <div class="flex items-center justify-center">
-                        Blood Type {% if users.sort_param == '&sort=blood_type' %} {% if users.paginator.reverse %}
-                        <!-- check if currently sorted ascending or descending -->
-                        <a href="?page={{ users.number }}&sort=-blood_type"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort ascending icon" class="w-5 h-5 ml-2" /></a>
-                        {% else %}
-                        <a href="?page={{ users.number }}"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort descending icon" class="w-5 h-5 ml-2" /></a>
-                        {% endif %} {% else %}
-                        <a href="?page={{ users.number }}&sort=blood_type"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                        {% endif %}
-                     </div>
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                     <div class="flex items-center justify-center">
-                        Number of donated
-                     </div>
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                     Last Donated
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                     <div class="flex items-center justify-center">
-                        Sex {% if users.sort_param == '&sort=sex' %} {% if users.paginator.reverse %}
-                        <!-- check if currently sorted ascending or descending -->
-                        <a href="?page={{ users.number }}&sort=-sex"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort ascending icon" class="w-5 h-5 ml-2" /></a>
-                        {% else %}
-                        <a href="?page={{ users.number }}"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort descending icon" class="w-5 h-5 ml-2" /></a>
-                        {% endif %} {% else %}
-                        <a href="?page={{ users.number }}&sort=sex"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                        {% endif %}
-                     </div>
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                     <div class="flex items-center justify-center">
-                        Age {% if users.sort_param == '&sort=age_asc' %}
-                        <a href="?page={{ users.number }}&sort=-age_asc"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                        {% else %}
-                        <a href="?page={{ users.number }}&sort=age_asc"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
-                        {% endif %}
-                     </div>
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                     Contact Number
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                     Actions
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                     Deferral
-                  </th>
-               </tr>
-            </thead>
-            <tbody id="table-body">
-               {% for blood_bag  in page_obj %}
-               <tr class="bg-white border-b hover:bg-gray-50 text-center text-gray-800">
-                  <!-- <td class="px-6 py-4">
+            <th scope="col" class="px-3">
+                <input id="select-all" type="checkbox" class="w-5 h-5 text-lifelink-red2 bg-gray-200 border-gray-400 rounded focus:ring-white" />
+            </th>
+            <th scope="col" class="px-6 py-3">
+                <div class="flex items-center justify-center">
+                    Name {% if page_obj.sort_param == '&sort=full_name' %} {% if users.sort_direction == 'asc' %}
+                    <a href="?page={{ page_obj.number }}&sort=-full_name">
+                        <img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" />
+                    </a>
+                    {% else %}
+                    <a href="?page={{ page_obj.number }}">
+                        <img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" />
+                    </a>
+                    {% endif %} {% else %}
+                    <a href="?page={{ page_obj.number }}&sort=full_name">
+                        <img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" />
+                    </a>
+                    {% endif %}
+                </div>
+                <!-- <div class="flex items-center justify-center">
+                                Name {% if users.sort_param == '&sort=full_name' %}
+                                <a href="?page={{ page_obj.number }}&sort=-full_name">
+                                    <img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" />
+                                </a>
+                                {% else %}
+                                <a href="?page={{ page_obj.number }}&sort=full_name">
+                                    <img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" />
+                                </a>
+                                {% endif %}
+                            </div> -->
+            </th>
+
+            <th scope="col" class="px-6 py-3">
+                <div class="flex items-center justify-center">
+                    Blood Type {% if page_obj.sort_param == '&sort=blood_type' %} {% if page_obj.paginator.reverse %}
+                    <!-- check if currently sorted ascending or descending -->
+                    <a href="?page={{ page_obj.number }}&sort=-blood_type"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort ascending icon" class="w-5 h-5 ml-2" /></a>
+                    {% else %}
+                    <a href="?page={{ page_obj.number }}"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort descending icon" class="w-5 h-5 ml-2" /></a>
+                    {% endif %} {% else %}
+                    <a href="?page={{ page_obj.number }}&sort=blood_type"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                    {% endif %}
+                </div>
+            </th>
+            <th scope="col" class="px-6 py-3">
+                <div class="flex items-center justify-center">
+                    # Donated Blood {% if page_obj.sort_param == '&sort=num_donations' %} {% if page_obj.paginator.reverse %}
+                    <!-- check if currently sorted ascending or descending -->
+                    <a href="?page={{ page_obj.number }}&sort=-num_donations"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort ascending icon" class="w-5 h-5 ml-2" /></a>
+                    {% else %}
+                    <a href="?page={{ page_obj.number }}"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort descending icon" class="w-5 h-5 ml-2" /></a>
+                    {% endif %} {% else %}
+                    <a href="?page={{ page_obj.number }}&sort=num_donations"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                    {% endif %}
+                </div>
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Last Donated
+            </th>
+            <th scope="col" class="px-6 py-3">
+                <div class="flex items-center justify-center">
+                    Sex {% if page_obj.sort_param == '&sort=sex' %} {% if page_obj.paginator.reverse %}
+                    <!-- check if currently sorted ascending or descending -->
+                    <a href="?page={{ page_obj.number }}&sort=-sex"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort ascending icon" class="w-5 h-5 ml-2" /></a>
+                    {% else %}
+                    <a href="?page={{ page_obj.number }}"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort descending icon" class="w-5 h-5 ml-2" /></a>
+                    {% endif %} {% else %}
+                    <a href="?page={{ page_obj.number }}&sort=sex"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                    {% endif %}
+                </div>
+            </th>            
+            <th scope="col" class="px-6 py-3">
+                <div class="flex items-center justify-center">
+                    Age {% if page_obj.sort_param == '&sort=age_asc' %}
+                    <a href="?page={{ page_obj.number }}&sort=-age_asc"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                    {% else %}
+                    <a href="?page={{ page_obj.number }}&sort=age_asc"><img src="{% static 'assets/icons/sort.svg' %}" alt="sort icon" class="w-5 h-5 ml-2" /></a>
+                    {% endif %}
+                </div>
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Contact Number
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Actions
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Deferral
+            </th>
+        </tr>
+    </thead>
+    <tbody id="table-body">
+        {% for blood_bag in page_obj %}
+        <tr class="bg-white border-b hover:bg-gray-50 text-center text-gray-800">
+            <!-- <td class="px-6 py-4">
                      {{ user.info_id }}
                      </td> -->
-                  <td class="px-3 ">
-                     <input type="checkbox"  class="select-donor w-5 h-5 text-lifelink-red2 bg-gray-200 border-gray-400 rounded focus:ring-white">
-                  </td>
-                  <td class="px-6 py-4">
-                     {{ blood_bag.full_name }}
-                  </td>
-                  <td class="px-6 py-4">
-                     {{ blood_bag.info_id__blood_type }}
-                  </td>
-                  <td class="px-6 py-4">
-                     {{ blood_bag.num_donations }}
-                  </td>
-                  <td class="px-6 py-4">
-                     {{ blood_bag.last_donation|date:"F d, Y" }}
-                  </td>
-                  <td class="px-6 py-4">
-                     {{ blood_bag.info_id__sex }}
-                  </td>
-                  <td class="px-6 py-4">
-                     {{ blood_bag.age }}
-                  </td>
-                  <td class="px-6 py-4">
-                     {{ blood_bag.info_id__contact_number }}
-                  </td>
-                  <td class="px-6 py-4">
-                     <div class="flex item-center justify-center">
-                        <button  data-modal-target="#view-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal" type="button">
-                           <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                              </svg>
-                           </div>
-                        </button>
+            <td class="px-3">
+                <input type="checkbox" name="ids" onchange="changeBackground(this)" class="select-donor w-5 h-5 text-lifelink-red2 bg-gray-200 border-gray-400 rounded focus:ring-white" />
+            </td>
+            <td class="px-6 py-4">
+                {{ blood_bag.full_name }}
+            </td>
+            <td class="px-6 py-4">
+                {{ blood_bag.info_id__blood_type }}
+            </td>
+            <td class="px-6 py-4">
+                {{ blood_bag.num_donations }}
+            </td>
+            <td class="px-6 py-4">
+                {{ blood_bag.last_donation|date:"F d, Y" }}
+            </td>
+            <td class="px-6 py-4">
+                {{ blood_bag.info_id__sex }}
+            </td>
+            <td class="px-6 py-4">
+                {{ blood_bag.age }}
+            </td>
+            <td class="px-6 py-4">
+                {{ blood_bag.info_id__contact_number }}
+            </td>
+            <td class="px-6 py-4">
+                <div class="flex item-center justify-center">
+                    <button data-modal-target="#view-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal" type="button">
                         <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
-                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 stroke-width="2"
-                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                 />
-                           </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
                         </div>
-                     </div>
-                  </td>
-                  <td class="px-4 py-4">
-                     <button data-modal-target="#add-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal"  type="button" class="add-blood-btn flex items-center justify-center text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg py-[5px] px-[3px] text-xs text-center" >Move to Deferral</button>
-                  </td>
-               </tr>
-               {% endfor %}
-            </tbody>
-         </table>
-         <nav class="bg-gray-50 flex items-center justify-center py-5">
-            {% if page_obj.has_other_pages %} 
-            <ul class="flex list-none">
-               {% if page_obj.has_previous %}
-               <!-- First page item -->
-               <li>
-                  <a class="relative block px-3 py-2 rounded-l-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page=1">
-                  <span>First</span>
-                  </a>
-               </li>
-               <!-- Previous page item -->
-               <li>
-                  <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.previous_page_number }}"> Previous </a>
-               </li>
-               {% endif %} {% for num in page_obj.paginator.page_range %} {% if num == page_obj.number %}
-               <!-- Current page item with highlighted background -->
-               <li>
-                  <a class="relative block px-3 py-2 bg-primary text-red-700 font-medium rounded-md" href="?page={{ num }}">{{ num }}</a>
-               </li>
-               {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-               <!-- Page number item -->
-               <li>
-                  <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ num }}">
-                  {{ num }}
-                  </a>
-               </li>
-               {% endif %} {% endfor %} {% if page_obj.has_next %}
-               <!-- Next page item -->
-               <li>
-                  <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.next_page_number }}"> Next </a>
-               </li>
-               <!-- Last page item -->
-               <li>
-                  <a class="relative block px-3 py-2 rounded-r-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.paginator.num_pages }}">
-                  <span>Last</span>
-                  </a>
-               </li>
-               {% endif %}
-            </ul>
-            {% endif %} 
-         </nav>
-      </div>
-   </div>
-</div>
+                    </button>
+                    <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </div>
+                </div>
+            </td>
+            <td class="px-4 py-4">
+                <button
+                    data-modal-target="#move-to-deferral{{blood_bag.info_id}}"
+                    data-modal-toggle="defaultModal"
+                    type="button"
+                    class="add-blood-btn flex items-center justify-center text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg py-[5px] px-[3px] text-xs text-center"
+                >
+                    Move to Deferral
+                </button>
+            </td>
+        </tr>
+        {% include "custom_admin/warningmodal.html" %} {% endfor %}
+    </tbody>
+</table>
+<nav class="bg-gray-50 flex items-center justify-center py-5">
+    {% if page_obj.has_other_pages %}
+    <ul class="flex list-none">
+        {% if page_obj.has_previous %}
+        <!-- First page item -->
+        <li>
+            <a class="relative block px-3 py-2 rounded-l-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page=1{{ page_obj.sort_param }}">
+                <span>First</span>
+            </a>
+        </li>
+        <!-- Previous page item -->
+        <li>
+            <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.previous_page_number }}{{ page_obj.sort_param }}">
+                Previous
+            </a>
+        </li>
+        {% endif %} {% for num in page_obj.paginator.page_range %} {% if num == page_obj.number %}
+        <!-- Current page item with highlighted background -->
+        <li>
+            <a class="relative block px-3 py-2 bg-primary text-red-700 font-medium rounded-md" href="?page={{ num }}{{ page_obj.sort_param }}">
+                {{ num }}
+            </a>
+        </li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <!-- Page number item -->
+        <li>
+            <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ num }}{{ page_obj.sort_param }}">
+                {{ num }}
+            </a>
+        </li>
+        {% endif %} {% endfor %} {% if page_obj.has_next %}
+        <!-- Next page item -->
+        <li>
+            <a class="relative block px-3 py-2 bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.next_page_number }}{{ page_obj.sort_param }}">
+                Next
+            </a>
+        </li>
+        <!-- Last page item -->
+        <li>
+            <a class="relative block px-3 py-2 rounded-r-md bg-white border border-gray-300 text-gray-600 hover:text-gray-900" href="?page={{ page_obj.paginator.num_pages }}{{ page_obj.sort_param }}">
+                <span>Last</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
+</nav>
+
 <script>
-   const selectAllCheckbox = document.getElementById('select-all');
-   const selectDonorCheckboxes = document.querySelectorAll('.select-donor');
-   const actionSelect = document.getElementById('action-select');
-   const executeButton = document.getElementById('execute-button');
-   
-   selectAllCheckbox.addEventListener('change', () => {
-     selectDonorCheckboxes.forEach(checkbox => {
-       checkbox.checked = selectAllCheckbox.checked;
-     });
-   });
-   
-   executeButton.addEventListener('click', () => {
-     const selectedAction = actionSelect.value;
-     const selectedDonors = [];
-   
-     selectDonorCheckboxes.forEach(checkbox => {
-       if (checkbox.checked) {
-         selectedDonors.push(checkbox.parentElement.parentElement);
-       }
-     });
-   
-     if (selectedDonors.length === 0) {
-       alert('Please select at least one donor to execute the action.');
-       return;
-     }
-   
-     if (selectedAction === 'move-to-deferral') {
-       selectedDonors.forEach(donor => {
-         // Logic to move donor to deferral list
-       });
-     }
-   
-     // Add more if statements to handle other actions
-   });
+    const selectAllCheckbox = document.getElementById("select-all");
+    const selectDonorCheckboxes = document.querySelectorAll(".select-donor");
+
+    selectAllCheckbox.addEventListener("change", () => {
+        selectDonorCheckboxes.forEach((checkbox) => {
+            checkbox.checked = selectAllCheckbox.checked;
+            highlightRow(checkbox);
+            checkbox.addEventListener("click", () => {
+                highlightRow(checkbox);
+            });
+        });
+    });
+
+    function highlightRow(checkbox) {
+        const row = checkbox.parentNode.parentNode; // get the parent tr element
+        if (checkbox.checked) {
+            row.style.backgroundColor = "#ECECEC";
+        } else {
+            row.style.backgroundColor = "white";
+        }
+    }
+
+    function changeBackground(checkbox) {
+        if (checkbox.checked) {
+            checkbox.parentNode.parentNode.style.backgroundColor = "#ECECEC";
+        } else {
+            checkbox.parentNode.parentNode.style.backgroundColor = "white";
+        }
+    }
+
+    //Checkbox counttttttttttttttttttttttt
+    function updateCheckedCount() {
+        // Get all the checkboxes with name 'ids'
+        var checkboxes = document.getElementsByName("ids");
+    
+        // Get the number of checkboxes that are currently checked
+        var count = 0;
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                count++;
+            }
+        }
+    
+        // Update the row count display
+        var rowCountSpan = document.getElementById("row-count");
+        rowCountSpan.textContent = checkboxes.length;
+    
+        // Update the count display
+        var checkedCountSpan = document.getElementById("checked-count");
+        checkedCountSpan.textContent = count;
+    
+        // Get the "select all" checkbox and set up an event listener
+        var selectAllCheckbox = document.getElementById("select-all");
+        selectAllCheckbox.addEventListener("change", function () {
+            // Check or uncheck all checkboxes based on the state of the "select all" checkbox
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = this.checked;
+            }
+            // Update the count display
+            count = this.checked ? checkboxes.length : 0;
+            checkedCountSpan.textContent = count;
+            // Save the count to local storage
+            localStorage.setItem('checkedCount', count);
+        });
+    
+        // Update the count when a checkbox is unchecked
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener("change", function () {
+                if (this.checked) {
+                    count++;
+                } else {
+                    count--;
+                }
+                checkedCountSpan.textContent = count;
+                // Update the "select all" checkbox based on the state of all checkboxes
+                selectAllCheckbox.checked = count == checkboxes.length;
+                // Save the count to local storage
+                localStorage.setItem('checkedCount', count);
+            });
+        }
+    }
+    
+    // Call the function to initialize the count when the page loads
+    window.addEventListener("load", function () {
+        // Get the saved count from local storage
+        var savedCount = localStorage.getItem('checkedCount');
+        if (savedCount !== null) {
+            // Update the count display
+            var checkedCountSpan = document.getElementById("checked-count");
+            checkedCountSpan.textContent = savedCount;
+        }
+        updateCheckedCount();
+    });
+
+    
+    //-----------------------------------------------------------------------------------------
+
+    // Get all the modal toggle buttons
+    const modalToggleButtons = document.querySelectorAll("[data-modal-toggle]");
+    // Loop through each button and add a click event listener
+    modalToggleButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            // Get the target modal using the data-modal-target attribute
+            const targetModal = document.querySelector(button.dataset.modalTarget);
+            // Toggle the hidden class of the target modal
+            targetModal.classList.toggle("hidden");
+            // Get the cancel button inside the target modal
+            const cancelButton = targetModal.querySelector("#cancel-btn");
+            // Add a click event listener to the cancel button to hide the modal
+            cancelButton.addEventListener("click", () => {
+                targetModal.classList.add("hidden");
+            });
+        });
+    });
+
+    
 </script>
-{% endblock content %}

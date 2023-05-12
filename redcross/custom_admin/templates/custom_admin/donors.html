@@ -1,0 +1,82 @@
+{% extends "custom_admin/base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% load static tailwind_tags %}
+{% block title %}Admin | Donor List{% endblock title %}
+{% tailwind_css %}
+
+{% block content %}
+<div class="flex flex-row h-full">
+    <div>{% include "custom_admin/sidebar.html" %}</div>
+    <div class="flex-1 mx-auto">
+        <div class="relative overflow-x-auto shadow-b-2xl sm:rounded-lg mx-[120px] mt-[20px]">
+            <div class="text-center bg-white border-b-2 border-lifelink-black1 p-4">
+                <ul class="flex flex-wrap -mb-px">
+                    <li class="mr-4">
+                      <a href="#DonorTab" class="tab-link font-semibold text-gray-900 text-lg py-2 px-4 border-b-2 border-transparent" data-tab="donor">
+                        Donor
+                      </a>
+                    </li>
+                    <li class="mr-4">
+                      <a href="#DeferralTab" class="tab-link font-semibold text-gray-900 text-lg py-2 px-4 border-b-2 border-transparent" data-tab="deferral">
+                        Deferral
+                      </a>
+                    </li>
+                  </ul>
+            </div>
+            
+            <div class="tab-content">
+                <div class="donor-tab tab-pane active-tab-pane">
+                    {% include "custom_admin/donorlist.html" %}
+                </div>
+                <div class="deferral-tab tab-pane hidden">
+                    Deferral List
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const tabs = document.querySelectorAll('.tab-link');
+    const tabContents = document.querySelectorAll('.tab-pane');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove the 'active-tab' class from all tabs except the clicked tab
+            tabs.forEach(otherTab => {
+                if (otherTab !== tab) {
+                    otherTab.classList.remove('active-tab');
+                }
+            });
+            tab.classList.add('active-tab'); // add the 'active-tab' class to the clicked tab
+    
+            // Hide all tab contents and show the corresponding one for the clicked tab
+            tabContents.forEach(content => {
+                content.classList.add('hidden');
+            });
+            const target = tab.dataset.tab;
+            const targetContent = document.querySelector(`.${target}-tab`);
+            targetContent.classList.remove('hidden');
+        });
+    });
+    
+
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      const currentTab = e.target.dataset.tab;
+      tabs.forEach(tab => {
+        if (tab.dataset.tab === currentTab) {
+          tab.classList.add('active-tab', 'font-bold', 'text-red-800');
+        } else {
+          tab.classList.remove('active-tab', 'font-bold', 'text-red-800');
+        }
+      });
+    });
+  });
+
+</script>
+
+{% endblock content %}

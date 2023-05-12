@@ -41,7 +41,7 @@ def donationHistory(request):
     if blood_bags:
         most_recent_donation = blood_bags[0]
         time_since_donation = timezone.now() - make_aware(datetime.datetime.combine(most_recent_donation.date_donated, datetime.time()))
-        days_since_last_donation = time_since_donation.days
+        days_since_last_donation = time_since_donation.days - 1
 
     no_donations = False
     if not blood_bags:

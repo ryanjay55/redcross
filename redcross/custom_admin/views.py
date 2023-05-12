@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from datetime import datetime
 from xlwt import easyxf
 from django.core.paginator import Paginator
-from django.db.models.functions import ExtractYear,Concat
+from django.db.models.functions import ExtractYear,Concat,ExtractMonth
 from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField
 
 
@@ -97,6 +97,7 @@ def usersList(request):
                     bled_by=bled_by,
                 )
                 blood_bag.save()
+                send_thank_you_email(donor_info)
                 submission_success = 'Blood bag successfully added to the database.'
 
         
@@ -113,6 +114,7 @@ def usersList(request):
         ).order_by('age')
     else:
         user_list = DonorInfo.objects.order_by('-completed_at')
+        
     paginator = Paginator(user_list, 7)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -142,45 +144,6 @@ def send_thank_you_email(donor_info):
     from_email = 'ryanjayantonio305@gmail.com'
     recipient_list = [donor_info.email]
     send_mail(subject, message, from_email, recipient_list)
-
-
-def donorList(request):
-    sort_param = request.GET.get('sort', '-last_donation')  # default sort by last donation date in descending order
-    blood_bags = BloodBags.objects.select_related('info_id').annotate(
-        age=ExpressionWrapper(
-            datetime.now().year - ExtractYear(F('info_id__date_of_birth')),
-            output_field=IntegerField()
-        ),
-        full_name=Concat('info_id__firstname', Value(' '), 'info_id__lastname', output_field=CharField())
-    ).values(
-        'info_id', 'full_name', 'age', 'info_id__blood_type', 'info_id__date_of_birth', 'info_id__email',
-        'info_id__sex', 'info_id__contact_number', 'info_id__address', 'info_id__occupation', 'info_id__completed_at'
-    ).annotate(
-        num_donations=Count('bag_id'),
-        last_donation=Max('date_donated')
-    )
-    
-    if sort_param == 'name':
-        blood_bags = blood_bags.order_by('full_name')
-    elif sort_param == 'bloodtype':
-        blood_bags = blood_bags.order_by('info_id__blood_type')
-    elif sort_param == 'num_donations':
-        blood_bags = blood_bags.order_by('-num_donations')
-    elif sort_param == 'sex':
-        blood_bags = blood_bags.order_by('info_id__sex')
-    elif sort_param == 'age':
-        blood_bags = blood_bags.order_by('age')
-    else:
-        blood_bags = blood_bags.order_by('-info_id__completed_at')
-
-    paginator = Paginator(blood_bags, 8)  # Show 8 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'custom_admin/donorlist.html', {'blood_bags': blood_bags, 'page_obj': page_obj})
-
-
-
-
 
 
 def export_donors_info(request):
@@ -222,4 +185,76 @@ def export_donors_info(request):
 
     wb.save(response)
     return response
+
+def donors(request): 
+    
+    blood_bags = BloodBags.objects.select_related('info_id').annotate(
+        age=ExpressionWrapper(
+            datetime.now().year - ExtractYear(F('info_id__date_of_birth')),
+            output_field=IntegerField()
+        ),
+        full_name=Concat('info_id__firstname', Value(' '), 'info_id__lastname', output_field=CharField())
+    ).values(
+        'info_id', 'full_name', 'age', 'info_id__blood_type', 'info_id__date_of_birth', 'info_id__email',
+        'info_id__sex', 'info_id__contact_number', 'info_id__address', 'info_id__occupation', 'info_id__completed_at'
+    ).annotate(
+        num_donations=Count('bag_id'),
+        last_donation=Max('date_donated')
+    )
+    
+    sort_param = request.GET.get('sort', '-last_donation')  # default sort by last donation date in descending order
+    if sort_param == 'full_name':
+        blood_bags = blood_bags.order_by('full_name')
+    elif sort_param == '-full_name':
+        blood_bags = blood_bags.order_by('-full_name')
+    elif sort_param == 'blood_type':
+        blood_bags = blood_bags.order_by('info_id__blood_type')
+    elif sort_param == '-blood_type':
+        blood_bags = blood_bags.order_by('-info_id__blood_type')
+    elif sort_param == 'num_donations':
+        blood_bags = blood_bags.order_by('num_donations')
+    elif sort_param == '-num_donations':
+        blood_bags = blood_bags.order_by('-num_donations')
+    elif sort_param == 'sex':
+        blood_bags = blood_bags.order_by('info_id__sex')
+    elif sort_param == '-sex':
+        blood_bags = blood_bags.order_by('-info_id__sex')
+    elif sort_param == 'age_asc':
+        blood_bags = blood_bags.order_by('age')
+    elif sort_param == 'age_desc':
+        blood_bags = blood_bags.order_by('-age')
+    else:
+        blood_bags = blood_bags.order_by('-last_donation')
+
+    paginator = Paginator(blood_bags, 7)  # Show 7 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Pass the current sort parameter value to the pagination links
+    if sort_param == 'full_name':
+        page_obj.sort_param = '&sort=full_name'
+    elif sort_param == 'blood_type':
+        page_obj.sort_param = '&sort=blood_type'
+    elif sort_param == 'blood_type':
+        page_obj.sort_param = '&sort=blood_type'
+    elif sort_param == 'num_donations':
+        page_obj.sort_param = '&sort=num_donations'
+    elif sort_param == 'sex':
+        page_obj.sort_param = '&sort=sex'
+    elif sort_param == 'age_asc':
+        page_obj.sort_param = '&sort=age_asc'
+    else:
+        page_obj.sort_param = ''
+
+
+    # Pass the current sort parameter value to the next and previous page links
+    if page_obj.has_previous():
+        page_obj.previous_page_number_param = f'&sort={sort_param}&page={page_obj.previous_page_number()}'
+    if page_obj.has_next():
+        page_obj.next_page_number_param = f'&sort={sort_param}&page={page_obj.next_page_number()}'
+        
+        
+        
+    return render(request, 'custom_admin/donors.html', {'page_obj': page_obj})
+
 

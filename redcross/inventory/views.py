@@ -3,24 +3,55 @@ from inventory.models import BloodBags
 from account.models import DonorInfo
 import xlwt
 from django.core.paginator import Paginator
+from django.db.models.functions import ExtractYear,Concat,ExtractMonth
+from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField
 from django.http import HttpResponse
+import xlwt
+from datetime import datetime
+
 
 
 # Create your views here.
 
 
-def bloodBagList(request):
-    blood_bags = BloodBags.objects.all().order_by('-date_donated')
-    paginator = Paginator(blood_bags, 8)  # Show 8 items per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'inventory/bloodbaglist.html',{'blood_bags': blood_bags,'page_obj':page_obj})
-
 def bloodInventory(request):
     blood_bags = BloodBags.objects.all().order_by('-date_donated')
-    return render(request, 'inventory/inventory.html',{'blood_bags': blood_bags})
+    full_name = Concat('info_id__firstname', Value(' '), 'info_id__lastname', output_field=CharField())
 
-import xlwt
+    sort_param = request.GET.get('sort', '-date_donated')  # default sort by date_donated in descending order
+    if sort_param == 'full_name':
+        blood_bags = blood_bags.annotate(donor_name=full_name).order_by('donor_name')
+    elif sort_param == '-full_name':
+        blood_bags = blood_bags.annotate(donor_name=full_name).order_by('-donor_name')
+    elif sort_param == 'blood_type':
+        blood_bags = blood_bags.order_by('info_id__blood_type')
+    elif sort_param == '-blood_type':
+        blood_bags = blood_bags.order_by('-info_id__blood_type')
+
+    paginator = Paginator(blood_bags, 7)  # Show 7 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Pass the current parameter value to the pagination links
+    if sort_param == 'full_name':
+        page_obj.sort_param = '&sort=full_name'
+    elif sort_param == '-full_name':
+        page_obj.sort_param = '&sort=-full_name'
+    elif sort_param == 'info_id__blood_type':
+        page_obj.sort_param = '&sort=blood_type'
+    elif sort_param == '-info_id__blood_type':
+        page_obj.sort_param = '&sort=-blood_type'
+        
+    # Pass the current sort parameter value to the next and previous page links
+    if page_obj.has_previous():
+        page_obj.previous_page_number_param = f'&sort={sort_param}&page={page_obj.previous_page_number()}'
+    if page_obj.has_next():
+        page_obj.next_page_number_param = f'&sort={sort_param}&page={page_obj.next_page_number()}'
+        
+    now = datetime.now()    
+        
+    return render(request, 'inventory/inventory.html',{'blood_bags': blood_bags,'page_obj': page_obj,'now':now})
+
 
 def exportBloodBagList_to_xls():
     response = HttpResponse(content_type='application/ms-excel')

@@ -2,40 +2,30 @@
 {% load static tailwind_tags %}
 {% tailwind_css %}
 
-
-<nav class="mb-3">
-    <div class="max-w-screen-xl  p-4">
-      <a href="{% url 'home' %}">
-          <img src="{% static 'assets/img/Lifelink-logo.png' %}" class="h-[50px] mt-3" alt="LifeLink Logo" />
-      </a>
-    </div>
-    <div>
-        <nav class="">
-            <div class="max-w-screen-xl px-4 py-3 mx-auto">
-                <div class="flex items-center">
-                    <ul class="flex flex-row font-medium mt-0 mr-6 space-x-8 text-md">
-                        <li>
-                            <a href="{% url 'home' %}" class="text-lifelink-black1 hover:underline mr-5  {% if navbar == 'home' %} underline text-lifelink-red1 {% endif %}" aria-current="page">Home</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-lifelink-black1 hover:underline mr-5">News and Events</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-lifelink-black1 hover:underline mr-5">Blood Banks</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-lifelink-black1 hover:underline mr-5">About</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-lifelink-black1 hover:underline mr-5">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
-</nav>
-
+<div class="flex flex-col items-start">
+    <a href="{% url 'home' %}">
+        <img src="{% static 'assets/img/Lifelink-logo.png' %}" class="h-[70px] mt-3 ml-5" alt="LifeLink Logo" />
+    </a>
+    <nav class="mt-3 ml-[200px]">
+        <ul class="flex flex-row font-medium mt-0 space-x-8 text-md justify-center">
+            <li>
+                <a href="{% url 'home' %}" class="text-lifelink-black1 hover:underline mr-5 text-2xl {% if navbar == 'home' %} underline text-lifelink-red1 {% endif %}" aria-current="page">Home</a>
+            </li>
+            <li>
+                <a href="#" class="text-lifelink-black1 hover:underline mr-5 text-2xl">News and Events</a>
+            </li>
+            <li>
+                <a href="#" class="text-lifelink-black1 hover:underline mr-5 text-2xl">Blood Banks</a>
+            </li>
+            <li>
+                <a href="#" class="text-lifelink-black1 hover:underline mr-5 text-2xl">About</a>
+            </li>
+            <li>
+                <a href="#" class="text-lifelink-black1 hover:underline mr-5 text-2xl">Contact</a>
+            </li>
+        </ul>
+    </nav>
+</div>
 
 
 <!-- <nav class="shadow-md flex items-center p-4 rounded-t-2xl justify-around">
@@ -63,3 +53,38 @@
     
 
 </nav> -->
+
+
+
+
+
+<!-- <nav class="bg-white border-gray-100">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <a href="{% url 'home' %}" class="flex items-center">
+          <img src="{% static 'assets/img/Lifelink-logo.png' %}" alt="LifeLink Logo" class="h-12 mr-3" alt="LifeLink Logo" />
+      </a> -->
+      <!-- <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+      </button> -->
+      <!-- <div class=" w-full md:block md:w-auto">
+        <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800">
+            <li>
+                <a href="{% url 'home' %}" class="block py-2 pl-3 pr-4  text-gray-500 hover:underline mr-5 text-2xl rounded md:bg-transparent {% if navbar == 'home' %} underline text-lifelink-red1 {% endif %}" aria-current="page">Home</a>
+            </li>
+            <li>
+                <a href="#" class="block py-2 pl-3 pr-4  text-gray-500 hover:underline mr-5 text-2xl rounded md:bg-transparent">News and Events</a>
+            </li>
+            <li>
+                <a href="#" class="block py-2 pl-3 pr-4  text-gray-500 hover:underline mr-5 text-2xl rounded md:bg-transparent">Blood Banks</a>
+            </li>
+            <li>
+                <a href="#" class="block py-2 pl-3 pr-4  text-gray-500 hover:underline mr-5 text-2xl rounded md:bg-transparent">About</a>
+            </li>
+            <li>
+                <a href="#" class="block py-2 pl-3 pr-4  text-gray-500 hover:underline mr-5 text-2xl rounded md:bg-transparent">Contact</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </nav> -->

@@ -5,8 +5,8 @@
 LifeLink | Login
 {% endblock title %}
 {% block content %}
-<div class="flex flex-col items-center justify-center px-6 py-0 mx-auto mt-[100px] lg:py-0">
-   <div class="w-full bg-lifelink-gray4 rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
+<div class="flex flex-col items-center justify-center px-6 py-0 mx-auto mt-[80px] lg:py-0">
+   <div class="w-full bg-white  rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
       <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
          <h1 class="flex flex-row items-center text-xl font-bold leading-tight tracking-tight text-lifelink-black1 md:text-2xl">
             <a href="{% url 'home' %}"><img class="h-[25px] mr-3 hover:rounded-md hover:bg-red-200" src="{% static 'assets/icons/back.svg' %}" alt="back icon"></a>
@@ -26,23 +26,24 @@ LifeLink | Login
               </label>
           </div>
           <div class="relative mb-3">
-              <input type="password" name="password" id="password" class="hidden"/>
-              <input type="password" name="password" id="floating_password" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
-              <label for="floating_password" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
-                  <img src="{% static 'assets/icons/lock.svg' %}" alt="Password Icon" class="inline-block w-[15px] h-auto mr-2">
-                  Password
-              </label>
-          </div>
-            <button type="submit" class="w-full text-white bg-lifelink-red2 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
-            <div class="flex items-center justify-center">
-               <a href="#" class="text-sm font-medium text-primary-600 hover:underline">Forgot password?</a>
+            <input type="password" name="password" id="password" class="hidden"/>
+            <input type="password" name="password" id="floating_password" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
+            <label for="floating_password" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                <img src="{% static 'assets/icons/lock.svg' %}" alt="Password Icon" class="inline-block w-[15px] h-auto mr-2">
+                Password
+            </label>
+            <div class="flex items-center mt-2">
+               <div class="flex-1"></div>
+               <a href="#" class="text-sm font-medium text-gray-800 hover:underline" onclick="document.getElementById('forgotPasswordModal').classList.remove('hidden')">Forgot password?</a>
             </div>
+          </div>          
+            <button type="submit" class="w-full text-white bg-lifelink-red2 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
             <div class="inline-flex items-center justify-center w-full">
                <hr class="w-64 h-px my-2 bg-lifelink-gray3 border-0">
                <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 left-1/2">or</span>
             </div>
             <div class="flex flex-col justify-between items-center">
-               <a href="{% url 'social:begin' 'google-oauth2' %}" class="flex justify-center items-center bg-white border-2 border-lifelink-red1 text-lifelink-black1 text-sm py-3 px-6 rounded-sm hover:bg-red-800 hover:text-white transition duration-200 mb-4 w-full"> 
+               <a href="{% url 'social:begin' 'google-oauth2' %}" class="flex justify-center items-center bg-white border-2 border-lifelink-red1  text-lifelink-black1 text-sm py-3 px-6 rounded-md hover:bg-red-800 hover:text-white transition duration-200 mb-4 w-full"> 
                <img src="{% static 'assets/icons/google.svg' %}" alt="Lock Icon" class="w-[15px] h-[25px] mr-5">
                Continue with Google
                </a>
@@ -58,4 +59,55 @@ LifeLink | Login
       </div>
    </div>
 </div>
+
+
+
+
+<!-- Modal for Forgot password-->
+<div class="fixed z-10 inset-0 overflow-y-auto hidden flex items-center justify-center" id="forgotPasswordModal">
+   <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+     <!-- Background overlay -->
+     <div class="fixed inset-0 transition-opacity">
+       <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+     </div>
+ 
+     <!-- Modal content -->
+     <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+       <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+         <div class="sm:flex sm:items-start">
+            <button class="absolute top-0 right-0 m-4 text-gray-700 hover:text-gray-900 focus:outline-none" onclick="closeModal()">
+               <svg class="w-6 h-6 fill-current hover:text-red-600" viewBox="0 0 24 24">
+                 <path d="M18.293 5.293a1 1 0 0 0-1.414 0L12 10.586 7.707 6.293a1 1 0 1 0-1.414 1.414L10.586 12l-4.293 4.293a1 1 0 0 0 1.414 1.414L12 13.414l4.293 4.293a1 1 0 0 0 1.414-1.414L13.414 12l4.879-4.879a1 1 0 0 0 0-1.414z"></path>
+               </svg>
+             </button>
+           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+             <h3 class="text-lg leading-6 font-medium text-gray-900">Forgot Password</h3>
+             <p class="mt-2 text-sm text-gray-500">Enter your email to receive a password reset OTP.</p>
+             <form method="post" class="mt-4">
+               {% csrf_token %}
+               <div class="relative mb-3">
+                  <input type="email" name="email" id="" class="hidden"/>
+                  <input type="email" name="email" id="floating_email" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
+                  <label for="floating_email" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                      <img src="{% static 'assets/icons/mail.svg' %}" alt="mail Icon" class="inline-block w-[15px] h-auto mr-2">
+                      Enter email
+                  </label>
+              </div>
+               <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Send OTP</button>
+             </form>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+</div>
+
+<script>
+   function closeModal() {
+     // Get the modal element
+     var modal = document.getElementById("forgotPasswordModal");
+     // Hide the modal by adding the "hidden" class
+     modal.classList.add("hidden");
+   }
+ </script>
 {% endblock content %}

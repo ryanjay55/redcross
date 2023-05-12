@@ -6,8 +6,14 @@ from django.contrib.auth.models import User
 from .forms import CompleteProfileForm
 from django.contrib.auth.decorators import login_required
 from .models import DonorInfo
+import random
 
 
+
+def send_otp(request):
+    otp = random.randint(111111,999999)
+    email = request.POST.get('email')
+    user = DonorInfo.objects.filter(email=email)
 
 
 def loginPage(request):
@@ -50,8 +56,8 @@ def signupPage(request):
         if password == confirm_password:
             # Create the user object
             user = User.objects.create_user(username=username, email=email, password=password)
+            # send_registration_email(user)
             user.save()
-            send_registration_email(user)
             messages.success(request, 'Account was created.')
             return redirect('user_login')
         else:
@@ -67,7 +73,7 @@ def signupPage(request):
 # METHOD FOR SENDING EMAIL
 def send_registration_email(user):
     subject = 'Thank you for completing your profile!'
-    message = f'Hi {user.username},\n\nThank you for registering with Lifelink! We appreciate your trust in us and we are committed to providing you with the best service possible.\n\nAccount Information: \n\nemail:{user.email}\n Note: Do not share this to anyone.'
+    message = f'Hi {user.username},\n\nThank you for completing your profile in Lifelink, our blood bank management system. Your participation and support are crucial in ensuring a steady supply of safe and adequate blood for patients in need.\n\nWith your updated information, we can keep track of your eligibility to donate blood and provide you with timely notifications on when you can donate again. Your data will also help us match the right blood type to the right patient, ensuring efficient and effective blood transfusions.\n\nAgain, we thank you for your cooperation and support in this noble cause. You are truly making a difference in the lives of many people.\n\nSincerely,\nThe Lifelink Team'
     from_email = 'ryanjayantonio305@gmail.com'
     recipient_list = [user.email]
     send_mail(subject, message, from_email, recipient_list)
@@ -79,7 +85,7 @@ def user_logout(request):
 
 @login_required
 def completeProfile(request):
-    # access_token = 'EAAK00TS0IyEBAHWYoZAnUoLNZB0h8NyMF8XRQPrzlYbxZBnvIT1z8CiG7fs2RztkjETZCbdSgRiEEuJ4RvhED9qjbt1oOviyktcIMm021M2MuhZAvq8fyZBnzuwzGWiscVCapMpjxQT4YDCkvBvZCQf53ZA4LNqifZA7n1OgfWyaszl9H1qgKhgLeug0MWmnxfqvVSqzoHLwadAo26ZC7ZBV7011KvMBYuFephN8LJNEqEdUA8p5AiGZCmqS'
+    # access_token = 'EAAK00TS0IyEBAM0LPZC9yx0xnZBId2uYeECZBHCwySgIIoyHnSBTtFjRQpxKOIEdNoSSBkR2pZCgx4Ot0O4FZAcHVTVcZC64ToomCBDUSHWPZBBtEtJJj9qAjUwAtDZBQcasp8lWzADMpI01XVwCOG0ODlQXD85u0bpZASgv7hqDiceLdBbZCZBFeSd7xvMPb9ldZCZAldpL5ZAVwHiEw9GmTZCkJt50p69plDp1SNR8HZBT2ZCRzHvC8fFM64WoY'
     # response = requests.get(f'https://graph.facebook.com/v12.0/me?fields=email&access_token={access_token}')
     # data = response.json()
     # facebook_email = data['email']
@@ -101,6 +107,7 @@ def completeProfile(request):
                 # Create a new DonorInfo object with the form data
                 donor_info = form.save(commit=False)
                 donor_info.user = user  # Set the user field to the current user
+                send_registration_email(user)
                 donor_info.save()
                 return redirect('user-dashboard')  # Redirect to dashboard page or any other appropriate page
             else:
@@ -112,6 +119,5 @@ def completeProfile(request):
         form = CompleteProfileForm(initial={'email': user.email})
         # form = CompleteProfileForm(initial={'email': facebook_email})
 
-    context = {'form': form}
-    return render(request, 'account/complete-profile.html', context)
+    return render(request, 'account/complete-profile.html', {'form': form})
 

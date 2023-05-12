@@ -2,7 +2,7 @@ from django.urls import  path
 from inventory import views
 
 urlpatterns = [
-    path('bloodBagList/', views.bloodBagList, name='bloodBagList'),
+    # path('bloodBagList/', views.bloodBagList, name='bloodBagList'),
     path('bloodInventory/', views.bloodInventory, name='bloodInventory'),
     
     

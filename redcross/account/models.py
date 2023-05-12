@@ -38,7 +38,7 @@ class DonorInfo(models.Model):
     email = models.CharField(max_length=50)
     address = models.CharField(max_length=50)
     sex = models.CharField(max_length=10, choices=GENDER_CHOICES)
-    occupation = models.CharField(max_length=50, null=True)
+    occupation = models.CharField(max_length=50, null=True, blank=True)
     age = models.IntegerField(default=0, editable=False)
     contact_number = PhoneNumberField(default='+639')
     completed_at=models.DateTimeField(auto_now_add=True)
