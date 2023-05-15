@@ -5,15 +5,66 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from .forms import CompleteProfileForm
 from django.contrib.auth.decorators import login_required
-from .models import DonorInfo
+from .models import DonorInfo,OTP
+from datetime import timedelta
+from django.utils import timezone
+from django.contrib.auth.hashers import make_password
 import random
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 
 
-def send_otp(request):
-    otp = random.randint(111111,999999)
-    email = request.POST.get('email')
-    user = DonorInfo.objects.filter(email=email)
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        user_info = DonorInfo.objects.filter(email=email).first()
+        if user_info:
+            # Generate a random OTP and store it in a new OTP object associated with the user's DonorInfo object
+            otp = random.randint(100000, 999999)
+            try:
+                otp_obj = OTP(user=user_info, otp=otp)
+                otp_obj.save()
+            except Exception as e:
+                messages.error(request, str(e))
+                return render(request, 'account/forgot_password.html')
+            # Send an email to the user's email address containing the OTP
+            send_mail(
+                'Password reset OTP',
+                f'Your OTP is: {otp}',
+                'noreply@example.com',
+                [email],
+                fail_silently=False,
+            )
+            # Redirect the user to a page to enter the OTP they received
+            return render(request, 'account/enter_otp.html', {'email': email})
+        else:
+            messages.error(request, 'Email not found.')
+    # If the request method is not POST, render the forgot_password.html template
+    return render(request, 'account/forgot_password.html')
+
+
+def enter_otp(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        otp_entered = request.POST.get('otp')
+        user_info = DonorInfo.objects.filter(email=email).first()
+        if user_info:
+            # Delete expired OTPs
+            OTP.objects.filter(user=user_info).delete_if_expired()
+            # Check if the OTP entered matches the OTP stored in the OTP model for this user
+            otp_obj = OTP.objects.filter(user=user_info, otp=otp_entered).first()
+            if otp_obj:
+                # If the OTP is correct, delete the OTP object and render the reset_password.html template
+                otp_obj.delete()
+                return render(request, 'account/reset_password.html', {'email': email})
+            else:
+                messages.error(request, 'Invalid OTP entered.')
+        else:
+            messages.error(request, 'Email not found.')
+    # If the request method is not POST, render the enter_otp.html template with the email that was entered on the forgot password form
+    email = request.GET.get('email')
+    return render(request, 'account/enter_otp.html', {'email': email})
+
 
 
 def loginPage(request):
@@ -26,7 +77,7 @@ def loginPage(request):
         if user is not None:
             login(request, user)
             
-            # Check if the user has a record in the DonorInfo model (or the completeProfile model)
+            # Check if the user has a record in the DonorInfo model 
             try:
                 DonorInfo.objects.get(user=user)
                 # Redirect to dashboard page if user has complete profile

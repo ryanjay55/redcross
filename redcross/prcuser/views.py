@@ -23,8 +23,10 @@ def dashboard(request):
     # print('Current user:', user)
     donated_blood_count = BloodBags.objects.filter(info_id__user=user).count()
     # print('Donated blood count:', donated_blood_count)
-    context = {'navbar': 'dashboard', 'donated_blood_count': donated_blood_count}
-    return render(request, 'prcuser/dashboard.html', context)
+    blood_types = DonorInfo.objects.values_list('blood_type', flat=True).distinct()
+    available_blood_types = request.session.get('available_blood_types', {blood_type: False for blood_type in blood_types})
+
+    return render(request, 'prcuser/dashboard.html', {'navbar': 'dashboard', 'donated_blood_count': donated_blood_count, 'available_blood_types': available_blood_types})
 
 @login_required(login_url='user_login')
 def bloodJourney(request):

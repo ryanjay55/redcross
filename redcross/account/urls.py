@@ -7,7 +7,8 @@ urlpatterns = [
     path('logout/', views.user_logout, name='user_logout'),
     path('signup/', views.signupPage, name='user_signup'),
     path('complete-profile/', views.completeProfile, name='completeProfile'),
-
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('enter_otp/', views.enter_otp, name='enter_otp'),
 
 
 

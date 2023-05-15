@@ -23,7 +23,7 @@ class BloodInventory(models.Model):
     inventory_id = models.AutoField(primary_key=True)
     bag_id = models.ForeignKey(BloodBags, on_delete=models.CASCADE)
     exp_date = models.DateTimeField()
-    qty = models.IntegerField()
+    qty = models.IntegerField(default=0)
     
     def save(self, *args, **kwargs):
         if not self.exp_date:

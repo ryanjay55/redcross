@@ -1,9 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import DonorInfo
+from .models import DonorInfo,OTP
 
 
+class OTPAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'otp', 'created_at')
+    
 class CustomUserAdmin(UserAdmin):
     list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'is_staff')
     
@@ -13,4 +16,5 @@ class CustomDonorInfoAdmin(admin.ModelAdmin):
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(DonorInfo,CustomDonorInfoAdmin)
+admin.site.register(OTP, OTPAdmin)
 

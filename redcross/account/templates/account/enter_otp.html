@@ -1,0 +1,12 @@
+{% extends 'account/base.html' %}
+
+{% block content %}
+  <h1>Enter OTP</h1>
+  <form method="POST" action="{% url 'reset_password' %}">
+    {% csrf_token %}
+    <input type="hidden" name="email" value="{{ email }}">
+    <label for="otp">Enter the OTP you received:</label>
+    <input type="text" id="otp" name="otp">
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}

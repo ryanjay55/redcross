@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from inventory.models import BloodBags
+from inventory.models import BloodBags,BloodInventory
 from account.models import DonorInfo
 import xlwt
 from django.core.paginator import Paginator
 from django.db.models.functions import ExtractYear,Concat,ExtractMonth
-from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField
+from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField,Sum
 from django.http import HttpResponse
 import xlwt
 from datetime import datetime
@@ -12,9 +12,9 @@ from datetime import datetime
 
 
 # Create your views here.
-
-
-def bloodInventory(request):
+def bloodBagList(request):
+    
+    now = datetime.now()
     blood_bags = BloodBags.objects.all().order_by('-date_donated')
     full_name = Concat('info_id__firstname', Value(' '), 'info_id__lastname', output_field=CharField())
 
@@ -47,10 +47,27 @@ def bloodInventory(request):
         page_obj.previous_page_number_param = f'&sort={sort_param}&page={page_obj.previous_page_number()}'
     if page_obj.has_next():
         page_obj.next_page_number_param = f'&sort={sort_param}&page={page_obj.next_page_number()}'
-        
-    now = datetime.now()    
-        
-    return render(request, 'inventory/inventory.html',{'blood_bags': blood_bags,'page_obj': page_obj,'now':now})
+    return render(request, 'inventory/bloodbaglist.html',{'blood_bags': blood_bags,'page_obj': page_obj,'now':now})
+
+
+def bloodInventory(request):
+    now = datetime.now()
+
+    # get all available blood types
+    blood_types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+
+    # create a dictionary to store the blood counts, initialized to zero for all blood types
+    available_blood_counts = {blood_type: 0 for blood_type in blood_types}
+
+    # count total bags for each blood type and update the dictionary
+    for blood_count in BloodBags.objects.values('info_id__blood_type').annotate(total_bags=Count('bag_id')):
+        blood_type = blood_count['info_id__blood_type']
+        total_bags = blood_count['total_bags']
+        available_blood_counts[blood_type] = total_bags
+
+    return render(request, 'inventory/inventory.html', {'available_blood_counts': available_blood_counts, 'now': now})
+
+
 
 
 def exportBloodBagList_to_xls():
