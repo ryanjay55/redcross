@@ -3,10 +3,10 @@ from inventory.models import BloodBags,BloodInventory
 from account.models import DonorInfo
 import xlwt
 from django.core.paginator import Paginator
-from django.db.models.functions import ExtractYear,Concat,ExtractMonth
-from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField,Sum
+from django.db.models.functions import Concat
+from django.db.models import Value, CharField
 from django.http import HttpResponse
-import xlwt
+from django.contrib import messages
 from datetime import datetime
 
 
@@ -50,24 +50,93 @@ def bloodBagList(request):
     return render(request, 'inventory/bloodbaglist.html',{'blood_bags': blood_bags,'page_obj': page_obj,'now':now})
 
 
+# def bloodInventory(request):
+#     blood_type = request.GET.get('blood_type', 'A+')
+#     bags = BloodBags.objects.filter(info_id__blood_type=blood_type)
+#     blood_inventory = BloodInventory.objects.filter(bag_id__info_id__blood_type=blood_type).order_by('exp_date')
+#     stock_count = blood_inventory.count()
+    
+#     if request.method == 'POST':
+#         serial_no = request.POST.get('serial_no')
+        
+#         try:
+#             blood_bag = BloodBags.objects.get(serial_no=serial_no)
+            
+#             if BloodInventory.objects.filter(bag_id=blood_bag).exists():
+#                 error_message = 'Serial number {} already exists in the BloodInventory.'.format(serial_no)
+#                 messages.error(request, error_message)
+#             else:
+#                 exp_date = blood_bag.get_exp_date()
+#                 blood_inventory_obj = BloodInventory.objects.create(bag_id=blood_bag, exp_date=exp_date, qty=0)
+#                 stock_count += 1
+#                 success_message = 'Blood bag with serial number {} has been added to the BloodInventory.'.format(serial_no)
+#                 messages.success(request, success_message)
+        
+#         except BloodBags.DoesNotExist:
+#             error_message = 'Blood bag with serial number {} does not exist.'.format(serial_no)
+#             messages.error(request, error_message)
+    
+#     now = datetime.now()
+#     return render(request, 'inventory/inventory.html', {'now': now, 'bags': bags, 'blood_inventory': blood_inventory, 'stock_count': stock_count})
+
+from django.utils import timezone
+from datetime import datetime, timedelta
+
+
 def bloodInventory(request):
-    now = datetime.now()
+    blood_type = request.GET.get('blood_type', 'A+')
+    bags = BloodBags.objects.filter(info_id__blood_type=blood_type)
+    blood_inventory = BloodInventory.objects.filter(bag_id__info_id__blood_type=blood_type).order_by('exp_date')
+    stock_count = blood_inventory.count()
 
-    # get all available blood types
-    blood_types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+    now = timezone.now()
+    high_priority_threshold = now + timedelta(days=7)
+    medium_priority_threshold = now + timedelta(days=14)
+    low_priority_threshold = now + timedelta(days=42)
 
-    # create a dictionary to store the blood counts, initialized to zero for all blood types
-    available_blood_counts = {blood_type: 0 for blood_type in blood_types}
+    if request.method == 'POST':
+        serial_no = request.POST.get('serial_no')
 
-    # count total bags for each blood type and update the dictionary
-    for blood_count in BloodBags.objects.values('info_id__blood_type').annotate(total_bags=Count('bag_id')):
-        blood_type = blood_count['info_id__blood_type']
-        total_bags = blood_count['total_bags']
-        available_blood_counts[blood_type] = total_bags
+        try:
+            blood_bag = BloodBags.objects.get(serial_no=serial_no)
 
-    return render(request, 'inventory/inventory.html', {'available_blood_counts': available_blood_counts, 'now': now})
+            if BloodInventory.objects.filter(bag_id=blood_bag).exists():
+                error_message = 'Serial number {} already exists in the BloodInventory.'.format(serial_no)
+                messages.error(request, error_message)
+            else:
+                exp_date = blood_bag.get_exp_date()
+                blood_inventory_obj = BloodInventory.objects.create(bag_id=blood_bag, exp_date=exp_date, qty=0)
+                stock_count += 1
+                success_message = 'Blood bag with serial number {} has been added to the BloodInventory.'.format(serial_no)
+                messages.success(request, success_message)
 
+        except BloodBags.DoesNotExist:
+            error_message = 'Blood bag with serial number {} does not exist.'.format(serial_no)
+            messages.error(request, error_message)
 
+    priority_mapping = {
+        'high': high_priority_threshold,
+        'medium': medium_priority_threshold,
+        'low': low_priority_threshold
+    }
+
+    blood_inventory_with_priority = []
+    for item in blood_inventory:
+        exp_datetime = item.exp_date
+        priority = 'low'  # Default priority is low
+        if exp_datetime <= high_priority_threshold:
+            priority = 'high'
+        elif exp_datetime <= medium_priority_threshold:
+            priority = 'medium'
+        blood_inventory_with_priority.append((item, priority))
+
+    return render(request, 'inventory/inventory.html', {
+        'now': now,
+        'bags': bags,
+        'blood_inventory_with_priority': blood_inventory_with_priority,
+        'stock_count': stock_count,
+        'priority_mapping': priority_mapping
+    })
 
 
 def exportBloodBagList_to_xls():

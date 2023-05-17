@@ -1,21 +1,47 @@
 {% load static %}
 <!-- Main Content -->
-<main class="container mx-auto py-8">
-    <h2 class="text-2xl font-bold mb-4">Blood Inventory</h2>
-
+<main class="container mx-auto ">
     <div class="grid grid-cols-4 gap-4 mb-4">
-        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center">
-            <img src="{% static 'assets/icons/blood-type (4).svg' %}" alt="blood type icon" class="w-24 h-24 mb-4 transition-opacity duration-300" />
-            {% for blood_type, count in available_blood_counts.items %} {% if blood_type == 'A+' %}
-            <tr>
-                {% if count == 0 %}
-                <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
-                {% else %}
-                <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
+            <img src="{% static 'assets/icons/blood-type (4).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
+            {% for blood_type, count in stock_counts.items %}
+                {% if blood_type == 'A+' %}
+                    {% if count == 0 %}
+                        <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% else %}
+                        <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% endif %}
                 {% endif %}
-            </tr>
-            {% endif %} {% endfor %}
+            {% endfor %}
+        
             <hr class="bg-black w-full mt-2" />
+        
+            <div class="w-full py-4 px-6 flex justify-between items-center">
+                <div class="text-center">
+                    <p class="text-sm text-gray-600 font-medium">Expires in 7 days:</p>
+                    <p class="text-lg text-gray-900 font-semibold">13</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm text-gray-600 font-medium">Expired:</p>
+                    <p class="text-lg text-gray-900 font-semibold">2</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
+            <img src="{% static 'assets/icons/blood-type (3).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
+            {% for blood_type, count in stock_counts.items %}
+                {% if blood_type == 'B+' %}
+                    {% if count == 0 %}
+                        <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% else %}
+                        <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        
+            <hr class="bg-black w-full mt-2" />
+        
             <div class="w-full py-4 px-6 flex justify-between items-center">
                 <div class="text-center">
                     <p class="text-sm text-gray-600 font-medium">Expires in 7 days:</p>
@@ -28,18 +54,45 @@
             </div>
         </div>
 
-        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center">
-            <img src="{% static 'assets/icons/blood-type (3).svg' %}" alt="blood type icon" class="w-24 h-24 mb-4 transition-opacity duration-300" />
-            {% for blood_type, count in available_blood_counts.items %} {% if blood_type == 'B+' %}
-            <tr>
-                {% if count == 0 %}
-                <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
-                {% else %}
-                <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
+            <img src="{% static 'assets/icons/blood-type (7).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
+            {% for blood_type, count in stock_counts.items %}
+                {% if blood_type == 'O+' %}
+                    {% if count == 0 %}
+                        <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% else %}
+                        <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% endif %}
                 {% endif %}
-            </tr>
-            {% endif %} {% endfor %}
+            {% endfor %}
+        
             <hr class="bg-black w-full mt-2" />
+        
+            <div class="w-full py-4 px-6 flex justify-between items-center">
+                <div class="text-center">
+                    <p class="text-sm text-gray-600 font-medium">Expires in 7 days:</p>
+                    <p class="text-lg text-gray-900 font-semibold">13</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm text-gray-600 font-medium">Expired:</p>
+                    <p class="text-lg text-gray-900 font-semibold">2</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
+            <img src="{% static 'assets/icons/blood-type (2).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
+            {% for blood_type, count in stock_counts.items %}
+                {% if blood_type == 'AB+' %}
+                    {% if count == 0 %}
+                        <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% else %}
+                        <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        
+            <hr class="bg-black w-full mt-2" />
+        
             <div class="w-full py-4 px-6 flex justify-between items-center">
                 <div class="text-center">
                     <p class="text-sm text-gray-600 font-medium">Expires in 7 days:</p>
@@ -52,18 +105,20 @@
             </div>
         </div>
 
-        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center">
-            <img src="{% static 'assets/icons/blood-type (7).svg' %}" alt="blood type icon" class="w-24 h-24 mb-4 transition-opacity duration-300" />
-            {% for blood_type, count in available_blood_counts.items %} {% if blood_type == 'O+' %}
-            <tr>
-                {% if count == 0 %}
-                <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
-                {% else %}
-                <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
+            <img src="{% static 'assets/icons/blood-type (1).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
+            {% for blood_type, count in stock_counts.items %}
+                {% if blood_type == 'A-' %}
+                    {% if count == 0 %}
+                        <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% else %}
+                        <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% endif %}
                 {% endif %}
-            </tr>
-            {% endif %} {% endfor %}
+            {% endfor %}
+        
             <hr class="bg-black w-full mt-2" />
+        
             <div class="w-full py-4 px-6 flex justify-between items-center">
                 <div class="text-center">
                     <p class="text-sm text-gray-600 font-medium">Expires in 7 days:</p>
@@ -76,18 +131,20 @@
             </div>
         </div>
 
-        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center">
-            <img src="{% static 'assets/icons/blood-type (2).svg' %}" alt="blood type icon" class="w-24 h-24 mb-4 transition-opacity duration-300" />
-            {% for blood_type, count in available_blood_counts.items %} {% if blood_type == 'AB+' %}
-            <tr>
-                {% if count == 0 %}
-                <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
-                {% else %}
-                <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
+            <img src="{% static 'assets/icons/blood-type (5).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
+            {% for blood_type, count in stock_counts.items %}
+                {% if blood_type == 'B-' %}
+                    {% if count == 0 %}
+                        <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% else %}
+                        <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% endif %}
                 {% endif %}
-            </tr>
-            {% endif %} {% endfor %}
+            {% endfor %}
+        
             <hr class="bg-black w-full mt-2" />
+        
             <div class="w-full py-4 px-6 flex justify-between items-center">
                 <div class="text-center">
                     <p class="text-sm text-gray-600 font-medium">Expires in 7 days:</p>
@@ -100,18 +157,20 @@
             </div>
         </div>
 
-        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center">
-            <img src="{% static 'assets/icons/blood-type (1).svg' %}" alt="blood type icon" class="w-24 h-24 mb-4 transition-opacity duration-300" />
-            {% for blood_type, count in available_blood_counts.items %} {% if blood_type == 'A-' %}
-            <tr>
-                {% if count == 0 %}
-                <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
-                {% else %}
-                <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
+            <img src="{% static 'assets/icons/blood-type (8).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
+            {% for blood_type, count in stock_counts.items %}
+                {% if blood_type == 'O-' %}
+                    {% if count == 0 %}
+                        <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% else %}
+                        <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% endif %}
                 {% endif %}
-            </tr>
-            {% endif %} {% endfor %}
+            {% endfor %}
+        
             <hr class="bg-black w-full mt-2" />
+        
             <div class="w-full py-4 px-6 flex justify-between items-center">
                 <div class="text-center">
                     <p class="text-sm text-gray-600 font-medium">Expires in 7 days:</p>
@@ -124,18 +183,20 @@
             </div>
         </div>
 
-        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center">
-            <img src="{% static 'assets/icons/blood-type (5).svg' %}" alt="blood type icon" class="w-24 h-24 mb-4 transition-opacity duration-300" />
-            {% for blood_type, count in available_blood_counts.items %} {% if blood_type == 'B-' %}
-            <tr>
-                {% if count == 0 %}
-                <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
-                {% else %}
-                <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
+            <img src="{% static 'assets/icons/blood-type (6).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
+            {% for blood_type, count in stock_counts.items %}
+                {% if blood_type == 'AB-' %}
+                    {% if count == 0 %}
+                        <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% else %}
+                        <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
+                    {% endif %}
                 {% endif %}
-            </tr>
-            {% endif %} {% endfor %}
+            {% endfor %}
+        
             <hr class="bg-black w-full mt-2" />
+        
             <div class="w-full py-4 px-6 flex justify-between items-center">
                 <div class="text-center">
                     <p class="text-sm text-gray-600 font-medium">Expires in 7 days:</p>
@@ -148,52 +209,5 @@
             </div>
         </div>
 
-        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center">
-            <img src="{% static 'assets/icons/blood-type (8).svg' %}" alt="blood type icon" class="w-24 h-24 mb-4 transition-opacity duration-300" />
-            {% for blood_type, count in available_blood_counts.items %} {% if blood_type == 'O-' %}
-            <tr>
-                {% if count == 0 %}
-                <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
-                {% else %}
-                <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
-                {% endif %}
-            </tr>
-            {% endif %} {% endfor %}
-            <hr class="bg-black w-full mt-2" />
-            <div class="w-full py-4 px-6 flex justify-between items-center">
-                <div class="text-center">
-                    <p class="text-sm text-gray-600 font-medium">Expires in 7 days:</p>
-                    <p class="text-lg text-gray-900 font-semibold">13</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-sm text-gray-600 font-medium">Expired:</p>
-                    <p class="text-lg text-gray-900 font-semibold">2</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center">
-            <img src="{% static 'assets/icons/blood-type (6).svg' %}" alt="blood type icon" class="w-24 h-24 mb-4 transition-opacity duration-300" />
-            {% for blood_type, count in available_blood_counts.items %} {% if blood_type == 'B-' %}
-            <tr>
-                {% if count == 0 %}
-                <div class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
-                {% else %}
-                <div class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">Stocks: {{ count }}</div>
-                {% endif %}
-            </tr>
-            {% endif %} {% endfor %}
-            <hr class="bg-black w-full mt-2" />
-            <div class="w-full py-4 px-6 flex justify-between items-center">
-                <div class="text-center">
-                    <p class="text-sm text-gray-600 font-medium">Expires in 7 days:</p>
-                    <p class="text-lg text-gray-900 font-semibold">13</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-sm text-gray-600 font-medium">Expired:</p>
-                    <p class="text-lg text-gray-900 font-semibold">2</p>
-                </div>
-            </div>
-        </div>
     </div>
 </main>

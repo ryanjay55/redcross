@@ -1,62 +1,64 @@
 from django.shortcuts import render,redirect
 from django.core.mail import send_mail
 from account.models import DonorInfo
-from inventory.models import BloodBags
+from inventory.models import BloodBags,BloodInventory
 import xlwt
 from django.http import HttpResponse
+from django.db import models
 from datetime import datetime
 from xlwt import easyxf
 from django.core.paginator import Paginator
 from django.db.models.functions import ExtractYear,Concat,ExtractMonth
-from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField
+from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField,Sum
 
 
-
-
-# Create your views here.
 def dashboard(request):
+    blood_types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+    stock_counts = {}
+
+    for blood_type in blood_types:
+        blood_inventory = BloodInventory.objects.filter(bag_id__info_id__blood_type=blood_type).order_by('exp_date')
+        stock_count = blood_inventory.count()
+        stock_counts[blood_type] = stock_count
     
-    return render(request, 'custom_admin/dashboard.html',{'sidebar':dashboard})
+    return render(request, 'custom_admin/dashboard.html', {'stock_counts':stock_counts})
 
-from datetime import datetime
-
-from datetime import datetime
 
 def usersList(request):
-    # if request.method == 'POST':
-    #     # Retrieve the form data
-    #     info_id = request.POST.get('info_id')
-    #     firstname = request.POST.get('firstname')
-    #     lastname = request.POST.get('lastname')
-    #     sex = request.POST.get('sex')
-    #     blood_type = request.POST.get('blood_type')
+    if request.method == 'POST':
+        # Retrieve the form data
+        info_id = request.POST.get('info_id')
+        firstname = request.POST.get('firstname')
+        lastname = request.POST.get('lastname')
+        sex = request.POST.get('sex')
+        blood_type = request.POST.get('blood_type')
 
-    #     email = request.POST.get('email')
-    #     address = request.POST.get('address')
-    #     contact_number = request.POST.get('contact_number')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        contact_number = request.POST.get('contact_number')
 
-    #     # Convert date_of_birth string to datetime object
+        # Convert date_of_birth string to datetime object
 
   
 
-    #     # Retrieve the existing DonorInfo object
-    #     donor_info = DonorInfo.objects.get(info_id=info_id)
+        # Retrieve the existing DonorInfo object
+        donor_info = DonorInfo.objects.get(info_id=info_id)
 
-    #     # Update the DonorInfo object with the form data
-    #     donor_info.firstname = firstname
-    #     donor_info.lastname = lastname
-    #     donor_info.sex = sex
-    #     donor_info.blood_type = blood_type
+        # Update the DonorInfo object with the form data
+        donor_info.firstname = firstname
+        donor_info.lastname = lastname
+        donor_info.sex = sex
+        donor_info.blood_type = blood_type
   
-    #     donor_info.email = email
-    #     donor_info.address = address
-    #     donor_info.contact_number = contact_number
+        donor_info.email = email
+        donor_info.address = address
+        donor_info.contact_number = contact_number
 
-    #     # Save the updated DonorInfo object to the database
-    #     donor_info.save()
+        # Save the updated DonorInfo object to the database
+        donor_info.save()
 
-    #     # Redirect to the users list page
-    #     return redirect('users-list')
+        # Redirect to the users list page
+        return redirect('users-list')
     
     donors = DonorInfo.objects.all()
     serial_exists_error = ''
@@ -135,7 +137,7 @@ def usersList(request):
     if page_obj.has_next():
         page_obj.next_page_number_param = f'&sort={sort_param}&page={page_obj.next_page_number()}'
     rows = [{'id': user.pk, 'firstname': user.firstname, 'lastname': user.lastname} for user in page_obj]
-    return render(request, 'custom_admin/users.html', {'users': page_obj, 'sidebar': page_obj, 'modal': True, 'rows': rows,'donors':donors,'serial_exists_error':serial_exists_error,'donors': donors,'serial_incomplete_error': serial_incomplete_error,'submission_success':submission_success})
+    return render(request, 'custom_admin/users.html', {'users': page_obj, 'sidebar': page_obj, 'modal': True, 'rows': rows,'donors':donors,'serial_exists_error':serial_exists_error,'serial_incomplete_error': serial_incomplete_error,'submission_success':submission_success})
 
 
 def send_thank_you_email(donor_info):

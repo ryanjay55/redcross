@@ -1,43 +1,31 @@
-{% extends "custom_admin/base.html" %} {% load tailwind_filters %} {% load static %} {% load static tailwind_tags %} {% block title %}Admin | Inventory{% endblock title %} {% tailwind_css %} {% block content %}
-<div class="flex flex-row h-full">
+{% extends "custom_admin/base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% load static tailwind_tags %}
+
+{% block title %}Admin | Inventory{% endblock title %} 
+{% block content %}
+<div class="flex flex-row h-screen">
     <div>{% include "custom_admin/sidebar.html" %}</div>
 
-    <div class="flex-1 mx-auto">
-        <div class="relative overflow-x-auto shadow-b-2xl sm:rounded-lg mx-[120px] mt-[20px]">
-            <div class="text-center bg-white border-b-2 border-lifelink-black1 p-4">
-                <ul class="flex flex-wrap -mb-px">
-                    <li class="mr-4">
-                        <a href="{% url 'bloodInventory' %}" class="tab-link font-semibold text-gray-900 text-lg py-2 px-4 border-b-2 border-transparent" data-tab="donor">
-                            Stocks
-                        </a>
-                    </li>
-                    <li class="mr-4">
-                        <a href="{% url 'bloodBagList' %}" class="tab-link font-semibold text-gray-900 text-lg py-2 px-4 border-b-2 border-transparent" data-tab="deferral">
-                            Blood Bags
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="flex justify-between items-center px-4 py-3 bg-white border-b border-gray-200 rounded-b-lg">
-                <div class="flex flex-row">
-                    <div class="text-lg font-bold text-gray-700 mr-[20px]">{{ now|date:"l, F d, Y" }}</div>
-                    <div class="flex items-center justify-around">
-                        <div class="text-xl font-bold text-gray-700 mr-2" id="clock"></div>
-                        <div class="text-gray-500 font-medium text-sm uppercase hidden md:block">{{ now|date:"a" }}</div>
-                    </div>
-                </div>
-                <div class="text-sm font-bold text-gray-700 mr-[20px]">Last updated: January 05 2023, 10:55 A.M</div>
-            </div>
-
-            {% include "inventory/stockoverview.html" %}
+    <div class="flex-1 mx-auto relative">
+        <div class="overflow-x-auto shadow-b-2xl sm:rounded-lg mx-[120px] mt-[20px]">
+            {% include "inventory/navbar.html" %}
+            {% include "inventory/bloodinventoryrecord.html" %}
         </div>
+
+        <div id="toast-container" class="fixed bottom-0 left-0 z-50 ml-14">
+            {% include "inventory/toast_message.html" %}
+        </div>
+        
     </div>
 </div>
 
 <script>
     setInterval(function () {
         let date = new Date();
-        document.getElementById("clock").innerHTML = (date.getHours() < 10 ? "0" : "") + date.getHours() + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes() + ":" + (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
+        let hours = date.getHours() % 12 || 12; // convert hours to 12-hour format
+        document.getElementById("clock").innerHTML = (hours < 10 ? "0" : "") + hours + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes() + ":" + (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
     }, 500);
 
     //autoreload

@@ -1,12 +1,23 @@
 {% extends 'account/base.html' %}
 
 {% block content %}
-  <h1>Enter OTP</h1>
-  <form method="POST" action="{% url 'reset_password' %}">
-    {% csrf_token %}
-    <input type="hidden" name="email" value="{{ email }}">
-    <label for="otp">Enter the OTP you received:</label>
-    <input type="text" id="otp" name="otp">
-    <button type="submit">Submit</button>
-  </form>
+<h1>Enter OTP</h1>
+<form method="POST" action="{% url 'reset_password' %}">
+  {% csrf_token %}
+  <input type="hidden" name="email" value="{{ email }}">
+  <div class="otp-input">
+    <input type="text" name="otp_1" maxlength="1" pattern="[0-9]" required>
+    <input type="text" name="otp_2" maxlength="1" pattern="[0-9]" required>
+    <input type="text" name="otp_3" maxlength="1" pattern="[0-9]" required>
+    <input type="text" name="otp_4" maxlength="1" pattern="[0-9]" required>
+    <input type="text" name="otp_5" maxlength="1" pattern="[0-9]" required>
+    <input type="text" name="otp_6" maxlength="1" pattern="[0-9]" required>
+  </div>
+  <button type="submit" class="submit-btn">Submit</button>
+</form>
+
+
+<div id="toast-container" class="fixed bottom-0 left-0 z-50 ml-14">
+  {% include "inventory/toast_message.html" %}
+</div>
 {% endblock %}

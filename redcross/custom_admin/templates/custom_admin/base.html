@@ -1,56 +1,55 @@
-{% load static %}
-{% load static tailwind_tags %}
+{% load static %} {% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="shortcut icon" type="image/png" href="{% static 'assets/icons/life-insurance.svg' %}">
-      {% tailwind_css %}
-      <title>
-         {% block title %}
-         LifeLink 
-         {% endblock title %}
-      </title>
-      {% block extra_css %}
-      {% endblock extra_css%}
-      <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-   </head>
-   <body class="bg-[#D1d1d1] bg-cover bg-center bg-no-repeat bg-fixed">
-
-      {% block content %}
-      <section class="">
-         <div class="py-8 mx-auto max-w-screen-xl lg:py-8 md:py-3">
-            <div class="p-8 md:p-12 mb-8">
-               <h1 class="text-gray-800 dark:text-white lg:text-8xl md:text-5xl font-extrabold mb-5">Donate</h1>
-               <h1 class="text-red-700 dark:text-white lg:text-8xl md:text-5xl font-extrabold mb-5">Blood</h1>
-               <h1 class="text-gray-800 dark:text-white lg:text-8xl md:text-5xl font-extrabold mb-[80px]">Save <span class="text-red-700">Lives.</span></h1>
-               <a href="{% url 'user_login' %}" class="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-3xl bg-red-600 border-[2px] border-gray-200 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 mr-5">
-                  Get Started
-                  <img src="{% static 'assets/icons/next.svg' %}" class="h-[15px] ml-3" alt="arrowright" />
-               </a>
-               <a href="#" class="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-red-600 rounded-3xl bg-white border-[2px] border-red-600 hover:bg-red-800 hover:text-white hover:border-gray-200 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
-                  Read More
-                  <img src="{% static 'assets/icons/next-red.svg' %}" class="h-[15px] ml-3" alt="arrowright" />
-               </a>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" type="image/png" href="{% static 'assets/icons/life-insurance.svg' %}" />
+        {% tailwind_css %}
+        <title>
+            {% block title %} LifeLink {% endblock title %}
+        </title>
+        {% block extra_css %} {% endblock extra_css%}
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <!-- Include Select2 CSS and JavaScript files -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+        
+    </head>
+    <body class="bg-[#D1d1d1] bg-cover bg-center bg-no-repeat bg-fixed">
+        {% block content %}
+        <section class="">
+            <div class="py-8 mx-auto max-w-screen-xl lg:py-8 md:py-3">
+                <div class="p-8 md:p-12 mb-8">
+                    <h1 class="text-gray-800 dark:text-white lg:text-8xl md:text-5xl font-extrabold mb-5">Donate</h1>
+                    <h1 class="text-red-700 dark:text-white lg:text-8xl md:text-5xl font-extrabold mb-5">Blood</h1>
+                    <h1 class="text-gray-800 dark:text-white lg:text-8xl md:text-5xl font-extrabold mb-[80px]">Save <span class="text-red-700">Lives.</span></h1>
+                    <a
+                        href="{% url 'user_login' %}"
+                        class="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-white rounded-3xl bg-red-600 border-[2px] border-gray-200 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 mr-5"
+                    >
+                        Get Started
+                        <img src="{% static 'assets/icons/next.svg' %}" class="h-[15px] ml-3" alt="arrowright" />
+                    </a>
+                    <a
+                        href="#"
+                        class="inline-flex justify-center items-center py-2.5 px-5 text-base font-medium text-center text-red-600 rounded-3xl bg-white border-[2px] border-red-600 hover:bg-red-800 hover:text-white hover:border-gray-200 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+                    >
+                        Read More
+                        <img src="{% static 'assets/icons/next-red.svg' %}" class="h-[15px] ml-3" alt="arrowright" />
+                    </a>
+                </div>
             </div>
-         </div>
-         <div>
-           
-         </div>
-      </section>
-      {% block extra_js %}
-      {% endblock extra_js %}
-      {% endblock content %}
-         
-         <!-- <hr class="p-4"> -->
-      <!-- <div class="mt-[80px] z-0">
+            <div></div>
+        </section>
+        {% block extra_js %} {% endblock extra_js %} {% endblock content %}
+
+        <!-- <hr class="p-4"> -->
+        <!-- <div class="mt-[80px] z-0">
          {% include "prcuser/footer.html" %}
          </div> -->
-         
-   </body>
+    </body>
 </html>

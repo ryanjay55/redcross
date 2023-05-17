@@ -20,8 +20,16 @@
             <span class="text-xl m-3 font-semibold">-- Complete Profile --</span>
         </div>
         {% for message in messages %}
-          <p class="flex items-center justify-center text-white bg-yellow-500 p-4 text-lg font-semibold rounded">{{message}}</p>
+            {% if message.tags == 'warning' %}
+                <div class="flex items-center justify-center">
+                    <p class="text-white bg-yellow-500 py-3 px-6 text-lg font-semibold rounded-lg shadow-md">
+                        {{ message }}
+                    </p>
+                </div>
+            {% endif %}
         {% endfor %}
+    
+
         <div class="modal-content py-4 text-left px-6">
             <!-- Form content -->
             <form id="myForm" class="grid grid-cols-1 md:grid-cols-2 gap-4" method="post">
@@ -50,7 +58,7 @@
                         <p class="text-red-500 text-s italic">{{ form.date_of_birth.errors|first }}</p>
                     {% endif %}
                 </div>
-                <div class="mb-2">
+                <div class="mb-2 hidden">
                     <label class="block text-gray-700 text-xs font-bold mb-2" for="email">Email</label>
                     {{ form.email }}
                 </div>
@@ -94,6 +102,8 @@
     </div>
 </div>
 
-
+<div id="toast-container" class="fixed bottom-0 left-0 z-50 ml-14">
+    {% include "inventory/toast_message.html" %}
+</div>
 
 {% endblock content %}

@@ -2,17 +2,75 @@
 {% load tailwind_filters %}
 {% load static %}
 {% load static tailwind_tags %}
-{% block title %}Admin | Dashboard{% endblock title %}
-{% tailwind_css %}
+
+{% block title %}
+    Admin | Dashboard
+{% endblock title %}
 
 {% block content %}
-
-<div class="flex flex-row">
+<div class="flex flex-row h-full">
     <div>
         {% include "custom_admin/sidebar.html" %}
     </div>
-    <div>
 
+    <div class="flex-1 mx-auto flex-col">
+        <div class="flex flex-row mt-5 ml-5 mr-5">
+            <div class="w-full ">
+                {% include "inventory/stockoverview.html" %}
+            </div>
+            <div class="w-[280px] bg-gray-100 p-4 rounded-lg shadow-lg ml-5 h-[490px] mb-7">
+                <h2 class="text-lg font-semibold mb-4 text-center">Total Donor Count: <span class="text-red-600 font-bold">134</span></h2>
+                <hr class="my-2 mb-3">
+                <h1 class="mb-2 font-bold text-center text-2xl">Galloners:</h1>
+                <div class="overflow-y-auto max-h-80">
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th class="py-2">Info ID</th>
+                                <th class="py-2">Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2">1</td>
+                                <td class="py-2">Galloner 1</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">2</td>
+                                <td class="py-2">Galloner 2</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">3</td>
+                                <td class="py-2">Galloner 3</td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        
+
+        <div class="flex flex-row justify-between">
+            <div class="flex flex-row justify-between items-center w-full ml-5 ">
+                <div id="graph1" class="w-1/2 h-[305px] bg-gray-300 p-4 border-4">
+                    <h3 class="text-lg font-semibold">Bar Graph 1</h3>
+                    <p>Graph 1</p>
+                </div>
+                <div id="graph2" class="w-1/2 h-[305px] bg-gray-300 p-4 border-4">
+                    <h3 class="text-lg font-semibold">Bar Graph 2</h3>
+                    <p>Graph 2</p>
+                </div>
+            </div>
+        
+            <div class="w-[280px] bg-gray-100 p-4 rounded-lg shadow-lg mr-5 ml-5 h-[320px] text-center">
+                <h2 class="text-lg font-semibold">Total Deferral Count: 1</h2>
+                <!-- Add the content for the Total Deferral Count section here -->
+            </div>
+        </div>
+        
     </div>
+
 </div>
-{% endblock content%}
+{% endblock content %}

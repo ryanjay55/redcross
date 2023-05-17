@@ -1,10 +1,9 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from datetime import datetime, date,timedelta
+from datetime import datetime, date
 from django.contrib.auth.models import User
 import uuid
 import random
-from django.utils import timezone
 
 
 def generate_id():
@@ -67,7 +66,7 @@ def generate_id():
     return 'DI-' + str(random.randint(100000, 999999))
 
 class OTP(models.Model):
-    user = models.ForeignKey(DonorInfo, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     otp = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
 

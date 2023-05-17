@@ -12,9 +12,6 @@ LifeLink | Login
             <a href="{% url 'home' %}"><img class="h-[25px] mr-3 hover:rounded-md hover:bg-red-200" src="{% static 'assets/icons/back.svg' %}" alt="back icon"></a>
             <span>Sign In</span>
          </h1>
-         {% for message in messages %}
-         <p class="text-lifelink-black1 bg-lifelink-gray1 p-4 text-sm font-bold rounded-md flex justify-center">{{message}}</p>
-         {% endfor %} 
          <form class="space-y-4 md:space-y-6" method="post">
             {% csrf_token %}
             <div class="relative mb-3">
@@ -34,7 +31,10 @@ LifeLink | Login
             </label>
             <div class="flex items-center mt-2">
                <div class="flex-1"></div>
-               <a href="{% url 'forgot_password' %}" class="text-sm font-medium text-gray-800 hover:underline">Forgot password?</a>
+               <a href="#forgotpassword"
+               data-modal-target="#forgotpassword"
+               data-modal-toggle="defaultModal"
+               class="text-sm font-medium text-gray-800 hover:underline">Forgot password?</a>
             </div>
           </div>          
             <button type="submit" class="w-full text-white bg-lifelink-red2 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
@@ -60,4 +60,30 @@ LifeLink | Login
    </div>
 </div>
 
+<div id="toast-container" class="fixed bottom-0 left-0 z-50 ml-14">
+   {% include "inventory/toast_message.html" %}
+</div>
+{% include "account/forgot_password.html" %}
+
+
+<script>
+       // Get all the modal toggle buttons
+       const modalToggleButtons = document.querySelectorAll("[data-modal-toggle]");
+       // Loop through each button and add a click event listener
+       modalToggleButtons.forEach((button) => {
+           button.addEventListener("click", () => {
+               // Get the target modal using the data-modal-target attribute
+               const targetModal = document.querySelector(button.dataset.modalTarget);
+               // Toggle the hidden class of the target modal
+               targetModal.classList.toggle("hidden");
+               // Get the cancel button inside the target modal
+               const cancelButton = targetModal.querySelector("#cancel-btn");
+               // Add a click event listener to the cancel button to hide the modal
+               cancelButton.addEventListener("click", () => {
+                   targetModal.classList.add("hidden");
+               });
+           });
+       });
+</script>
+ 
 {% endblock content %}

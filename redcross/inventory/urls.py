@@ -4,7 +4,7 @@ from inventory import views
 urlpatterns = [
     # path('bloodBagList/', views.bloodBagList, name='bloodBagList'),
     path('blood-inventory-overview/', views.bloodInventory, name='bloodInventory'),
-     path('blood-bag-list/', views.bloodBagList, name='bloodBagList'),
+    path('blood-bag-list/', views.bloodBagList, name='bloodBagList'),
     
     
     #others

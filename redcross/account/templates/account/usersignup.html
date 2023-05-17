@@ -16,19 +16,19 @@
          <form class="space-y-4 md:space-y-6" method="post">
             {% csrf_token %}
             <div class="relative mb-3">
-               <input type="text" name="username" class="hidden"/>
-               <input type="text" name="username" id="floating_username" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50  border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
+               <input type="text" name="username" class="hidden" />
+               <input type="text" name="username" id="floating_username" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
                <label for="floating_username" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
-               <img src="{% static 'assets/icons/user.svg' %}" alt="User Icon" class="inline-block w-[15px] h-auto mr-2">
-               Username
+                 <img src="{% static 'assets/icons/user.svg' %}" alt="User Icon" class="inline-block w-[15px] h-auto mr-2">
+                 Username
                </label>
-               {% if error %}
-               <div class="flex items-center p-3 mb-4 text-sm text-red-800 rounded-b-lg bg-red-100 role="alert">
-                  <img src="{% static 'assets/icons/businessman.svg' %}" alt="User Icon" class="flex-shrink-0 inline h-[16px] mr-3">
-                  <span class="">{{ error }}</span>
+               {% if password_error1 %}
+               <div class="flex items-center p-3 mb-4 text-sm text-red-800 rounded-b-lg bg-red-100" role="alert">
+                  <img src="{% static 'assets/icons/puzzle.svg' %}" alt="User Icon" class="flex-shrink-0 inline h-[16px] mr-3">
+                  <span class="font-semibold">{{ password_error1 }}</span>
                </div>
                {% endif %}
-            </div>
+             </div>
             <div class="relative mb-3">
                <input type="text" name="email" id="" class="hidden"/>
                <input type="email" name="email" id="floating_email" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
@@ -38,21 +38,27 @@
                </label>
             </div>
             <div class="relative mb-3">
-               <input type="password" name="password1" id="password1" class="hidden"/>
-               <input type="password" name="password1" id="floating_password1" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required/>
+               <input type="password" name="password1" id="password1" class="hidden" />
+               <input type="password" name="password1" id="floating_password1" class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                <label for="floating_password" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
-                   <img src="{% static 'assets/icons/lock.svg' %}" alt="Password Icon" class="inline-block w-[15px] h-auto mr-2">
-                   Password
+                 <img src="{% static 'assets/icons/lock.svg' %}" alt="Password Icon" class="inline-block w-[15px] h-auto mr-2">
+                 Password
                </label>
+               {% if password_error2 %}
+               <div class="flex items-center p-3 mb-4 text-sm text-red-800 rounded-b-lg bg-red-100" role="alert">
+                  <img src="{% static 'assets/icons/puzzle.svg' %}" alt="User Icon" class="flex-shrink-0 inline h-[16px] mr-3">
+                  <span class="font-semibold">{{ password_error2 }}</span>
+               </div>
+               {% endif %}
                <ul id="password-requirements" class="text-sm text-red-800-700 mt-1 pl-7">
-                  <li class="mb-1 text-xs" id="length-req"><img src="{% static 'assets/icons/blood-drop.svg' %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2">At least 8 characters</li>
-                  <li class="mb-1 text-xs" id="uppercase-req"><img src="{% static 'assets/icons/blood-drop.svg' %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2">Contains at least one uppercase letter</li>
-                  <li class="mb-1 text-xs" id="lowercase-req"><img src="{% static 'assets/icons/blood-drop.svg' %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2">Contains at least one lowercase letter</li>
-                  <li class="mb-1 text-xs" id="number-req"><img src="{% static 'assets/icons/blood-drop.svg' %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2">Contains at least one number</li>
-                  <li class="mb-1 text-xs" id="special-req"><img src="{% static 'assets/icons/blood-drop.svg' %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2">Contains at least one special character (!@#$%^&amp;*)</li>
-              </ul>
-              
-           </div>
+                 <li class="mb-1 text-xs" id="length-req"><img src="{% static 'assets/icons/blood-drop.svg' %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2">At least 8 characters</li>
+                 <li class="mb-1 text-xs" id="uppercase-req"><img src="{% static 'assets/icons/blood-drop.svg' %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2">Contains at least one uppercase letter</li>
+                 <li class="mb-1 text-xs" id="lowercase-req"><img src="{% static 'assets/icons/blood-drop.svg' %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2">Contains at least one lowercase letter</li>
+                 <li class="mb-1 text-xs" id="number-req"><img src="{% static 'assets/icons/blood-drop.svg' %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2">Contains at least one number</li>
+               
+               </ul>
+             </div>
+             
            
 
             <div class="relative mb-3">
@@ -109,11 +115,10 @@
    const signupButton = document.getElementById('signup-button');
    
    passwordInput.addEventListener('input', () => {
-      
      const password = passwordInput.value;
      let requirementsMet = true;
      const requirementsListItems = passwordRequirements.getElementsByTagName('li');
-   
+     
      if (password.length < 8) {
        requirementsListItems[0].classList.remove('text-green-800');
        requirementsListItems[0].innerHTML = '<img src="{% static "assets/icons/blood-drop.svg" %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2"> At least 8 characters';
@@ -150,28 +155,20 @@
        requirementsListItems[3].innerHTML = '<img src="{% static "assets/icons/verified (1).svg" %}" alt="Password Icon" class="inline-block w-[20px] h-auto mr-2"> Contains at least one number';
      }
    
-     if (!/[!@#$%^&*().-]/.test(password)) {
-       requirementsListItems[4].classList.remove('text-green-800');
-       requirementsListItems[4].innerHTML = '<img src="{% static "assets/icons/blood-drop.svg" %}" alt="Password Icon" class="inline-block w-[10px] h-auto mr-2"> Contains at least one special character';
-       requirementsMet = false;
-     } else {
-      requirementsListItems[4].classList.add('text-green-800');
-requirementsListItems[4].innerHTML = '<img src="{% static "assets/icons/verified (1).svg" %}" alt="Password Icon" class="inline-block w-[20px] h-auto mr-2"> Contains at least one special character';
-}
 
-if (password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /\d/.test(password) && /[!@#$%^&*().-]/.test(password)) {
-passwordIcon.innerHTML = '<img src="{% static "assets/icons/verified (1).svg" %}" alt="Password Icon" class="inline-block w-[20px] h-auto mr-2">';
-} else {
-passwordIcon.innerHTML = '<img src="{% static "assets/icons/unverified.svg" %}" alt="Password Icon" class="inline-block w-[20px] h-auto mr-2">';
-}
-
-if (requirementsMet = true) {
-   passwordRequirements.classList.add('hidden');
+ // Update the password strength icon
+ if (password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /\d/.test(password)) {
+   passwordIcon.innerHTML = '<img src="{% static "assets/icons/verified (1).svg" %}" alt="Password Icon" class="inline-block w-[20px] h-auto mr-2">';
  } else {
-   passwordRequirements.classList.remove('hidden');
+   passwordIcon.innerHTML = '<img src="{% static "assets/icons/unverified.svg" %}" alt="Password Icon" class="inline-block w-[20px] h-auto mr-2">';
+ }
+ 
+ // Disable signup button if requirements are not met
+ if (requirementsMet) {
+   signupButton.disabled = false;
+ } else {
+   signupButton.disabled = true;
  }
 });
-      
-   
 </script>
 {% endblock content %}

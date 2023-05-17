@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from account.models import DonorInfo
+from inventory.models import BloodInventory
 from inventory.models import BloodBags
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import make_aware
@@ -25,8 +26,19 @@ def dashboard(request):
     # print('Donated blood count:', donated_blood_count)
     blood_types = DonorInfo.objects.values_list('blood_type', flat=True).distinct()
     available_blood_types = request.session.get('available_blood_types', {blood_type: False for blood_type in blood_types})
+    
+    
+    
+    #determine if bloodtype is available or not
+    blood_types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+    stock_counts = {}
 
-    return render(request, 'prcuser/dashboard.html', {'navbar': 'dashboard', 'donated_blood_count': donated_blood_count, 'available_blood_types': available_blood_types})
+    for blood_type in blood_types:
+        blood_inventory = BloodInventory.objects.filter(bag_id__info_id__blood_type=blood_type).order_by('exp_date')
+        stock_count = blood_inventory.count()
+        stock_counts[blood_type] = stock_count
+
+    return render(request, 'prcuser/dashboard.html', {'navbar': 'dashboard', 'donated_blood_count': donated_blood_count, 'available_blood_types': available_blood_types,'stock_counts':stock_counts})
 
 @login_required(login_url='user_login')
 def bloodJourney(request):
