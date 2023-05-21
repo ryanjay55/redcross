@@ -19,10 +19,9 @@ class BloodBags(models.Model):
     def get_exp_date(self):
         return self.date_donated + timedelta(days=37)  # expiration date is 37 days after donation
 
-
 class BloodInventory(models.Model):
     inventory_id = models.AutoField(primary_key=True)
-    bag_id = models.ForeignKey(BloodBags, on_delete=models.CASCADE)
+    bag_id = models.ForeignKey(BloodBags, on_delete=models.CASCADE,null=True)
     exp_date = models.DateTimeField()
 
     def clean(self):
@@ -37,6 +36,7 @@ class BloodInventory(models.Model):
 
     def __str__(self):
         return str(self.inventory_id)
+
 
 
 class ExpiredBlood(models.Model):

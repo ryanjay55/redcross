@@ -118,7 +118,7 @@
   
               </td>
               <td class="px-6 py-4">
-                  {{ expired_blood_obj.bag_id.date_donated | date:"F d, Y" }}
+                {{ expired_blood_obj.exp_date|date:"F d, Y" }}
               </td>
               <td class="px-6 py-4">
                       <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-500 text-white">
@@ -128,15 +128,66 @@
               </td>
               
               <td class="px-6 py-4">
-                <button data-modal-target="#view-blood-modal{{ item.bag_id.info_id }}" data-modal-toggle="defaultModal" type="button" class="bg-red-600 hover:bg-red-700 focus:bg-red-700 text-white font-bold py-1 px-4 rounded">
+                <button data-modal-target="#move-to-stock{{ expired_blood_obj.bag_id.pk }}" data-modal-toggle="staticModal" type="button" class="bg-red-600 hover:bg-red-700 focus:bg-red-700 text-white font-bold py-1 px-4 rounded">
                     Dispose
                 </button>
             </td>
             
           </tr>
-          {% endfor %}
+          <!-- Modal for adding it to stock -->
+          <div id="move-to-stock{{ expired_blood_obj.bag_id.pk }}" class="fixed flex justify-center items-center z-50 modal hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-screen max-h-full bg-gray-800 bg-opacity-75">
+            <div class="relative w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-gray-200 rounded-lg shadow">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b border-gray-400 rounded-t">
+                    <h3 class="text-xl font-semibold text-gray-900">
+                        Move <span class="text-red-700">{{ blood_bag.info_id.firstname }} {{ blood_bag.info_id.lastname }}</span>
+                    </h3>
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        Serial number: <span class="text-red-700 text-lg">{{ expired_blood_obj.bag_id.serial_no }}</span>
+                    </h3>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 space-y-6">
+                    <form method="post" action="{% url 'deleteExpiredBlood' expired_blood_obj.pk %}" id="blood-bag-form" onsubmit="return validateForm(event);">
+                        {% csrf_token %}
+                        <!-- <input type="text" class="hidden" name="serial_no" value="{{ blood_bag.serial_no }}"> -->
+                        <h1>Are you sure you want to disposed this blood bag?</h1>
+                        <!-- Modal footer -->
+                        <hr class="h-px my-2 bg-gray-400 border-0">
+                        <div class="flex justify-end">
+                            <div class="flex items-center space-x-2 border-t border-gray-200 rounded-b">
+                                <button data-modal-hide="staticModal" type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                                    Delete
+                                </button>
+                                <button
+                                    id="cancel-btn"
+                                    type="button"
+                                    class="text-black bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-red-500 hover:border-red-500"
+                                    data-modal-hide="staticModal"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center mt-6">
+              <div class="flex items-center justify-center h-20">
+                <p class="text-gray-500">No expired blood found.</p>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
       </tbody>
   </div>
+  
   </table>
   </div>
       </div>
@@ -147,8 +198,6 @@
       
   </div>
 </div>
-
-
 <script>
     const selectAllCheckbox = document.getElementById("select-all");
     const selectDonorCheckboxes = document.querySelectorAll(".select-donor");
@@ -243,6 +292,28 @@
         }
         updateCheckedCount();
     });
+
+
+
+   
+        // Get all the modal toggle buttons
+        const modalToggleButtons = document.querySelectorAll("[data-modal-toggle]");
+        // Loop through each button and add a click event listener
+        modalToggleButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                // Get the target modal using the data-modal-target attribute
+                const targetModal = document.querySelector(button.dataset.modalTarget);
+                // Toggle the hidden class of the target modal
+                targetModal.classList.toggle("hidden");
+                // Get the cancel button inside the target modal
+                const cancelButton = targetModal.querySelector("#cancel-btn");
+                // Add a click event listener to the cancel button to hide the modal
+                cancelButton.addEventListener("click", () => {
+                    targetModal.classList.add("hidden");
+                });
+            });
+        });
+    
 
 </script>
 {% endblock content %}

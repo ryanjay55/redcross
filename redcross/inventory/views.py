@@ -4,7 +4,7 @@ from account.models import DonorInfo
 import xlwt
 from django.core.paginator import Paginator
 from django.db.models.functions import Concat
-from django.db.models import Value, CharField
+from django.db.models import Value, CharField,Q
 from django.http import HttpResponse
 from django.contrib import messages
 from django.utils import timezone
@@ -15,8 +15,40 @@ from datetime import datetime, timedelta,date
 def bloodBagList(request):
     
     now = datetime.now()
-    blood_bags = BloodBags.objects.all().order_by('-date_donated')
+    blood_bags = BloodBags.objects.exclude(
+    Q(bloodinventory__bag_id__isnull=False) | Q(expiredblood__bag_id__isnull=False)
+    ).order_by('-date_donated')
     full_name = Concat('info_id__firstname', Value(' '), 'info_id__lastname', output_field=CharField())
+    
+    if request.method == 'POST':
+        serial_no = request.POST.get('serial_no')
+   
+        try:
+            blood_bag = BloodBags.objects.get(serial_no=serial_no)
+
+            if BloodInventory.objects.filter(bag_id=blood_bag).exists():
+                error_message = 'Serial number {} already exists in the BloodInventory.'.format(serial_no)
+                messages.error(request, error_message)
+            elif ExpiredBlood.objects.filter(bag_id=blood_bag).exists():
+                error_message = 'Serial number {} already exists in the ExpiredBlood table.'.format(serial_no)
+                messages.error(request, error_message)
+            else:
+                exp_date = blood_bag.get_exp_date().date()  # Convert datetime.datetime to datetime.date
+
+                if exp_date <= date.today():
+                    expired_blood_obj = ExpiredBlood.objects.create(bag_id=blood_bag, exp_date=exp_date)
+                    error_message = 'Blood bag with serial number {} has expired and will be added to the Expired Blood List.'.format(serial_no)
+                    messages.error(request, error_message)
+                else:
+                    blood_inventory_obj = BloodInventory.objects.create(bag_id=blood_bag, exp_date=exp_date)
+                    success_message = 'Blood bag with serial number {} has been added to the BloodInventory.'.format(serial_no)
+                    messages.success(request, success_message)
+                
+
+        except BloodBags.DoesNotExist:
+            error_message = 'Blood bag with serial number {} does not exist.'.format(serial_no)
+            messages.error(request, error_message)
+    
 
     sort_param = request.GET.get('sort', '-date_donated')  # default sort by date_donated in descending order
     if sort_param == 'full_name':
@@ -63,35 +95,35 @@ def bloodInventory(request):
     medium_priority_threshold = now + timedelta(days=14)
     low_priority_threshold = now + timedelta(days=42)
 
-    if request.method == 'POST':
-        serial_no = request.POST.get('serial_no')
+    # if request.method == 'POST':
+    #     serial_no = request.POST.get('serial_no')
 
-        try:
-            blood_bag = BloodBags.objects.get(serial_no=serial_no)
+    #     try:
+    #         blood_bag = BloodBags.objects.get(serial_no=serial_no)
 
-            if BloodInventory.objects.filter(bag_id=blood_bag).exists():
-                error_message = 'Serial number {} already exists in the BloodInventory.'.format(serial_no)
-                messages.error(request, error_message)
-            elif ExpiredBlood.objects.filter(bag_id=blood_bag).exists():
-                error_message = 'Serial number {} already exists in the ExpiredBlood table.'.format(serial_no)
-                messages.error(request, error_message)
-            else:
-                exp_date = blood_bag.get_exp_date().date()  # Convert datetime.datetime to datetime.date
+    #         if BloodInventory.objects.filter(bag_id=blood_bag).exists():
+    #             error_message = 'Serial number {} already exists in the BloodInventory.'.format(serial_no)
+    #             messages.error(request, error_message)
+    #         elif ExpiredBlood.objects.filter(bag_id=blood_bag).exists():
+    #             error_message = 'Serial number {} already exists in the ExpiredBlood table.'.format(serial_no)
+    #             messages.error(request, error_message)
+    #         else:
+    #             exp_date = blood_bag.get_exp_date().date()  # Convert datetime.datetime to datetime.date
 
-                if exp_date <= date.today():
-                    expired_blood_obj = ExpiredBlood.objects.create(bag_id=blood_bag, exp_date=exp_date)
-                    expired_count += 1
-                    error_message = 'Blood bag with serial number {} has expired and will be added to the Expired Blood List.'.format(serial_no)
-                    messages.success(request, error_message)
-                else:
-                    blood_inventory_obj = BloodInventory.objects.create(bag_id=blood_bag, exp_date=exp_date)
-                    stock_count += 1
-                    success_message = 'Blood bag with serial number {} has been added to the BloodInventory.'.format(serial_no)
-                    messages.success(request, success_message)
+    #             if exp_date <= date.today():
+    #                 expired_blood_obj = ExpiredBlood.objects.create(bag_id=blood_bag, exp_date=exp_date)
+    #                 expired_count += 1
+    #                 error_message = 'Blood bag with serial number {} has expired and will be added to the Expired Blood List.'.format(serial_no)
+    #                 messages.success(request, error_message)
+    #             else:
+    #                 blood_inventory_obj = BloodInventory.objects.create(bag_id=blood_bag, exp_date=exp_date)
+    #                 stock_count += 1
+    #                 success_message = 'Blood bag with serial number {} has been added to the BloodInventory.'.format(serial_no)
+    #                 messages.success(request, success_message)
 
-        except BloodBags.DoesNotExist:
-            error_message = 'Blood bag with serial number {} does not exist.'.format(serial_no)
-            messages.error(request, error_message)
+    #     except BloodBags.DoesNotExist:
+    #         error_message = 'Blood bag with serial number {} does not exist.'.format(serial_no)
+    #         messages.error(request, error_message)
 
     # Move expired blood from BloodInventory to ExpiredBlood
     expired_blood_to_move = blood_inventory.filter(exp_date__lte=date.today())
@@ -127,6 +159,32 @@ def expiredBlood(request):
     expired_count = expired_blood.count()  # Count the number of expired blood objects
 
     return render(request, 'inventory/expiredblood.html', {'expired_blood': expired_blood,'expired_count':expired_count,'navbar': 'expiredBlood'})
+
+from django.shortcuts import get_object_or_404, redirect
+def deleteExpiredBlood(request, pk=None):
+    if pk is None:
+        # Delete all expired blood objects
+        expired_blood_objs = ExpiredBlood.objects.all()
+        for expired_blood_obj in expired_blood_objs:
+            # Get the associated BloodBags object
+            blood_bags_obj = expired_blood_obj.bag_id
+            # Delete the ExpiredBlood object
+            expired_blood_obj.delete()
+            # Delete the associated BloodBags object
+            blood_bags_obj.delete()
+    else:
+        # Delete a specific expired blood object
+        expired_blood_obj = get_object_or_404(ExpiredBlood, pk=pk)
+        # Get the associated BloodBags object
+        blood_bags_obj = expired_blood_obj.bag_id
+        # Delete the ExpiredBlood object
+        expired_blood_obj.delete()
+        # Delete the associated BloodBags object
+        blood_bags_obj.delete()
+        success_message = 'Blood bag disposed successfully.'
+        messages.success(request, success_message)
+
+    return redirect('expiredBlood')
 
 
 
