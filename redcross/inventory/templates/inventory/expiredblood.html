@@ -1,0 +1,248 @@
+{% extends "custom_admin/base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% load static tailwind_tags %}
+
+{% block title %}Admin | Inventory{% endblock title %} 
+{% block content %}
+
+
+<div class="flex flex-row h-screen">
+  <div>{% include "custom_admin/sidebar.html" %}</div>
+
+  <div class="flex-1 mx-auto relative">
+      <div class="overflow-x-auto shadow-b-2xl sm:rounded-lg mx-[120px] mt-[20px]">
+          {% include "inventory/navbar.html" %}
+          
+
+          <div class="flex items-center justify-between pb-4">
+            <label for="table-search" class="sr-only">Search</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <img src="{% static 'assets/icons/search.svg' %}" alt="Search icon" class="w-5 h-5" />
+                </div>
+                <input type="text" id="search" class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-red-500 focus:border-red-500" placeholder="Search Donor" />
+            </div>
+        </div>
+          
+          <div class="flex flex-row justify-between items-center mb-2">
+            <div class="flex flex-row items-center justify-center">
+                <div class="actions">
+                    <label>
+                        <span style="font-weight: bold;">Action:</span>
+                        <select name="action" required="" class="px-4 py-2 h-auto rounded border border-gray-300 text-gray-700 text-sm w-[250px]">
+                            <option value="" selected>------------------</option>
+                            <option value="delete_selected" class="font-semibold">Dispose all selected blood </option>
+                        </select>
+                    </label>
+                    <input type="hidden" name="select_across" value="0" class="select-across" />
+                    <button type="button" id="execute-button" class="w-[80px] text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg py-[5px] px-[3px] text-xs text-center">Go</button>
+                </div>
+                <p class="text-sm"><span id="checked-count" class="ml-2">0</span> out of <span id="row-count">{{ users.paginator.count }}</span> selected</p>
+            </div>
+            <div>
+                <a href="{% url 'export-donor-info' %}">
+                    <button
+                        id="dateRange-modal-trigger-btn"
+                        data-modal-target="small-modal"
+                        data-modal-toggle="small-modal"
+                        class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-300 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5"
+                        type="button"
+                    >
+                        <img src="{% static 'assets/icons/xls.svg' %}" alt="xls icon" class="w-5 h-5 mr-4" />
+                        Export
+                    </button>
+                </a>
+            </div>
+        </div>
+          <!-- TABLEEEEEEE -->
+<div class="h-[450px] overflow-y-auto">
+  <table class="w-full text-sm text-left text-gray-500 table-auto" id="table">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-200 text-center">
+          <tr>
+            <th scope="col" class="px-3">
+                <input id="select-all" type="checkbox" class="w-5 h-5 text-lifelink-red2 bg-gray-200 border-gray-400 rounded focus:ring-white" />
+            </th>
+              <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center justify-center">
+                      Info ID 
+                  </div>
+              </th>
+  
+              <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center justify-center">
+                      Name
+                  </div>
+              </th>
+              <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center justify-center">
+                      Serial Number
+                  </div>
+              </th>
+              <th scope="col" class="px-6 py-3">
+                  Date Donated
+              </th>
+              <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center justify-center">
+                      Expiration Date
+                  </div>
+              </th>            
+              <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center justify-center">
+                      Status
+                  </div>
+              </th>
+              <th scope="col" class="px-6 py-3">
+                  Actions
+              </th>
+          </tr>
+      </thead>
+      <tbody id="table-body">
+        {% for expired_blood_obj in expired_blood %}
+
+          <tr class="bg-white border-b hover:bg-gray-50 text-center text-gray-800">
+            <td class="px-3">
+                <input type="checkbox" name="ids" onchange="changeBackground(this)" class="select-donor w-5 h-5 text-lifelink-red2 bg-gray-200 border-gray-400 rounded focus:ring-white" />
+            </td>
+              <td class="px-6 py-4">
+                {{ expired_blood_obj.bag_id.info_id.info_id }}
+              </td>
+              <td class="px-6 py-4">
+                {{ expired_blood_obj.bag_id.info_id.firstname }} {{ expired_blood_obj.bag_id.info_id.lastname }}
+              </td>
+              <td class="px-6 py-4">
+                {{ expired_blood_obj.bag_id.serial_no }}
+              </td>
+              <td class="px-6 py-4">
+                {{ expired_blood_obj.bag_id.date_donated | date:"F d, Y" }}
+  
+              </td>
+              <td class="px-6 py-4">
+                  {{ expired_blood_obj.bag_id.date_donated | date:"F d, Y" }}
+              </td>
+              <td class="px-6 py-4">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-500 text-white">
+                          Expired
+                      </span>
+
+              </td>
+              
+              <td class="px-6 py-4">
+                <button data-modal-target="#view-blood-modal{{ item.bag_id.info_id }}" data-modal-toggle="defaultModal" type="button" class="bg-red-600 hover:bg-red-700 focus:bg-red-700 text-white font-bold py-1 px-4 rounded">
+                    Dispose
+                </button>
+            </td>
+            
+          </tr>
+          {% endfor %}
+      </tbody>
+  </div>
+  </table>
+  </div>
+      </div>
+
+      <div id="toast-container" class="fixed bottom-0 left-0 z-50 ml-14">
+          {% include "inventory/toast_message.html" %}
+      </div>
+      
+  </div>
+</div>
+
+
+<script>
+    const selectAllCheckbox = document.getElementById("select-all");
+    const selectDonorCheckboxes = document.querySelectorAll(".select-donor");
+
+    selectAllCheckbox.addEventListener("change", () => {
+        selectDonorCheckboxes.forEach((checkbox) => {
+            checkbox.checked = selectAllCheckbox.checked;
+            highlightRow(checkbox);
+            checkbox.addEventListener("click", () => {
+                highlightRow(checkbox);
+            });
+        });
+    });
+
+    function highlightRow(checkbox) {
+        const row = checkbox.parentNode.parentNode; // get the parent tr element
+        if (checkbox.checked) {
+            row.style.backgroundColor = "#ECECEC";
+        } else {
+            row.style.backgroundColor = "white";
+        }
+    }
+
+    function changeBackground(checkbox) {
+        if (checkbox.checked) {
+            checkbox.parentNode.parentNode.style.backgroundColor = "#ECECEC";
+        } else {
+            checkbox.parentNode.parentNode.style.backgroundColor = "white";
+        }
+    }
+
+    //Checkbox counttttttttttttttttttttttt
+    function updateCheckedCount() {
+        // Get all the checkboxes with name 'ids'
+        var checkboxes = document.getElementsByName("ids");
+    
+        // Get the number of checkboxes that are currently checked
+        var count = 0;
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                count++;
+            }
+        }
+    
+        // Update the row count display
+        var rowCountSpan = document.getElementById("row-count");
+        rowCountSpan.textContent = checkboxes.length;
+    
+        // Update the count display
+        var checkedCountSpan = document.getElementById("checked-count");
+        checkedCountSpan.textContent = count;
+    
+        // Get the "select all" checkbox and set up an event listener
+        var selectAllCheckbox = document.getElementById("select-all");
+        selectAllCheckbox.addEventListener("change", function () {
+            // Check or uncheck all checkboxes based on the state of the "select all" checkbox
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = this.checked;
+            }
+            // Update the count display
+            count = this.checked ? checkboxes.length : 0;
+            checkedCountSpan.textContent = count;
+            // Save the count to local storage
+            localStorage.setItem('checkedCount', count);
+        });
+    
+        // Update the count when a checkbox is unchecked
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener("change", function () {
+                if (this.checked) {
+                    count++;
+                } else {
+                    count--;
+                }
+                checkedCountSpan.textContent = count;
+                // Update the "select all" checkbox based on the state of all checkboxes
+                selectAllCheckbox.checked = count == checkboxes.length;
+                // Save the count to local storage
+                localStorage.setItem('checkedCount', count);
+            });
+        }
+    }
+    
+    // Call the function to initialize the count when the page loads
+    window.addEventListener("load", function () {
+        // Get the saved count from local storage
+        var savedCount = localStorage.getItem('checkedCount');
+        if (savedCount !== null) {
+            // Update the count display
+            var checkedCountSpan = document.getElementById("checked-count");
+            checkedCountSpan.textContent = savedCount;
+        }
+        updateCheckedCount();
+    });
+
+</script>
+{% endblock content %}

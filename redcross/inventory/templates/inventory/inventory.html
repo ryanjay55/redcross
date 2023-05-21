@@ -9,7 +9,7 @@
     <div>{% include "custom_admin/sidebar.html" %}</div>
 
     <div class="flex-1 mx-auto relative">
-        <div class="overflow-x-auto shadow-b-2xl sm:rounded-lg mx-[120px] mt-[20px]">
+        <div class="overflow-x-auto shadow-b-2xl sm:rounded-lg mx-[120px] mt-[10px]">
             {% include "inventory/navbar.html" %}
             {% include "inventory/bloodinventoryrecord.html" %}
         </div>
@@ -22,11 +22,11 @@
 </div>
 
 <script>
-    setInterval(function () {
-        let date = new Date();
-        let hours = date.getHours() % 12 || 12; // convert hours to 12-hour format
-        document.getElementById("clock").innerHTML = (hours < 10 ? "0" : "") + hours + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes() + ":" + (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
-    }, 500);
+    //setInterval(function () {
+     //   let date = new Date();
+      //  let hours = date.getHours() % 12 || 12; // convert hours to 12-hour format
+      //  document.getElementById("clock").innerHTML = (hours < 10 ? "0" : "") + hours + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes() + ":" + (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
+    //}, 500);
 
     //autoreload
     function autoRefresh(hours, minutes, seconds) {

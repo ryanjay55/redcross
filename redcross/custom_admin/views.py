@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.core.mail import send_mail
 from account.models import DonorInfo
-from inventory.models import BloodBags,BloodInventory
+from inventory.models import BloodBags,BloodInventory,ExpiredBlood
 import xlwt
 from django.http import HttpResponse
 from django.db import models
@@ -10,55 +10,74 @@ from xlwt import easyxf
 from django.core.paginator import Paginator
 from django.db.models.functions import ExtractYear,Concat,ExtractMonth
 from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField,Sum
+from django.utils import timezone
+from datetime import timedelta
 
 
 def dashboard(request):
+    blood_type = 'A+'
+    high_priority_threshold = timezone.now() + timedelta(days=7)
+
+    high_priority_count = BloodInventory.objects.filter(
+        bag_id__info_id__blood_type=blood_type,
+        exp_date__lte=high_priority_threshold
+    ).count()
+
+    expired_count = ExpiredBlood.objects.filter(
+        bag_id__info_id__blood_type=blood_type
+    ).count()
+
     blood_types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
     stock_counts = {}
 
     for blood_type in blood_types:
-        blood_inventory = BloodInventory.objects.filter(bag_id__info_id__blood_type=blood_type).order_by('exp_date')
+        blood_inventory = BloodInventory.objects.filter(bag_id__info_id__blood_type=blood_type)
         stock_count = blood_inventory.count()
         stock_counts[blood_type] = stock_count
-    
-    return render(request, 'custom_admin/dashboard.html', {'stock_counts':stock_counts})
+
+    return render(request, 'custom_admin/dashboard.html', {
+        'stock_counts': stock_counts,
+        'high_priority_count': high_priority_count,
+        'expired_count': expired_count
+    })
+
 
 
 def usersList(request):
-    if request.method == 'POST':
-        # Retrieve the form data
-        info_id = request.POST.get('info_id')
-        firstname = request.POST.get('firstname')
-        lastname = request.POST.get('lastname')
-        sex = request.POST.get('sex')
-        blood_type = request.POST.get('blood_type')
+    # if request.method == 'POST':
+    #     # Retrieve the form data
+    #     info_id = request.POST.get('info_id')
+    #     firstname = request.POST.get('firstname')
+    #     lastname = request.POST.get('lastname')
+    #     sex = request.POST.get('sex')
+    #     blood_type = request.POST.get('blood_type')
 
-        email = request.POST.get('email')
-        address = request.POST.get('address')
-        contact_number = request.POST.get('contact_number')
+    #     email = request.POST.get('email')
+    #     address = request.POST.get('address')
+    #     contact_number = request.POST.get('contact_number')
 
-        # Convert date_of_birth string to datetime object
+    #     # Convert date_of_birth string to datetime object
 
   
 
-        # Retrieve the existing DonorInfo object
-        donor_info = DonorInfo.objects.get(info_id=info_id)
+    #     # Retrieve the existing DonorInfo object
+    #     donor_info = DonorInfo.objects.get(info_id=info_id)
 
-        # Update the DonorInfo object with the form data
-        donor_info.firstname = firstname
-        donor_info.lastname = lastname
-        donor_info.sex = sex
-        donor_info.blood_type = blood_type
+    #     # Update the DonorInfo object with the form data
+    #     donor_info.firstname = firstname
+    #     donor_info.lastname = lastname
+    #     donor_info.sex = sex
+    #     donor_info.blood_type = blood_type
   
-        donor_info.email = email
-        donor_info.address = address
-        donor_info.contact_number = contact_number
+    #     donor_info.email = email
+    #     donor_info.address = address
+    #     donor_info.contact_number = contact_number
 
-        # Save the updated DonorInfo object to the database
-        donor_info.save()
+    #     # Save the updated DonorInfo object to the database
+    #     donor_info.save()
 
-        # Redirect to the users list page
-        return redirect('users-list')
+    #     # Redirect to the users list page
+    #     return redirect('users-list')
     
     donors = DonorInfo.objects.all()
     serial_exists_error = ''

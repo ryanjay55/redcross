@@ -10,23 +10,20 @@ class BloodBags(models.Model):
     serial_no = models.CharField(max_length=100, unique=True)
     date_donated = models.DateTimeField()
     bled_by = models.CharField(max_length=50)
-    
+
     @property
     def days_since_donation(self):
         days = (timezone.now() - self.date_donated).days
         return days
-    
+
     def get_exp_date(self):
-        return self.date_donated + timedelta(days=37) # expiration date is 37 days after donation
-    
-    
+        return self.date_donated + timedelta(days=37)  # expiration date is 37 days after donation
 
 
 class BloodInventory(models.Model):
     inventory_id = models.AutoField(primary_key=True)
     bag_id = models.ForeignKey(BloodBags, on_delete=models.CASCADE)
     exp_date = models.DateTimeField()
-    qty = models.IntegerField(default=0)
 
     def clean(self):
         super().clean()
@@ -40,3 +37,11 @@ class BloodInventory(models.Model):
 
     def __str__(self):
         return str(self.inventory_id)
+
+
+class ExpiredBlood(models.Model):
+    bag_id = models.OneToOneField(BloodBags, primary_key=True, on_delete=models.CASCADE)
+    exp_date = models.DateTimeField(default=timezone.now)  # Specify a default value
+
+    def __str__(self):
+        return str(self.bag_id)
