@@ -116,15 +116,15 @@ def usersList(request):
         else:
             if not serial_exists_error and not serial_incomplete_error:
                 # Check if the donor has donated within the last 3 months
-                last_donation = BloodBags.objects.filter(info_id=donor_info).order_by('-date_donated').first()
-                if last_donation:
-                    last_donation_date = last_donation.date_donated.date()
-                    min_donation_date = last_donation_date + timedelta(days=90)  # Minimum donation date after 3 months
-                    current_date = date.today()
-                    if current_date < min_donation_date:
-                        # Display an error message if the donor has donated within the last 3 months
-                        messages.error(request, 'Donor must wait for at least 3 months before donating again.')
-                        return redirect('users-list')
+                # last_donation = BloodBags.objects.filter(info_id=donor_info).order_by('-date_donated').first()
+                # if last_donation:
+                #     last_donation_date = last_donation.date_donated.date()
+                #     min_donation_date = last_donation_date + timedelta(days=90)  # Minimum donation date after 3 months
+                #     current_date = date.today()
+                #     if current_date < min_donation_date:
+                #         # Display an error message if the donor has donated within the last 3 months
+                #         messages.error(request, 'Donor must wait for at least 3 months before donating again.')
+                #         return redirect('users-list')
 
                 # Create a new BloodBags instance based on the form data and DonorInfo record
                 blood_bag = BloodBags(
@@ -134,8 +134,9 @@ def usersList(request):
                     bled_by=bled_by,
                 )
                 blood_bag.save()
-                # send_thank_you_email(donor_info)
-                messages.success = 'Blood bag successfully added to the database.'
+                send_thank_you_email(donor_info)
+                messages.success(request, 'Blood bag successfully added to the database.')
+
         
     sort_param = request.GET.get('sort', 'completed_at')  # default sort by completion date
     if sort_param == 'firstname':

@@ -1,11 +1,12 @@
 {% extends "custom_admin/base.html" %}{% load tailwind_filters %} {% load static %} {% load static tailwind_tags %} {% block title %}Admin | Users{% endblock title %} {% tailwind_css %} {% block content %}
 <div class="flex flex-row h-ful">
     {% block sidebaruser %}
+    
+    <div>{% include "custom_admin/sidebar.html" %}</div>
+    {% endblock sidebaruser %}
     <div id="toast-container" class="fixed bottom-0 left-0 z-50 ml-14">
         {% include "inventory/toast_message.html" %}
     </div>
-    <div>{% include "custom_admin/sidebar.html" %}</div>
-    {% endblock sidebaruser %}
     <div class="flex-1 mx-auto">
         <!-- TABLEEEEEEE -->
         <div class="relative overflow-x-auto shadow-b-2xl sm:rounded-lg mx-[120px] mt-[20px]">

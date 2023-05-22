@@ -11,8 +11,6 @@ from django.utils import timezone
 from datetime import datetime, timedelta,date
 
 
-
-
 def bloodBagList(request):
     
     now = datetime.now()
@@ -44,7 +42,7 @@ def bloodBagList(request):
                     blood_inventory_obj = BloodInventory.objects.create(bag_id=blood_bag, exp_date=exp_date)
                     success_message = 'Blood bag with serial number {} has been added to the BloodInventory.'.format(serial_no)
                     messages.success(request, success_message)
-                
+                    
 
         except BloodBags.DoesNotExist:
             error_message = 'Blood bag with serial number {} does not exist.'.format(serial_no)

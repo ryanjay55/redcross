@@ -170,9 +170,6 @@
     </tr>
     {% endfor %}
 </table>
-<div id="toast-container" class="fixed bottom-0 left-0 z-50 ml-14">
-    {% include "inventory/toast_message.html" %}
-</div>
 {% endblock table %} {% block navPagination %}
 <nav class="bg-gray-50 flex items-center justify-center py-5">
     {% if page_obj.has_other_pages %}
