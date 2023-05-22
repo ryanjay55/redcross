@@ -32,45 +32,131 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="py-2">1</td>
-                                <td class="py-2">Galloner 1</td>
+                                <td class="py-2">23-4323</td>
+                                <td class="py-2">Ryan Jay D. Antonio</td>
                             </tr>
                             <tr>
-                                <td class="py-2">2</td>
-                                <td class="py-2">Galloner 2</td>
+                                <td class="py-2">23-2342</td>
+                                <td class="py-2">Renz Lander De Ocampo</td>
                             </tr>
                             <tr>
-                                <td class="py-2">3</td>
-                                <td class="py-2">Galloner 3</td>
+                                <td class="py-2">23-5431</td>
+                                <td class="py-2">Ray Matthew Reyes</td>
                             </tr>
-                            <!-- Add more rows as needed -->
+                            <tr>
+                                <td class="py-2">23-5324</td>
+                                <td class="py-2">James Ryan Robles</td>
+                            </tr>
+                          
                         </tbody>
                     </table>
                 </div>
             </div>
+        </a>
         </div>
         
         
 
-        <div class="flex flex-row justify-between">
-            <div class="flex flex-row justify-between items-center w-full ml-5 ">
-                <div id="graph1" class="w-1/2 h-[305px] bg-gray-300 p-4 border-4">
-                    <h3 class="text-lg font-semibold">Bar Graph 1</h3>
-                    <p>Graph 1</p>
+        <div class="flex justify-between">
+            <div class="flex justify-between items-center flex-1 ml-5 space-x-4">
+                <div class="w-1/2 h-[305px] bg-white p-4 border-2 border-gray-300 rounded-lg shadow-lg">
+                    <div class="relative">
+                        <select class="absolute top-0 left-0 p-2 border border-gray-300 rounded-lg text-sm w-[150px]">
+                            <option value="January" class="text-sm">January - March</option>
+                            <option value="February" selected class="text-sm">April - June</option>
+                            <option value="March" class="text-sm">July - September</option>
+                            <option value="March" class="text-sm">October - December</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col justify-center items-center">
+                        <h3 class="text-lg font-semibold mb-4">April - June</h3>
+                        <div class="w-full max-w-md">
+                            <canvas id="myChart" class="w-full"></canvas>
+                        </div>
+                    </div>
                 </div>
-                <div id="graph2" class="w-1/2 h-[305px] bg-gray-300 p-4 border-4">
-                    <h3 class="text-lg font-semibold">Bar Graph 2</h3>
-                    <p>Graph 2</p>
+                
+                <div class="w-1/2 h-[305px] bg-white p-4 border-2 border-gray-300 rounded-lg shadow-lg">
+                    <div class="relative">
+                        <select class="absolute top-0 left-0 p-2 border border-gray-300 rounded-lg text-sm w-[150px]">
+                            <option value="January" class="text-sm">January - March</option>
+                            <option value="February" selected class="text-sm">April - June</option>
+                            <option value="March" class="text-sm">July - September</option>
+                            <option value="March" class="text-sm">October - December</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col justify-center items-center">
+                        <h3 class="text-lg font-semibold mb-4">April - June</h3>
+                        <div class="w-full max-w-md">
+                            <canvas id="myChart1" class="w-full"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
-        
-            <div class="w-[280px] bg-gray-100 p-4 rounded-lg shadow-lg mr-5 ml-5 h-[320px] text-center">
+            
+            <div class="w-[240px] bg-gray-100 p-4 rounded-lg shadow-lg ml-5 h-[290px] mr-5">
                 <h2 class="text-lg font-semibold">Total Deferral Count: 1</h2>
-                <!-- Add the content for the Total Deferral Count section here -->
+                <h2 class="text-lg font-semibold">Dispensed Count: 1</h2>
+                <h2 class="text-lg font-semibold">Expired Blood: 1</h2>
             </div>
         </div>
+        
+        
         
     </div>
 
 </div>
+
+<script>
+
+    var xValues = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+    var yValues = [10, 8, 15, 24, 15, 5, 35, 26];
+    var lineColors = ["red", "green", "blue", "orange", "brown", "purple", "teal", "gray"];
+
+    new Chart("myChart", {
+    type: "line",  // Changed to line chart
+    data: {
+        labels: xValues,
+        datasets: [{
+          fill: false,
+          lineTension: 0,
+          backgroundColor: "rgba(0,0,255,1.0)",
+          borderColor: "rgba(0,0,255,0.1)",
+          data: yValues
+        }]
+      },
+    options: {
+        legend: { display: false },
+        title: {
+        display: true,
+        text: "Total Blood Bags Quarterly"
+        }
+    }
+    });
+
+    
+
+    var xValues1 = ["Malinta", "Maysan", "Dalandanan", "Marulas", "Viente Reales", "Ugong", "Punturin", "Balubaran","Others"];
+    var yValues1 = [10, 8, 15, 24, 15, 5, 35, 26,2];
+    var barColors1 = ["red", "green", "blue", "orange", "brown", "purple", "teal", "gray","black"];
+    
+    new Chart("myChart1", {
+      type: "bar",
+      data: {
+        labels: xValues1,
+        datasets: [{
+          backgroundColor: barColors1,
+          data: yValues1
+        }]
+      },
+      options: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: "Donors Per Barangay"
+        }
+      }
+    });
+    
+    </script>
 {% endblock content %}

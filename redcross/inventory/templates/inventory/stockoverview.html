@@ -2,6 +2,8 @@
 <!-- Main Content -->
 <main class="container mx-auto ">
     <div class="grid grid-cols-4 gap-4 mb-4">
+
+        <a href="{% url 'bloodInventory' %}">
         <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
             <img src="{% static 'assets/icons/blood-type (4).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
             {% for blood_type, count in stock_counts.items %}
@@ -27,7 +29,9 @@
                 </div>
             </div>
         </div>
-        
+        </a>
+
+        <a href="{% url 'bloodInventory' %}">
         <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
             <img src="{% static 'assets/icons/blood-type (3).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
             {% for blood_type, count in stock_counts.items %}
@@ -53,7 +57,9 @@
                 </div>
             </div>
         </div>
+        </a>
 
+        <a href="{% url 'bloodInventory' %}">
         <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
             <img src="{% static 'assets/icons/blood-type (7).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
             {% for blood_type, count in stock_counts.items %}
@@ -79,6 +85,9 @@
                 </div>
             </div>
         </div>
+        </a>
+
+        <a href="{% url 'bloodInventory' %}">
         <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
             <img src="{% static 'assets/icons/blood-type (2).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
             {% for blood_type, count in stock_counts.items %}
@@ -104,7 +113,9 @@
                 </div>
             </div>
         </div>
+        </a>
 
+        <a href="{% url 'bloodInventory' %}">
         <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
             <img src="{% static 'assets/icons/blood-type (1).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
             {% for blood_type, count in stock_counts.items %}
@@ -130,7 +141,9 @@
                 </div>
             </div>
         </div>
+        </a>
 
+        <a href="{% url 'bloodInventory' %}">
         <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
             <img src="{% static 'assets/icons/blood-type (5).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
             {% for blood_type, count in stock_counts.items %}
@@ -156,7 +169,9 @@
                 </div>
             </div>
         </div>
+        </a>
 
+        <a href="{% url 'bloodInventory' %}">
         <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
             <img src="{% static 'assets/icons/blood-type (8).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
             {% for blood_type, count in stock_counts.items %}
@@ -182,7 +197,9 @@
                 </div>
             </div>
         </div>
+        </a>
 
+        <a href="{% url 'bloodInventory' %}">
         <div class="col-span-1 bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center justify-center hover:bg-red-200">
             <img src="{% static 'assets/icons/blood-type (6).svg' %}" alt="blood type icon" class="w-16 h-16 mb-4 transition-opacity duration-300" />
             {% for blood_type, count in stock_counts.items %}
@@ -208,6 +225,6 @@
                 </div>
             </div>
         </div>
-
+        </a>
     </div>
 </main>

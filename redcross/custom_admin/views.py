@@ -9,7 +9,7 @@ from datetime import datetime
 from xlwt import easyxf
 from django.core.paginator import Paginator
 from django.db.models.functions import ExtractYear,Concat,ExtractMonth
-from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField,Sum
+from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField,Sum,Q
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -301,56 +301,88 @@ def deferredDonors(request):
 
 
 
+# def mbdSummary(request):
+#     # Retrieve the selected month and year from the query parameters
+#     month = request.GET.get('month')
+#     year = request.GET.get('year')
+
+#     # Validate and convert month and year to integers
+#     try:
+#         month = int(month)
+#         year = int(year)
+#     except (TypeError, ValueError):
+#         # Handle invalid month or year
+#         # You can show an error message or redirect to an error page
+#         return render(request, 'custom_admin/mbdsummary.html', {'error': 'Invalid month or year'})
+
+#     # Filter blood inventory and expired blood by selected month and year
+#     blood_inventory = BloodInventory.objects.filter(exp_date__month=month, exp_date__year=year)
+#     expired_blood = ExpiredBlood.objects.filter(exp_date__month=month, exp_date__year=year)
+
+#     # Count male and female donors
+#     male_count = DonorInfo.objects.filter(sex='M').count()
+#     female_count = DonorInfo.objects.filter(sex='F').count()
+
+#     # Count donors by blood type
+#     blood_type_counts = DonorInfo.objects.values('blood_type').annotate(count=Count('blood_type'))
+
+#     # Count donors per barangay
+#     barangay_counts = DonorInfo.objects.values('address').annotate(count=Count('address'))
+
+#     # Count expired blood bags
+#     expired_count = expired_blood.count()
+
+#     # Count blood bags with different priority levels
+#     high_priority_count = BloodBags.objects.filter(priority='High').count()
+#     medium_priority_count = BloodBags.objects.filter(priority='Medium').count()
+#     low_priority_count = BloodBags.objects.filter(priority='Low').count()
+
+#     # Count current stock per blood type
+#     stock_counts = BloodInventory.objects.values('bag_id__info_id__blood_type').annotate(count=Count('bag_id__info_id__blood_type'))
+
+#     return render(request, 'custom_admin/mbdsummary.html', {
+#         'blood_inventory': blood_inventory,
+#         'expired_blood': expired_blood,
+#         'male_count': male_count,
+#         'female_count': female_count,
+#         'blood_type_counts': blood_type_counts,
+#         'barangay_counts': barangay_counts,
+#         'expired_count': expired_count,
+#         'high_priority_count': high_priority_count,
+#         'medium_priority_count': medium_priority_count,
+#         'low_priority_count': low_priority_count,
+#         'stock_counts': stock_counts,
+#         'navbar': 'summaryReport'
+#     })
+
+
+
+
+
 def mbdSummary(request):
-    # Retrieve the selected month and year from the query parameters
-    month = request.GET.get('month')
-    year = request.GET.get('year')
-
-    # Validate and convert month and year to integers
-    try:
-        month = int(month)
-        year = int(year)
-    except (TypeError, ValueError):
-        # Handle invalid month or year
-        # You can show an error message or redirect to an error page
-        return render(request, 'custom_admin/mbdsummary.html', {'error': 'Invalid month or year'})
-
-    # Filter blood inventory and expired blood by selected month and year
-    blood_inventory = BloodInventory.objects.filter(exp_date__month=month, exp_date__year=year)
-    expired_blood = ExpiredBlood.objects.filter(exp_date__month=month, exp_date__year=year)
-
-    # Count male and female donors
+    donor_info = DonorInfo.objects.all()
+    blood_bags = BloodBags.objects.all()
+    expired_blood = ExpiredBlood.objects.all()
     male_count = DonorInfo.objects.filter(sex='M').count()
     female_count = DonorInfo.objects.filter(sex='F').count()
-
-    # Count donors by blood type
     blood_type_counts = DonorInfo.objects.values('blood_type').annotate(count=Count('blood_type'))
+    minor_count = DonorInfo.objects.filter(date_of_birth__gte=date.today() - timedelta(days=17 * 365)).count()
+    legal_age_count = DonorInfo.objects.filter(date_of_birth__lt=date.today() - timedelta(days=17 * 365)).count()
 
-    # Count donors per barangay
-    barangay_counts = DonorInfo.objects.values('address').annotate(count=Count('address'))
+    blood_inventory_counts = BloodInventory.objects.values('bag_id__info_id__blood_type').annotate(count=Count('bag_id__info_id__blood_type'))
+    
+    blood_donation_per_month = BloodBags.objects.exclude(date_donated=None).annotate(month=ExtractMonth('date_donated')).values('month').annotate(count=Count('bag_id')).order_by('count')
 
-    # Count expired blood bags
-    expired_count = expired_blood.count()
-
-    # Count blood bags with different priority levels
-    high_priority_count = BloodBags.objects.filter(priority='High').count()
-    medium_priority_count = BloodBags.objects.filter(priority='Medium').count()
-    low_priority_count = BloodBags.objects.filter(priority='Low').count()
-
-    # Count current stock per blood type
-    stock_counts = BloodInventory.objects.values('bag_id__info_id__blood_type').annotate(count=Count('bag_id__info_id__blood_type'))
-
-    return render(request, 'custom_admin/mbdsummary.html', {
-        'blood_inventory': blood_inventory,
+    context = {
+        'donor_info': donor_info,
+        'blood_bags': blood_bags,
         'expired_blood': expired_blood,
         'male_count': male_count,
         'female_count': female_count,
         'blood_type_counts': blood_type_counts,
-        'barangay_counts': barangay_counts,
-        'expired_count': expired_count,
-        'high_priority_count': high_priority_count,
-        'medium_priority_count': medium_priority_count,
-        'low_priority_count': low_priority_count,
-        'stock_counts': stock_counts,
-        'navbar': 'summaryReport'
-    })
+        'minor_count': minor_count,
+        'legal_age_count': legal_age_count,
+        'blood_inventory_counts': blood_inventory_counts,
+        'blood_donation_per_month': blood_donation_per_month,
+    }
+    return render(request, 'custom_admin/mbdsummary.html', context)

@@ -1,70 +1,48 @@
-{% extends "custom_admin/base.html" %} {% load tailwind_filters %} {% load static %} {% load static tailwind_tags %} {% block title %} Admin | Dashboard {% endblock title %} {% block content %}
+{% extends "custom_admin/base.html" %} {% load tailwind_filters %} {% load static %} {% load static tailwind_tags %} {% block title %}Admin | Dashboard{% endblock title %} {% block content %}
+
 <div class="flex flex-row h-full">
     <div>{% include "custom_admin/sidebar.html" %}</div>
 
-    <div>
-        <!-- Display blood inventory -->
-        <h2>Blood Inventory</h2>
-        <ul>
-            {% for blood_bag in blood_inventory %}
-            <li>{{ blood_bag }}</li>
-            {% empty %}
-            <li>No blood inventory available.</li>
-            {% endfor %}
-        </ul>
+    <!-- Donor Info -->
+    <div class="flex-1 mx-auto">
+        <h1 class="font-bold">Donor Summary</h1>
+        <div class="">
+            <p>Total Male Count: {{ male_count }}</p>
+            <p>Total Female Count: {{ female_count }}</p>
 
-        <!-- Display expired blood -->
-        <h2>Expired Blood</h2>
-        <ul>
-            {% for expired_bag in expired_blood %}
-            <li>{{ expired_bag }}</li>
-            {% empty %}
-            <li>No expired blood available.</li>
-            {% endfor %}
-        </ul>
-
-        <!-- Display male and female counts -->
-        <h2>Donor Counts</h2>
-        <p>Male count: {{ male_count }}</p>
-        <p>Female count: {{ female_count }}</p>
-
-        <!-- Display blood type counts -->
-        <h2>Blood Type Counts</h2>
-        <ul>
+            <!-- bloodtype -->
             {% for blood_type_count in blood_type_counts %}
-            <li>{{ blood_type_count.blood_type }}: {{ blood_type_count.count }}</li>
-            {% empty %}
-            <li>No blood type counts available.</li>
+            <p>{{ blood_type_count.blood_type }}: {{ blood_type_count.count }}</p>
             {% endfor %}
-        </ul>
 
-        <!-- Display barangay counts -->
-        <h2>Donors per Barangay</h2>
-        <ul>
-            {% for barangay_count in barangay_counts %}
-            <li>{{ barangay_count.address }}: {{ barangay_count.count }}</li>
-            {% empty %}
-            <li>No donors per barangay available.</li>
-            {% endfor %}
-        </ul>
+            <!-- Age -->
+            <div>
+                <p>Total Minors Count: {{ minors_count|default:0 }}</p>
+                <p>Total Legal Age Count: {{ legal_age_count|default:0 }}</p>
+            </div>
+        </div>
+    </div>
 
-        <!-- Display expired blood count -->
-        <p>Expired blood count: {{ expired_count }}</p>
+    <!-- Inventory -->
+    <div class="flex-1 mx-auto">
+        <h1 class="font-bold">Inventory Summary</h1>
+        <div class="">
+            <div>
+                {% for count in blood_inventory_counts %}
+                <p>Current Stock for {{ count.bag_id__info_id__blood_type }}: {{ count.count }}</p>
+                {% endfor %}
+            </div>
 
-        <!-- Display blood bags with different priority levels -->
-        <p>High priority count: {{ high_priority_count }}</p>
-        <p>Medium priority count: {{ medium_priority_count }}</p>
-        <p>Low priority count: {{ low_priority_count }}</p>
-
-        <!-- Display current stock per blood type -->
-        <h2>Current Stock per Blood Type</h2>
-        <ul>
-            {% for stock_count in stock_counts %}
-            <li>{{ stock_count.bag_id__info_id__blood_type }}: {{ stock_count.count }}</li>
-            {% empty %}
-            <li>No current stock available.</li>
-            {% endfor %}
-        </ul>
+            <div>
+                <h3>Blood Bags Donated Per Month:</h3>
+                <ul>
+                    {% for donation in blood_donation_per_month %}
+                    <li>Month: {{ donation.month }}, Count: {{ donation.count }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+        </div>
     </div>
 </div>
 {% endblock content %}
