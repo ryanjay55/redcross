@@ -107,7 +107,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'lifelink',
         'USER': 'root',
-        'PASSWORD': '123456789',
+        'PASSWORD': '',
         'PORT': '3306',
         'HOST': 'localhost',
     }
