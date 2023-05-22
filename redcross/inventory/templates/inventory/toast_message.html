@@ -105,31 +105,32 @@
 
 
     if (document.getElementById("toast-danger")) {
-        const toast = document.getElementById("toast-danger");
-        const closeButton = toast.querySelector("[data-dismiss-target='#toast-danger']");
-        closeButton.addEventListener("click", () => {
-          toast.style.opacity = "0";
-          setTimeout(() => {
-            toast.style.display = "none";
-          }, 500); // Adjust the duration to match the transition duration in CSS
-        });
+      const toast = document.getElementById("toast-danger");
+      const closeButton = toast.querySelector("[data-dismiss-target='#toast-danger']");
+      closeButton.addEventListener("click", () => {
+        toast.style.opacity = "0";
+        setTimeout(() => {
+          toast.style.display = "none";
+        }, 500); // Adjust the duration to match the transition duration in CSS
+      });
     
-        let progressBar = toast.querySelector(".progress-bar");
-        let progress = 100;
-        const updateProgressBar = () => {
-          progress -= 1; // Adjust the decrement value to change the progress bar speed
-          progressBar.style.width = progress + "%";
-          if (progress > 0) {
-            requestAnimationFrame(updateProgressBar);
-          } else {
+      let progressBar = toast.querySelector(".progress-bar");
+      let progress = 100;
+      const updateProgressBar = () => {
+        progress -= 1; // Adjust the decrement value to change the progress bar speed
+        progressBar.style.width = progress + "%";
+        if (progress > 0) {
+          requestAnimationFrame(updateProgressBar);
+        } else {
+          setTimeout(() => {
+            toast.style.opacity = "0";
             setTimeout(() => {
-              toast.style.opacity = "0";
-              setTimeout(() => {
-                toast.style.display = "none";
-              }, 500); // Adjust the duration to match the transition duration in CSS
-            }, 1000); // Adjust the duration to match the progress bar fill duration
-          }
-        };
+              toast.style.display = "none";
+            }, 500); // Adjust the duration to match the transition duration in CSS
+          }, 1000); // Adjust the duration to match the progress bar fill duration
+        }
+      };
+    
     
         updateProgressBar();
       }

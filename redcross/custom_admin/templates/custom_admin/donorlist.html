@@ -1,4 +1,5 @@
 {% load static %}
+
 <h1 class="flex items-center text-5xl font-extrabold mt-6 mb-[40px]">Donor<span class="bg-red-700 text-white text-sm font-semibold mr-2 px-2.5 py-0.5 rounded ml-2">LIST</span></h1>
 <div class="flex items-center justify-between pb-4">
     <label for="table-search" class="sr-only">Search</label>
@@ -44,11 +45,11 @@
 <table class="w-full text-sm text-left text-gray-500 table-auto" id="table">
     <thead class="text-xs text-gray-700 uppercase bg-gray-200 text-center">
         <tr>
-            <!-- <th scope="col" class="px-6 py-3">
-                     info ID 
-                     </th> -->
             <th scope="col" class="px-3">
                 <input id="select-all" type="checkbox" class="w-5 h-5 text-lifelink-red2 bg-gray-200 border-gray-400 rounded focus:ring-white" />
+            </th>
+            <th scope="col" class="px-6 py-3">
+                info ID 
             </th>
             <th scope="col" class="px-6 py-3">
                 <div class="flex items-center justify-center">
@@ -141,11 +142,11 @@
     <tbody id="table-body">
         {% for blood_bag in page_obj %}
         <tr class="bg-white border-b hover:bg-gray-50 text-center text-gray-800">
-            <!-- <td class="px-6 py-4">
-                     {{ user.info_id }}
-                     </td> -->
             <td class="px-3">
                 <input type="checkbox" name="ids" onchange="changeBackground(this)" class="select-donor w-5 h-5 text-lifelink-red2 bg-gray-200 border-gray-400 rounded focus:ring-white" />
+            </td>
+            <td class="px-6 py-4">
+                {{ blood_bag.info_id }}
             </td>
             <td class="px-6 py-4">
                 {{ blood_bag.full_name }}
@@ -170,7 +171,7 @@
             </td>
             <td class="px-6 py-4">
                 <div class="flex item-center justify-center">
-                    <button data-modal-target="#view-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal" type="button">
+                    <button data-modal-target="#view-donor-info{{blood_bag.info_id}}" data-modal-toggle="defaultModal" type="button">
                         <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -196,7 +197,149 @@
                 </button>
             </td>
         </tr>
-        {% include "custom_admin/warningmodal.html" %} {% endfor %}
+        {% include "custom_admin/warningmodal.html" %} 
+        <div id="view-donor-info{{blood_bag.info_id}}" class="fixed flex justify-center items-center z-50 modal hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0  h-screen  max-h-full bg-gray-800 bg-opacity-75">
+                       
+            <div class="relative w-full max-w-2xl max-h-full">
+                <!-- Modal content -->
+                <div class="relative bg-gray-200 rounded-lg shadow">
+                    <!-- Modal header -->
+                    <div class="flex items-start justify-between p-4 border-b rounded-t">
+                        <h3 class="text-2xl font-semibold text-text-700">
+                           <span class="text-red-700 text-2xl">{{ blood_bag.full_name }}</span>
+                        </h3>
+                        <h3 class="text-2xl font-semibold text-red-700">
+                            Info ID: <span class="text-red-700 text-2xl">{{ blood_bag.info_id }}</span>
+                        </h3>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-4 space-y-2">
+                        
+                        <form action="#">
+                            <div class="grid gap-4 mb-4 grid-cols-2 sm:gap-6 sm:mb-5">
+                                <div class="sm:col-span-1">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Age</label>
+                                    <input type="text" name="age" id="age" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ blood_bag.age}}"  required="" readonly>
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sex</label>
+                                    <input type="text" name="sex" id="sex" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ blood_bag.info_id__sex }}" required="" readonly>
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Blood Type</label>
+                                    <input type="text" name="blood_type" id="blood_type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ blood_bag.info_id__blood_type}}" required="" readonly>
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of Birth</label>
+                                    <input type="text" name="date_of_birth" id="date_of_birth" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ blood_bag.info_id__date_of_birth}}" required="" readonly>
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                    <input type="text" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ blood_bag.info_id__email}}" required="" readonly>
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                                    <input type="text" name="address" id="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ blood_bag.info_id__address}}" required="" readonly>
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Occupation</label>
+                                    <input type="text" name="occupation" id="occupation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ blood_bag.info_id__occupation}}" required="" readonly>
+                                </div>
+                                <div class="sm:col-span-1">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
+                                    <input type="text" name="contact_number" id="contact_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ blood_bag.info_id__contact_number}}" required="" readonly>
+                                </div>
+                                
+                     
+                                <div class="bg-gray-50 text-center text-gray-900 py-4 px-6 rounded-lg">
+                                    <p class="mb-2 font-bold">Donated Blood</p>
+                                    <hr class="my-4">
+                                    <div class="flex justify-around">
+                                      <p class="font-semibold">Serial Number</p>
+                                      <p class="font-semibold">Date</p>
+                                    </div>
+                                    <ul class="list-disc pl-4 h-[100px] overflow-y-auto">
+                                      <!-- List of serial numbers for donors who donated blood -->
+                                      <li class="mb-2">
+                                        <div class="flex justify-between items-center">
+                                          <span>3332-123332-1</span>
+                                          <span>May 15, 2023</span>
+                                        </div>
+                                      </li>
+                                      <li class="mb-2">
+                                        <div class="flex justify-between items-center">
+                                          <span>0201-432443-1</span>
+                                          <span>May 16, 2023</span>
+                                        </div>
+                                      </li>
+                                      <li class="mb-2">
+                                        <div class="flex justify-between items-center">
+                                          <span>5232-223523s-1</span>
+                                          <span>May 17, 2023</span>
+                                        </div>
+                                      </li>
+                                      <!-- Add more list items as needed -->
+                                    </ul>
+                                  </div>
+                                  
+                                  <div class="bg-gray-50 text-center text-gray-900 py-4 px-6 rounded-lg">
+                                    <p class="mb-2 font-bold">Blood Received</p>
+                                    <hr class="my-4">
+                                    <div class="flex justify-around">
+                                      <p class="font-semibold">Serial Number</p>
+                                      <p class="font-semibold">Date</p>
+                                    </div>
+                                    <ul class="list-disc pl-2 h-[100px] overflow-y-auto">
+                                      <!-- List of serial numbers for donors who received blood -->
+                                      <li class="mb-2">
+                                        <div class="flex justify-between items-center">
+                                          <span>5323-334532-2</span>
+                                          <span>May 18, 2023</span>
+                                        </div>
+                                      </li>
+                                      <li class="mb-2">
+                                        <div class="flex justify-between items-center">
+                                          <span>3234-663432-3</span>
+                                          <span>May 19, 2023</span>
+                                        </div>
+                                      </li>
+                                      <li class="mb-2">
+                                        <div class="flex justify-between items-center">
+                                          <span>2345-323444-3</span>
+                                          <span>May 20, 2023</span>
+                                        </div>
+                                      </li>
+                                      <!-- Add more list items as needed -->
+                                    </ul>
+                                  </div>
+                                  
+                                  
+                              
+                                  
+                                  
+                            </div>
+        
+                             <!-- Modal footer -->
+                             <div class="flex justify-end">
+                                <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
+                                <button
+                                        id="cancel-btn"
+                                        type="button"
+                                        class="text-white bg-red-700 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
+                                    >
+                                        Close
+                                </button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        
+            <!-- End of Add blood Bag Modal-->
+        </div>
+        {% endfor %}
     </tbody>
 </table>
 <nav class="bg-gray-50 flex items-center justify-center py-5">
@@ -363,5 +506,47 @@
         });
     });
 
+
+    //-----------------
+    //Search
+    const searchInput = document.getElementById("search");
+    const tableBody = document.getElementById("table-body");
+    const tableRows = Array.from(tableBody.querySelectorAll("tr"));
+    const results = [];
+    searchInput.addEventListener("input", function () {
+        filterTable("name");
+    });
+
+    function filterTable(sortColumn) {
+        const filterValue = searchInput.value.toLowerCase();
+        results.length = 0;
+        tableRows.forEach((row) => {
+            let isMatch = false;
+            row.querySelectorAll("td").forEach((cell) => {
+                const cellValue = cell.textContent.toLowerCase();
+                if (cellValue.includes(filterValue)) {
+                    isMatch = true;
+                }
+            });
+            if (isMatch) {
+                results.push(row);
+            }
+        });
+        tableBody.innerHTML = "";
+        if (results.length === 0) {
+            const noDataRow = document.createElement("tr");
+            const noDataCell = document.createElement("td");
+            noDataCell.setAttribute("colspan", "8");
+            noDataCell.textContent = "No data available";
+            noDataCell.classList.add("px-6", "py-4", "text-center", "text-gray-500", "italic");
+            noDataRow.appendChild(noDataCell);
+            noDataRow.classList.add("no-data");
+            tableBody.appendChild(noDataRow);
+        } else {
+            results.forEach((result) => {
+                tableBody.appendChild(result);
+            });
+        }
+    }
     
 </script>

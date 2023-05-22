@@ -1,7 +1,7 @@
 {% extends "custom_admin/viewuserinfo.html" %}
 
 {% block modaltoggle %}
-<div id="edit-blood-modal{{user.info_id}}" class="fixed flex justify-center items-center z-50 modal hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="edit-blood-modal{{user.info_id}}" class="fixed flex justify-center items-center z-50 modal hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0  h-screen  max-h-full bg-gray-800 bg-opacity-75">
 {% endblock modaltoggle %}
 
 {% block form %}
@@ -22,27 +22,27 @@
         </div>
         <div class="sm:col-span-1">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Blood Type</label>
-            <input type="text" name="blood_type" id="blood_type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.blood_type}}" placeholder="Type product name" required="" >
+            <input type="text" name="blood_type" id="blood_type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.blood_type}}" required="" >
         </div>
         <div class="sm:col-span-1">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of Birth</label>
-            <input type="text" name="date_of_birth" id="date_of_birth" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.date_of_birth}}" placeholder="Type product name" required="" >
+            <input type="text" name="date_of_birth" id="date_of_birth" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.date_of_birth|date:'Y-m-d' }}" required="" >
         </div>
         <div class="sm:col-span-1">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-            <input type="text" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.email}}" placeholder="Type product name" required="" >
+            <input type="text" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.email}}" required="" >
         </div>
         <div class="sm:col-span-1">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-            <input type="text" name="address" id="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.address}}" placeholder="Type product name" required="" >
+            <input type="text" name="address" id="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.address}}" required="" >
         </div>
         <div class="sm:col-span-1">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
-            <input type="text" name="contact_number" id="contact_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.contact_number}}" placeholder="Type product name" required="" >
+            <input type="text" name="contact_number" id="contact_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.contact_number}}" required="" >
         </div>
         <div class="sm:col-span-1">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Occupation</label>
-            <input type="text" name="occupation" id="occupation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.occupation}}" placeholder="Type product name" >
+            <input type="text" name="occupation" id="occupation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.occupation}}" >
         </div>
     </div>
 

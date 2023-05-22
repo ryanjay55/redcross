@@ -20,16 +20,21 @@ class BloodInventoryAdmin(admin.ModelAdmin):
     search_fields = ('bag_id__serial_no', 'bag_id__info_id__firstname', 'bag_id__info_id__lastname')
 
     def get_donor_name(self, obj):
-        return f"{obj.bag_id.info_id.firstname} {obj.bag_id.info_id.lastname}"
-    get_donor_name.short_description = 'Donor Name'
+        if obj.bag_id and obj.bag_id.info_id:
+            return f"{obj.bag_id.info_id.firstname} {obj.bag_id.info_id.lastname}"
+        return "N/A"
+
 
     def get_serial_no(self, obj):
-        return obj.bag_id.serial_no
-    get_serial_no.short_description = 'Bag Serial No.'
+        if obj.bag_id:
+            return obj.bag_id.serial_no
+        return "N/A"
 
     def get_date_donated(self, obj):
-        return obj.bag_id.date_donated
-    get_date_donated.short_description = 'Date Donated'
+        if obj.bag_id:
+            return obj.bag_id.date_donated
+        return "N/A"
+
 
 
 @admin.register(ExpiredBlood)

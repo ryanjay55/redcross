@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404, redirect
 from inventory.models import BloodBags,BloodInventory,ExpiredBlood
 from account.models import DonorInfo
 import xlwt
@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.utils import timezone
 from datetime import datetime, timedelta,date
+
 
 
 
@@ -160,7 +161,7 @@ def expiredBlood(request):
 
     return render(request, 'inventory/expiredblood.html', {'expired_blood': expired_blood,'expired_count':expired_count,'navbar': 'expiredBlood'})
 
-from django.shortcuts import get_object_or_404, redirect
+
 def deleteExpiredBlood(request, pk=None):
     if pk is None:
         # Delete all expired blood objects

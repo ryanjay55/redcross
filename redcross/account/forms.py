@@ -41,6 +41,7 @@ class CompleteProfileForm(forms.ModelForm):
         # For example, you can strip out any non-numeric characters, or ensure it's in a certain format
         return contact_number
 
+
     def clean_date_of_birth(self):
         """
         Validate that the date of birth is at least 17 years ago and not in the future,
@@ -50,12 +51,16 @@ class CompleteProfileForm(forms.ModelForm):
         if date_of_birth:
             today = date.today()
             age = today.year - date_of_birth.year - ((today.month, today.day) < (date_of_birth.month, date_of_birth.day))
+            if age < 17 and date_of_birth > today:
+                raise forms.ValidationError("Invalid date. You must be at least 17 years old and the date of birth cannot be in the future.")
             if age < 17:
-                raise forms.ValidationError("You must be at least 17 years old and above.")
+                raise forms.ValidationError("You must be at least 17 years old.")
             if date_of_birth > today:
                 raise forms.ValidationError("Date of birth cannot be in the future.")
             if date_of_birth.year < (today.year - 100):
                 raise forms.ValidationError("Please enter a valid date of birth.")
         return date_of_birth
+
+
 
 

@@ -1,0 +1,70 @@
+{% extends "custom_admin/base.html" %} {% load tailwind_filters %} {% load static %} {% load static tailwind_tags %} {% block title %} Admin | Dashboard {% endblock title %} {% block content %}
+<div class="flex flex-row h-full">
+    <div>{% include "custom_admin/sidebar.html" %}</div>
+
+    <div>
+        <!-- Display blood inventory -->
+        <h2>Blood Inventory</h2>
+        <ul>
+            {% for blood_bag in blood_inventory %}
+            <li>{{ blood_bag }}</li>
+            {% empty %}
+            <li>No blood inventory available.</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Display expired blood -->
+        <h2>Expired Blood</h2>
+        <ul>
+            {% for expired_bag in expired_blood %}
+            <li>{{ expired_bag }}</li>
+            {% empty %}
+            <li>No expired blood available.</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Display male and female counts -->
+        <h2>Donor Counts</h2>
+        <p>Male count: {{ male_count }}</p>
+        <p>Female count: {{ female_count }}</p>
+
+        <!-- Display blood type counts -->
+        <h2>Blood Type Counts</h2>
+        <ul>
+            {% for blood_type_count in blood_type_counts %}
+            <li>{{ blood_type_count.blood_type }}: {{ blood_type_count.count }}</li>
+            {% empty %}
+            <li>No blood type counts available.</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Display barangay counts -->
+        <h2>Donors per Barangay</h2>
+        <ul>
+            {% for barangay_count in barangay_counts %}
+            <li>{{ barangay_count.address }}: {{ barangay_count.count }}</li>
+            {% empty %}
+            <li>No donors per barangay available.</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Display expired blood count -->
+        <p>Expired blood count: {{ expired_count }}</p>
+
+        <!-- Display blood bags with different priority levels -->
+        <p>High priority count: {{ high_priority_count }}</p>
+        <p>Medium priority count: {{ medium_priority_count }}</p>
+        <p>Low priority count: {{ low_priority_count }}</p>
+
+        <!-- Display current stock per blood type -->
+        <h2>Current Stock per Blood Type</h2>
+        <ul>
+            {% for stock_count in stock_counts %}
+            <li>{{ stock_count.bag_id__info_id__blood_type }}: {{ stock_count.count }}</li>
+            {% empty %}
+            <li>No current stock available.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock content %}

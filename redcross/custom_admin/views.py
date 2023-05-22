@@ -11,7 +11,10 @@ from django.core.paginator import Paginator
 from django.db.models.functions import ExtractYear,Concat,ExtractMonth
 from django.db.models import Value, CharField,Count, Max,F,ExpressionWrapper, IntegerField,Sum
 from django.utils import timezone
-from datetime import timedelta
+from django.contrib.auth.models import User
+from django.contrib import messages
+from datetime import timedelta, datetime, date
+
 
 
 def dashboard(request):
@@ -41,9 +44,10 @@ def dashboard(request):
         'expired_count': expired_count
     })
 
-
-
 def usersList(request):
+    # Retrieve the list of users with the number of blood donations
+    users_with_donation_count = User.objects.annotate(donation_count=Count('donorinfo__bloodbags'))
+
     # if request.method == 'POST':
     #     # Retrieve the form data
     #     info_id = request.POST.get('info_id')
@@ -51,24 +55,26 @@ def usersList(request):
     #     lastname = request.POST.get('lastname')
     #     sex = request.POST.get('sex')
     #     blood_type = request.POST.get('blood_type')
-
+    #     date_of_birth = request.POST.get('date_of_birth')
     #     email = request.POST.get('email')
     #     address = request.POST.get('address')
     #     contact_number = request.POST.get('contact_number')
 
     #     # Convert date_of_birth string to datetime object
-
-  
+    #     if date_of_birth:
+    #         date_of_birth = datetime.strptime(date_of_birth, '%Y-%m-%d').date()
 
     #     # Retrieve the existing DonorInfo object
     #     donor_info = DonorInfo.objects.get(info_id=info_id)
+
+
 
     #     # Update the DonorInfo object with the form data
     #     donor_info.firstname = firstname
     #     donor_info.lastname = lastname
     #     donor_info.sex = sex
     #     donor_info.blood_type = blood_type
-  
+    #     donor_info.date_of_birth = date_of_birth
     #     donor_info.email = email
     #     donor_info.address = address
     #     donor_info.contact_number = contact_number
@@ -94,14 +100,13 @@ def usersList(request):
         date_donated = request.POST.get('date_donated')
         bled_by = request.POST.get('bled_by')
 
-
         # Validate the serial number
         if len(serial_no_1) != 4 or len(serial_no_2) != 6 or len(serial_no_3) != 1:
             serial_incomplete_error = 'Serial number must have the format XXXX-XXXXXX-X.'
         elif BloodBags.objects.filter(serial_no=serial_no).exists():
             serial_exists_error = 'Serial number already exists in the database.'
 
-        # Check if DonorInfo record with id exists in database
+        # Check if DonorInfo record with id exists in the database
         try:
             donor_info = DonorInfo.objects.get(pk=info_id)
         except DonorInfo.DoesNotExist:
@@ -110,6 +115,17 @@ def usersList(request):
 
         else:
             if not serial_exists_error and not serial_incomplete_error:
+                # Check if the donor has donated within the last 3 months
+                last_donation = BloodBags.objects.filter(info_id=donor_info).order_by('-date_donated').first()
+                if last_donation:
+                    last_donation_date = last_donation.date_donated.date()
+                    min_donation_date = last_donation_date + timedelta(days=90)  # Minimum donation date after 3 months
+                    current_date = date.today()
+                    if current_date < min_donation_date:
+                        # Display an error message if the donor has donated within the last 3 months
+                        messages.error(request, 'Donor must wait for at least 3 months before donating again.')
+                        return redirect('users-list')
+
                 # Create a new BloodBags instance based on the form data and DonorInfo record
                 blood_bag = BloodBags(
                     info_id=donor_info,
@@ -118,9 +134,8 @@ def usersList(request):
                     bled_by=bled_by,
                 )
                 blood_bag.save()
-                send_thank_you_email(donor_info)
-                submission_success = 'Blood bag successfully added to the database.'
-
+                # send_thank_you_email(donor_info)
+                messages.success = 'Blood bag successfully added to the database.'
         
     sort_param = request.GET.get('sort', 'completed_at')  # default sort by completion date
     if sort_param == 'firstname':
@@ -156,6 +171,7 @@ def usersList(request):
     if page_obj.has_next():
         page_obj.next_page_number_param = f'&sort={sort_param}&page={page_obj.next_page_number()}'
     rows = [{'id': user.pk, 'firstname': user.firstname, 'lastname': user.lastname} for user in page_obj]
+    
     return render(request, 'custom_admin/users.html', {'users': page_obj, 'sidebar': page_obj, 'modal': True, 'rows': rows,'donors':donors,'serial_exists_error':serial_exists_error,'serial_incomplete_error': serial_incomplete_error,'submission_success':submission_success})
 
 
@@ -276,6 +292,65 @@ def donors(request):
         
         
         
-    return render(request, 'custom_admin/donors.html', {'page_obj': page_obj})
+    return render(request, 'custom_admin/donors.html', {'page_obj': page_obj,'navbar':'donors'})
 
 
+def deferredDonors(request):
+    
+    return render(request,'custom_admin/deferreddonors.html',{'navbar':'deferredDonors'})
+
+
+
+def mbdSummary(request):
+    # Retrieve the selected month and year from the query parameters
+    month = request.GET.get('month')
+    year = request.GET.get('year')
+
+    # Validate and convert month and year to integers
+    try:
+        month = int(month)
+        year = int(year)
+    except (TypeError, ValueError):
+        # Handle invalid month or year
+        # You can show an error message or redirect to an error page
+        return render(request, 'custom_admin/mbdsummary.html', {'error': 'Invalid month or year'})
+
+    # Filter blood inventory and expired blood by selected month and year
+    blood_inventory = BloodInventory.objects.filter(exp_date__month=month, exp_date__year=year)
+    expired_blood = ExpiredBlood.objects.filter(exp_date__month=month, exp_date__year=year)
+
+    # Count male and female donors
+    male_count = DonorInfo.objects.filter(sex='M').count()
+    female_count = DonorInfo.objects.filter(sex='F').count()
+
+    # Count donors by blood type
+    blood_type_counts = DonorInfo.objects.values('blood_type').annotate(count=Count('blood_type'))
+
+    # Count donors per barangay
+    barangay_counts = DonorInfo.objects.values('address').annotate(count=Count('address'))
+
+    # Count expired blood bags
+    expired_count = expired_blood.count()
+
+    # Count blood bags with different priority levels
+    high_priority_count = BloodBags.objects.filter(priority='High').count()
+    medium_priority_count = BloodBags.objects.filter(priority='Medium').count()
+    low_priority_count = BloodBags.objects.filter(priority='Low').count()
+
+    # Count current stock per blood type
+    stock_counts = BloodInventory.objects.values('bag_id__info_id__blood_type').annotate(count=Count('bag_id__info_id__blood_type'))
+
+    return render(request, 'custom_admin/mbdsummary.html', {
+        'blood_inventory': blood_inventory,
+        'expired_blood': expired_blood,
+        'male_count': male_count,
+        'female_count': female_count,
+        'blood_type_counts': blood_type_counts,
+        'barangay_counts': barangay_counts,
+        'expired_count': expired_count,
+        'high_priority_count': high_priority_count,
+        'medium_priority_count': medium_priority_count,
+        'low_priority_count': low_priority_count,
+        'stock_counts': stock_counts,
+        'navbar': 'summaryReport'
+    })

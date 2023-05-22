@@ -1,6 +1,9 @@
 {% extends "custom_admin/base.html" %}{% load tailwind_filters %} {% load static %} {% load static tailwind_tags %} {% block title %}Admin | Users{% endblock title %} {% tailwind_css %} {% block content %}
 <div class="flex flex-row h-ful">
     {% block sidebaruser %}
+    <div id="toast-container" class="fixed bottom-0 left-0 z-50 ml-14">
+        {% include "inventory/toast_message.html" %}
+    </div>
     <div>{% include "custom_admin/sidebar.html" %}</div>
     {% endblock sidebaruser %}
     <div class="flex-1 mx-auto">
@@ -111,6 +114,7 @@
                             </div>
                         </th>
                         <th scope="col" class="px-6 py-3">Contact Number</th>
+                        <!-- <th scope="col" class="px-6 py-3"># Donated Blood</th> -->
                         <th scope="col" class="px-6 py-3">Actions</th>
                         <th scope="col" class="px-6 py-3">Blood Bag</th>
                     </tr>
@@ -142,6 +146,10 @@
                         <td class="px-6 py-4">
                             {{ user.contact_number }}
                         </td>
+                        <!-- <td class="px-6 py-4">
+                            {{ user.donation_count }}
+                          </td> -->
+                          
                         <td class="px-6 py-4">
                             <div class="flex item-center justify-center">
                                 <button data-modal-target="#view-blood-modal{{user.info_id}}" data-modal-toggle="defaultModal" type="button">
@@ -159,16 +167,6 @@
                                         </svg>
                                     </div>
                                 </button>
-                                <div class="w-4 mr-2 transform hover:text-red-500 hover:scale-110 text-gray-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                        />
-                                    </svg>
-                                </div>
                             </div>
                         </td>
                         <td class="px-4 py-4">
@@ -182,7 +180,7 @@
                             </button>
                         </td>
                     </tr>
-                    {% include "custom_admin/addbloodbag.html" %} {% include "custom_admin/viewuserinfo.html" %} {% include "custom_admin/edituserinfo.html" %} {% endfor %}
+                    {% include "custom_admin/addbloodbag.html" %} {% include "custom_admin/viewuserinfo.html" %} {% include "custom_admin/edituserinfo.html" %}{% endfor %}
                 </tbody>
                 <div class="flex items-center justify-center w-full">
                     {% if submission_success %}
@@ -303,6 +301,7 @@
         </div>
     </div>
 </div>
+  
 <!-- End of table -->
 <!-- Modal forExport -->
 <!-- End of Modal forExport -->
@@ -369,32 +368,33 @@
 
 
 
-//toasttttt
-    if (document.getElementById("toast-danger")) {
-        const toast = document.getElementById("toast-danger");
-        const closeButton = toast.querySelector("[data-dismiss-target]");
-        closeButton.addEventListener("click", () => {
-            toast.remove();
-        });
+
+ // Get all date input fields
+const dateDonatedInputs = document.querySelectorAll('input[type="date"]');
+
+// Get tomorrow's date
+const tomorrowDate = new Date();
+tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+const tomorrowDateString = tomorrowDate.toISOString().split('T')[0];
+
+// Iterate over each date input field
+dateDonatedInputs.forEach((dateDonatedInput) => {
+  // Set the max attribute to tomorrow's date
+  dateDonatedInput.setAttribute('max', tomorrowDateString);
+
+  // Add event listener to the input field
+  dateDonatedInput.addEventListener('input', () => {
+    const selectedDate = dateDonatedInput.value;
+
+    // Compare the selected date with the current and tomorrow's dates
+    if (selectedDate > tomorrowDateString) {
+      dateDonatedInput.setCustomValidity('Please select a date before or equal to tomorrow\'s date.');
+    } else {
+      dateDonatedInput.setCustomValidity('');
     }
-
-    if (document.getElementById("toast-success")) {
-        const toast = document.getElementById("toast-success");
-        const closeButton = toast.querySelector("[data-dismiss-target='#toast-success']");
-        closeButton.addEventListener("click", () => {
-            toast.style.display = "none";
-        });
-
-        setTimeout(() => {
-            toast.style.display = "none";
-        }, 3000);
-    }
+  });
+});
 
 
-    //clock for blood bag list
-    setInterval(function () {
-        let date = new Date();
-        document.getElementById("clock").innerHTML = (date.getHours() < 10 ? "0" : "") + date.getHours() + ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes() + ":" + (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
-      }, 500);
 </script>
 {% endblock content%}

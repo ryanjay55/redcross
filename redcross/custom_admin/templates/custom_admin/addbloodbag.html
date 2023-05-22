@@ -54,7 +54,7 @@
                   <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none w">
                      <img src="{% static 'assets/icons/calendar.svg' %}" alt="calendar Icon" class="inline-block w-[15px] h-auto mr-2" />
                   </div>
-                  <input type="date" name="date_donated" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Select date" />
+                  <input type="date" id="date_donated" name="date_donated" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Select date" />
                </div>
                <!-- Modal footer -->
                <hr class="h-px my-2 bg-gray-400 border-0">
@@ -102,6 +102,7 @@ if (document.getElementById("myForm").checkValidity()) {
    document.getElementById("myForm").submit();
    
 }
-    
+   
+
  </script>
  

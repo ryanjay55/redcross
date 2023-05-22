@@ -1,6 +1,7 @@
 {% load static %}
-<!-- Add blood Bag Modal-->
-{% block modaltoggle %}<div id="view-blood-modal{{user.info_id}}" class="fixed flex justify-center items-center z-50 modal hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">{% endblock modaltoggle %} 
+{% block modaltoggle %}
+<div id="view-blood-modal{{user.info_id}}" class="fixed flex justify-center items-center z-50 modal hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0  h-screen  max-h-full bg-gray-800 bg-opacity-75">
+{% endblock modaltoggle %} 
     <div class="relative w-full max-w-2xl max-h-full">
         <!-- Modal content -->
         <div class="relative bg-gray-200 rounded-lg shadow">

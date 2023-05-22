@@ -116,6 +116,9 @@ def loginPage(request):
                 return redirect('completeProfile')
         else:
             messages.error(request, 'Username or password is incorrect.')
+            # Add the entered username to the request's POST data
+            request.POST = request.POST.copy()
+            request.POST['username'] = username
         
     context = {}
     return render(request, 'account/userlogin.html')
@@ -130,39 +133,79 @@ def signupPage(request):
         
         # Check if the username is already taken
         if User.objects.filter(username=username).exists():
-            context = {'error': 'Username is already taken'}
+            context = {
+                'password_error1': 'Username is already taken',
+                'username': username,
+                'email': email
+            }
             return render(request, 'account/usersignup.html', context)
         
         # Check if the username length is valid
         if len(username) < 8 or len(username) > 30:
-            context = {'password_error1': 'Username must be between 8 and 30 characters long.'}
+            context = {
+                'password_error1': 'Username must be between 8 and 30 characters long.',
+                'username': username,
+                'email': email
+            }
+            return render(request, 'account/usersignup.html', context)
+        
+        if User.objects.filter(username=username).exists():
+            context = {
+                'error': 'Username is already taken',
+                'username': username,
+                'email': email
+            }
             return render(request, 'account/usersignup.html', context)
         
          # Check password requirements
         if len(password) < 8 or len(password) > 30:
-            context = {'password_error2': 'Password must be between 8 and 30 characters long.'}
+            context = {
+                'password_error2': 'Password must be between 8 and 30 characters long.',
+                'username': username,
+                'email': email
+            }
             return render(request, 'account/usersignup.html', context)
         
         if not any(char.isdigit() for char in password):
-            context = {'password_error2': 'Password must contain at least one digit.'}
+            context = {
+                'password_error2': 'Password must contain at least one digit.',
+                'username': username,
+                'email': email
+            }
             return render(request, 'account/usersignup.html', context)
         
         if not any(char.isalpha() for char in password):
-            context = {'password_error2': 'Password must contain at least one letter.'}
+            context = {
+                'password_error2': 'Password must contain at least one letter.',
+                'username': username,
+                'email': email
+            }
             return render(request, 'account/usersignup.html', context)
         
         if not any(char.isupper() for char in password):
-            context = {'password_error2': 'Password must contain at least one uppercase letter.'}
+            context = {
+                'password_error2': 'Password must contain at least one uppercase letter.',
+                'username': username,
+                'email': email
+            }
             return render(request, 'account/usersignup.html', context)
         
         if not any(char.islower() for char in password):
-            context = {'password_error2': 'Password must contain at least one lowercase letter.'}
+            context = {
+                'password_error2': 'Password must contain at least one lowercase letter.',
+                'username': username,
+                'email': email
+            }
             return render(request, 'account/usersignup.html', context)
         
         
         if password != confirm_password:
             # Return an error message if the passwords don't match
-            context = {'password_error': 'Passwords do not match'}
+            context = {
+                'password_error': 'Passwords do not match',
+                'username': username,
+                'email': email
+            }
             return render(request, 'account/usersignup.html', context)
         
         # Create the user object
